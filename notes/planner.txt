@@ -3,41 +3,27 @@
 ===========================
 
 Poniedziałek (____/____/2025)
-- [ ] 
-- [ ] 
-- [ ] 
+ - zrobić cpp00 ex 01
+ - zrobić cpp01 od 0 - 3
+ - wstawić post linkedin
+ - live o 17
 
 Wtorek (____/____/2025)
-- [ ] 
-- [ ] 
-- [ ] 
+
 
 Środa (____/____/2025)
-- Programowanie
-- Live
-- Yoga
-- zadzonc do optyka
-- umyc sie
+
 
 Czwartek (____/____/2025)
-- nagrania dla istudies
-- yoga
-- spotkanei z Zyta
+
 
 Piątek (____/____/2025)
-- odebrac koszulke
-- pociag
-- [ ] 
+
 
 Sobota (____/____/2025)
-- [ ] 
-- [ ] 
-- [ ] 
+
 
 Niedziela (____/____/2025)
-- [ ] 
-- [ ] 
-- [ ] 
 
 --------------------------------
 Notatki:

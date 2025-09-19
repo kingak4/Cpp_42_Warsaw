@@ -163,18 +163,13 @@ stwórz obiekt PhoneBook
 
 pętla nieskończona:
     wypisz "Enter command: ADD, SEARCH, EXIT"
-
     odczytaj wejście użytkownika (string)
-
     jeśli wejście == "ADD":
         wywołaj phoneBook.addContact()
-
     inaczej jeśli wejście == "SEARCH":
         wywołaj phoneBook.searchContacts()
-
     inaczej jeśli wejście == "EXIT":
         przerwij pętlę i zakończ program
-
     inaczej:
         wypisz "Unknown command"
 

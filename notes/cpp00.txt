@@ -1,0 +1,104 @@
+🔎 Co to zadanie od Ciebie wymaga?
+
+Masz napisać prostą aplikację konsolową w C++ (taką z lat 80., prosty tekst w terminalu), która zachowuje się jak telefoniczna książka adresowa.
+
+Główne punkty:
+
+Dwie klasy:
+Contact – pojedynczy kontakt (ma imię, nazwisko, pseudonim, numer telefonu, sekret).
+PhoneBook – cała książka (ma w sobie tablicę max. 8 kontaktów).
+Brak dynamicznej alokacji
+– czyli nie wolno używać new, delete, malloc, free. Tylko zwykła statyczna tablica (Contact contacts[8];).
+
+Funkcjonalności programu:
+
+ADD → użytkownik wpisuje dane nowego kontaktu (wszystkie pola muszą być uzupełnione).
+SEARCH → użytkownik widzi listę kontaktów (ładna tabela, kolumny po 10 znaków, z obcięciem i kropką na końcu jeśli za długie). Następnie może wybrać indeks i zobaczyć pełne dane tego kontaktu.
+EXIT → kończy program.
+Inne komendy → są ignorowane.
+
+Specjalne zasady:
+Jeśli dodasz 9-ty kontakt, najstarszy zostaje zastąpiony nowym.
+Format tabeli jest obowiązkowy → 4 kolumny: index | first name | last name | nickname.
+Tekst musi być right-aligned (czyli wyrównany do prawej).
+Tekst dłuższy niż 10 znaków ma być obcięty do 9 i na końcu dajesz ..
+Wszystkie dane kontaktu muszą być niepuste.
+Po SEARCH – jeśli użytkownik poda zły indeks, masz to obsłużyć w sposób, który sam wybierzesz (np. komunikat o błędzie).
+
+📘 Czego wolno / czego nie wolno używać?
+
+✅ Dozwolone:
+Standardowe biblioteki C++: <iostream>, <iomanip>, <string>, <limits>.
+Klasy i funkcje standardowe: std::cin, std::cout, std::string, std::setw(), std::getline(), itp.
+Tablice statyczne (nie dynamiczne).
+
+❌ Niedozwolone:
+
+Dynamiczna alokacja (new, delete, malloc, free).
+Zewnętrzne biblioteki.
+Skracanie sobie drogi gotowymi implementacjami (np. brak std::vector, bo to ukryta dynamiczna alokacja).
+
+📘 Przykład w programowaniu – Telefon
+🔹 Bez private
+class Phone {
+public:
+    int battery; // bateria w procentach
+};
+
+int main() {
+    Phone p;
+    p.battery = -50; // ❌ ktoś ustawił głupią wartość
+}
+
+➡️ Problem: każdy może złamać logikę programu. Telefon z -50% baterii to absurd.
+
+🔹 Z private + public
+class Phone {
+private:
+    int battery; // ukryte, nie można zmienić z zewnątrz
+
+public:
+    void setBattery(int level) {
+        if (level >= 0 && level <= 100) // walidacja
+            battery = level;
+        else
+            std::cout << "Nieprawidlowy poziom baterii!" << std::endl;
+    }
+
+    int getBattery() const {
+        return battery;
+    }
+};
+
+int main() {
+    Phone p;
+    p.setBattery(80);        // ✅ poprawne ustawienie
+    std::cout << p.getBattery() << std::endl; // 80
+
+    p.setBattery(-50);       // ❌ odrzucone
+}
+
+➡️ Teraz dane są chronione: nikt nie ustawi złej wartości, bo setter pilnuje zasad.
+🔑 Dlaczego to ważne?
+private = chronisz dane przed głupotą użytkownika lub błędami programu.
+public = dajesz bezpieczne narzędzia do korzystania z klasy.
+
+🔎 Krótka wizualizacja PhoneBooka
+          [ Klasa Contact ]
+   +-------------------------------+
+   |          PRIVATE               |
+   | firstName                     |
+   | lastName                      |
+   | nickname                      |
+   | phoneNumber                   |
+   | darkestSecret                 |
+   +-------------------------------+
+   |           PUBLIC               |
+   | setFirstName(string)           |
+   | getFirstName()                 |
+   | setPhoneNumber(string)         |
+   | getPhoneNumber()               |
+   | displayContact()               |
+   +-------------------------------+
+
+👉 Czyli: dane są chronione w private, a Ty dajesz tylko takie funkcje public, które pozwalają je ustawić/pobrać w kontrolowany sposób.

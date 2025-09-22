@@ -25,6 +25,7 @@ class Contact
 		int add_number(std::string s);
 		int add_secret(std::string s);
 		void add_contact();
+		std::string truncate_s(std::string s);
 };
 class PhoneBook
 {

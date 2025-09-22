@@ -126,3 +126,20 @@ void PhoneBook::add_C()
 		curr_id = 0;
 	std::cout << "Contact added successfully!" << std::endl;
 }
+std::string Contact::truncate_s(std::string s)
+{
+	int i = 0;
+	std::string rest;
+	if(s.length() <= 10)
+		return(s);
+	else
+	{
+		while(i < 9)
+		{
+			rest += s[i];
+			i++;
+		}
+		rest += '.';
+		return(rest);
+	}
+}

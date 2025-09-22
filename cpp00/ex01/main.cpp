@@ -7,12 +7,13 @@ int main()
 	std:: string cmd;
 	PhoneBook myPhoneBook;
 	std::cout << "Welcome to Phone Book !";
-	std::cout << "Commands: ADD, SEARCH, EXIT"; // add this to loop
+	// std::cout << "Commands: ADD, SEARCH, EXIT"; // add this to loop
 	std::cout << std::endl;
 	while(true)
 	{
 		std::cout << "Commands: ADD, SEARCH, EXIT";
 		std::cout << std::endl;
+		std::cout << "Enter command : ";
 		std::getline(std::cin, cmd);
 		if (cmd == "ADD")
 		{

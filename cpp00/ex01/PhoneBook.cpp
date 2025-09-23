@@ -53,6 +53,7 @@ int Contact::add_number(std::string s)
 		if(!isnb(s))
 		{
 			std::cout << "Phone number must be numeric!" << std::endl;
+			return(0);
 		}
 		this->phoneNumber = atoi(s.c_str());
 	}
@@ -126,54 +127,4 @@ void PhoneBook::add_C()
 		curr_id = 0;
 	std::cout << "Contact added successfully!" << std::endl;
 }
-std::string Contact::truncate_s(std::string s)
-{
-	int i = 0;
-	std::string rest;
-	if(s.length() <= 10)
-		return(s);
-	else
-	{
-		while(i < 9)
-		{
-			rest += s[i];
-			i++;
-		}
-		rest += '.';
-		return(rest);
-	}
-}
-void	Contact::display_one_line(int id)
-{
-	if(this->firstName.empty())
-		return ;
-	else
-	{
-		std::cout << id;
-		std::cout << "|";
-		std::cout << truncate_s(this->firstName);
-		std::cout << "|";
-		std::cout << truncate_s(this->lastName);
-		std::cout << "|";
-		std::cout << truncate_s(this->nickname);
-	}
-}
-bool Contact::isEmpty() { return firstName.empty(); }
 
-void PhoneBook::display_tab()
-{
-	std::cout << "     Index|First Name| Last Name|  Nickname " << std::endl;
-	int i = 0;
-	int id = 0;
-	while( i < 8)
-	{
-		if(!contacts[i].isEmpty())
-		{
-			contacts[i].display_one_line(i + 1);
-			id = 1;
-		}
-		i++;
-	}
-	if (id == 0)
-		std::cout << "No contacts in the phone book." << std::endl;
-}

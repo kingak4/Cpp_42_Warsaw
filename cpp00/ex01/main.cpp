@@ -21,7 +21,7 @@ int main()
 		}
 		else if (cmd == "SEARCH")
 		{
-
+			myPhoneBook.showContactDetails();
 		}
 		else if (cmd == "EXIT")
 		{

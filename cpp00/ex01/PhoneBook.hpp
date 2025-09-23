@@ -28,7 +28,7 @@ class Contact
 		std::string truncate_s(std::string s);
 		void display_one_line(int id);
 		bool isEmpty();
-		
+		void display_full();
 };
 class PhoneBook
 {
@@ -38,7 +38,9 @@ class PhoneBook
 	public:
 	PhoneBook() : curr_id(0) {} 
     void add_C(); 
-	void display_tab(); 
+	void display_tab();
+	int showContactDetails();
+	int getContactCount();
 };
-
+int isnb(std::string s);
 #endif

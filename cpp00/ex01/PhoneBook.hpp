@@ -26,6 +26,9 @@ class Contact
 		int add_secret(std::string s);
 		void add_contact();
 		std::string truncate_s(std::string s);
+		void display_one_line(int id);
+		bool isEmpty();
+		
 };
 class PhoneBook
 {
@@ -34,7 +37,8 @@ class PhoneBook
 	int	curr_id;
 	public:
 	PhoneBook() : curr_id(0) {} 
-    void add_C();   
+    void add_C(); 
+	void display_tab(); 
 };
 
 #endif

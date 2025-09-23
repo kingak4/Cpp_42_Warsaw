@@ -9,16 +9,17 @@ Poniedziałek (____/____/2025)
  - live o 17
 
 Wtorek (____/____/2025)
-
+- zacząć cpp01
+- oraganc staze i cv
 
 Środa (____/____/2025)
-
-
+- zrobic cpp01
+-oraganc staze i cv
 Czwartek (____/____/2025)
-
+- cv i wysyłać
 
 Piątek (____/____/2025)
-
+-cpp 02
 
 Sobota (____/____/2025)
 
@@ -27,156 +28,3 @@ Niedziela (____/____/2025)
 
 --------------------------------
 Notatki:
-🔑 Wiedza, którą musisz opanować przed kodem
-Podstawy klas w C++
-
-jak deklarować klasę (class), konstruktory, destruktory,
-różnica między private a public.
-Tablica obiektów (nie dynamiczna)
-stała tablica Contact contacts[8]; w klasie PhoneBook.
-indeksowanie i nadpisywanie elementów.
-Wejście/wyjście w C++
-std::cin >> i std::getline() (ważne do czytania stringów z przestrzeniami),
-std::cout i std::setw() z <iomanip> do formatowania kolumn.
-Stringi (std::string)
-sprawdzanie długości (.length()),
-wycinanie (substr()).
-
-Kontrola pętli i warunków
-sprawdzanie komend (if (input == "ADD") itd.)
-proste walidacje danych.
-
-📋 Plan realizacji zadania
-Etap 1 – Struktura projektu
-Makefile, main.cpp, PhoneBook.cpp/.hpp, Contact.cpp/.hpp.
-W main.cpp: pętla while (true) do obsługi komend ADD, SEARCH, EXIT.
-
-Etap 2 – Klasa Contact
-
-Prywatne pola: firstName, lastName, nickname, phoneNumber, darkestSecret.
-Publiczne metody:
-setContact() → wypełnia pola na podstawie danych od użytkownika.
-displayShort() → zwraca dane do tabeli (10 znaków, przycięte kropką).
-displayFull() → wypisuje wszystkie pola jeden pod drugim.
-
-Etap 3 – Klasa PhoneBook
-Pole: Contact contacts[8].
-Licznik zapisanych kontaktów + wskaźnik, który kontakt nadpiszemy (rotacja po 8).
-Publiczne metody:
-addContact(),
-searchContacts() (tabela + wybór indeksu),
-ewentualnie printHeader() do formatowania tabeli.
-
-Etap 4 – Obsługa komend w main
-Program zaczyna od pustego phonebooka.
-Odczyt komendy od użytkownika (std::getline).
-Jeśli ADD → wywołaj addContact().
-Jeśli SEARCH → wywołaj searchContacts().
-Jeśli EXIT → przerwij pętlę.
-Inny input → zignoruj.
-
-⚠️ Edge cases (na które musisz uważać)
-
-Dodanie więcej niż 8 kontaktów → nadpisanie najstarszego.
-Pole kontaktu nie może być puste (musisz powtarzać pytanie aż user coś wpisze).
-
-SEARCH:
-tabela nie wyświetla pustych kontaktów,
-kolumny mają zawsze szerokość 10, z . jeśli za długie,
-użytkownik wpisuje indeks – jeśli poza zakresem lub pusty → komunikat błędu.
-EXIT kończy program natychmiast.
-std::cin i std::getline() → uważaj na mieszanie (bo cin zostawia \n w buforze).
-
-⏱ Plan na 1 dzień
-
-Godzina 1–2 → zrozumienie klas, tablicy obiektów, std::getline, std::setw.
-Godzina 3 → implementacja Contact (set + display).
-Godzina 4 → implementacja PhoneBook (tablica + rotacja 8 kontaktów).
-Godzina 5 → obsługa ADD, SEARCH, EXIT w main.
-Godzina 6 → testowanie edge-case’ów i poprawki.
-
-📋 Pseudokod – ex01 My Awesome PhoneBook
-🔹 Klasa Contact
-
-Pola prywatne (stringi):
-firstName
-lastName
-nickname
-phoneNumber
-darkestSecret
-Metody publiczne:
-setContact():
-
-dla każdego pola kontaktu:
-    zapytaj użytkownika o wartość
-    jeśli użytkownik poda pusty string → ponów pytanie
-    zapisz wartość do pola
-
-displayShort(index):
-
-wyświetl w jednej linii:
-    index | firstName (przycięte do 10 znaków) | lastName (przycięte) | nickname (przycięte)
-
-displayFull():
-
-wyświetl wszystkie pola kontaktu jeden pod drugim:
-    First Name: ...
-    Last Name: ...
-    Nickname: ...
-    Phone Number: ...
-    Darkest Secret: ...
-
-🔹 Klasa PhoneBook
-
-Pola prywatne:
-
-Contact contacts[8] (tablica stała)
-int count (ile kontaktów jest zapisanych)
-int nextIndex (gdzie zapisać nowy kontakt – rotacja)
-
-Metody publiczne:
-
-addContact():
-
-utwórz nowy obiekt Contact
-wywołaj setContact() → uzupełnij pola
-zapisz kontakt do contacts[nextIndex]
-zwiększ nextIndex o 1 (jeśli == 8 → wróć do 0)
-jeśli count < 8 → zwiększ count
-
-searchContacts():
-
-jeśli count == 0:
-    wypisz "PhoneBook is empty"
-    zakończ
-wyświetl tabelę nagłówków (Index | First Name | Last Name | Nickname)
-dla każdego kontaktu od 0 do count-1:
-    wywołaj displayShort(i)
-poproś użytkownika o numer indeksu
-jeśli indeks jest niepoprawny (np. nie liczba, poza zakresem):
-    wypisz "Invalid index"
-w przeciwnym wypadku:
-    wywołaj displayFull() dla danego kontaktu
-
-🔹 Funkcja main
-stwórz obiekt PhoneBook
-
-pętla nieskończona:
-    wypisz "Enter command: ADD, SEARCH, EXIT"
-    odczytaj wejście użytkownika (string)
-    jeśli wejście == "ADD":
-        wywołaj phoneBook.addContact()
-    inaczej jeśli wejście == "SEARCH":
-        wywołaj phoneBook.searchContacts()
-    inaczej jeśli wejście == "EXIT":
-        przerwij pętlę i zakończ program
-    inaczej:
-        wypisz "Unknown command"
-
-🔹 Edge cases w pseudokodzie
-
-Pusty input w polach kontaktu → nie pozwól przejść dalej, dopóki user czegoś nie wpisze.
-Więcej niż 8 kontaktów → nadpisanie najstarszego (dzięki nextIndex).
-SEARCH bez kontaktów → komunikat „PhoneBook is empty”.
-Indeks poza zakresem → komunikat „Invalid index”.
-Długie dane → w tabeli przycięte do 10 znaków z kropką na końcu.

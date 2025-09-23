@@ -1,5 +1,8 @@
-🔎 Co to zadanie od Ciebie wymaga?
 
+W C++ też występują wycieki pamięci. Gdy alokujesz pamięć przez new, musisz zadbać o jej zwolnienie.
+Od Module 02 do 09 Twoje klasy muszą być zaprojektowane w tzw. Orthodox Canonical Form, chyba że wskazano inaczej.
+Implementacja funkcji w pliku nagłówkowym (poza szablonami) = ocena 0.
+Każdy nagłówek musi działać samodzielnie – musi zawierać wszystkie swoje zależności, a jednocześnie chronić przed wielokrotnym dołączaniem (include guards).🔎 Co to zadanie od Ciebie wymaga?
 Masz napisać prostą aplikację konsolową w C++ (taką z lat 80., prosty tekst w terminalu), która zachowuje się jak telefoniczna książka adresowa.
 
 Główne punkty:
@@ -102,3 +105,17 @@ public = dajesz bezpieczne narzędzia do korzystania z klasy.
    +-------------------------------+
 
 👉 Czyli: dane są chronione w private, a Ty dajesz tylko takie funkcje public, które pozwalają je ustawić/pobrać w kontrolowany sposób.
+
+Dlaczego piszemy void Contact::add_first(std::string s)?
+Contact:: oznacza, że ta funkcja należy do klasy Contact.
+Bez tego kompilator nie wiedziałby, że to jest metoda klasy, a nie jakaś zwykła funkcja globalna.
+
+🔑 Zapamiętaj
+
+Deklaracja w klasie (w .hpp).
+Definicja z Contact:: w .cpp.
+:: to operator zakresu — mówi do której klasy/nazwy coś należy.
+
+for (typ zmienna : kolekcja) {
+    // ciało pętli
+}

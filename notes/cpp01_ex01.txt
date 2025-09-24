@@ -1,0 +1,71 @@
+| Element                  | Rola w klasie                                                                                           |
+| ------------------------ | ------------------------------------------------------------------------------------------------------- |
+| Konstruktor              | Tworzy i inicjalizuje obiekt. Wywołuje się automatycznie przy powstawaniu obiektu.                      |
+| `setName` / `set_Zombie` | Ustawia pole `name` po stworzeniu obiektu. Przydatne przy konstruktorze domyślnym.                      |
+| Destruktor               | Wywołuje się automatycznie przy niszczeniu obiektu. Można w nim zwolnić pamięć i/lub wypisać komunikat. |
+| `announce()`             | Metoda informacyjna – wypisuje, co robi Zombie. Nie inicjalizuje ani nie niszczy obiektu.               |
+
+1️⃣ Konstruktor
+Doprecyzowanie: konstruktor to specjalna funkcja wywoływana automatycznie przy tworzeniu obiektu. Może nie robi nic (jak Twój Zombie::Zombie(){}), albo może inicjalizować np. pola (name).
+Podstawowa rola: inicjalizacja nowego obiektu.
+
+2️⃣ Funkcja set_Zombie
+Twoja odpowiedź: funkcja do inicjalizacji, dzięki niej możemy ustawić imię ✅
+Doprecyzowanie: to metoda klasy, która ustawia pole name po utworzeniu obiektu. Można używać jej, jeśli obiekt został stworzony konstruktorem domyślnym i nie ma jeszcze ustawionego imienia.
+
+3️⃣ Destruktor
+Destruktor jest automatycznie wywoływany, gdy obiekt znika, np. po wyjściu z funkcji lub po delete.
+On sam nie zapobiega wyciekom pamięci, chyba że w nim zwalniasz dynamicznie przydzieloną pamięć. W Twoim przypadku wypisuje tylko komunikat.
+
+4️⃣ Funkcja announce
+Twoja odpowiedź: funkcja, która działa po to, aby pokazać, że nasz Zombie został utworzony ✅
+Doprecyzowanie: announce() po prostu wypisuje w konsoli komunikat z imieniem Zombiaka. Nie ma związku z tworzeniem obiektu – jest metodą informacyjną.
+
+1️⃣ Co funkcja ma robić
+
+Funkcja zombieHorde ma:
+Przyjąć parametry:
+int N – liczba Zombie do stworzenia
+std::string name – imię, które mają mieć wszystkie Zombie
+Alokować dynamicznie tablicę N Zombie
+Jeden blok pamięci dla wszystkich obiektów (new Zombie[N])
+Ustawić imię każdego Zombie
+Można użyć metody setName() lub konstruktora, jeśli jest dostępny z parametrem
+Zwrócić wskaźnik do pierwszego Zombie
+Dzięki temu w main.cpp można po niej przejść w pętli i wywołać announce() dla każdego Zombie
+W main.cpp pamiętać o delete[]
+Żeby zwolnić całą tablicę i uniknąć wycieków pamięci
+
+3️⃣ Co robi każdy krok w pamięci
+Alokacja: powstaje tablica N obiektów Zombie w jednym bloku pamięci.
+Inicjalizacja: każdemu obiektowi przypisujemy name (przez setter lub konstruktor).
+Zwracanie wskaźnika: funkcja daje dostęp do całej tablicy z zewnątrz.
+Usuwanie: w main.cpp przy delete[] destruktory wszystkich Zombie w tablicy wywołają się automatycznie.
+
+4️⃣ Dlaczego tego uczysz się w Ex01
+
+Dynamiczne tablice obiektów (new[] / delete[]) – nauka zarządzania pamięcią.
+Praca z konstruktorami i setterami – inicjalizacja wielu obiektów.
+Praca w pętli po tablicy obiektów – typowy wzorzec w projektach 42.
+Zrozumienie destruktorów – kiedy i jak są wywoływane dla wielu obiektów.
+
+❌ Problem: z[i]->set_Zombie(name);
+z[i] to obiekt, a nie wskaźnik. W tablicy obiektów używanych przez new Zombie[N] dostęp do metod robisz kropką, a nie ->.
+Dlatego poprawnie powinno być:
+z[i].set_Zombie(name);
+Jeśli użyjesz ->, kompilator zgłosi błąd, bo z[i] nie jest wskaźnikiem, tylko obiektem.
+
+| Typ zmiennej                                         | Dostęp do metody / pola |
+| ---------------------------------------------------- | ----------------------- |
+| Obiekt                                               | `z.metoda()`            |
+| Wskaźnik                                             | `z->metoda()`           |
+| Tablica obiektów (`new Zombie[N]`)                   | `z[i].metoda()`         |
+| Tablica wskaźników (`Zombie** tab = new Zombie*[N]`) | `tab[i]->metoda()`      |
+
+Podsumowanie :
+Jak tworzyć dynamiczną tablicę obiektów (new Zombie[N]) i jak ją prawidłowo zwolnić (delete[]).
+Różnicę między obiektem a wskaźnikiem i kiedy używać . a ->.
+Jak działają konstruktor, destruktor i metoda announce() w kontekście wielu obiektów.
+Jak używać setterów (setName/set_Zombie) do inicjalizacji pól po stworzeniu obiektu.
+Znaczenie przechowywania wskaźnika do tablicy, żeby nie utracić dostępu i uniknąć wycieków pamięci.
+To wszystko razem uczy Cię zarządzania pamięcią dynamiczną i pracy z wieloma obiektami w C++.

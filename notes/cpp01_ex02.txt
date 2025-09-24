@@ -1,0 +1,55 @@
+1️⃣ O czym jest to zadanie?
+Zadanie jest prostym wprowadzeniem do wskaźników i referencji w C++.
+Musisz:
+Utworzyć zmienną typu std::string.
+Utworzyć wskaźnik do tej zmiennej (string*).
+Utworzyć referencję do tej zmiennej (string&).
+Wypisać:
+Adresy w pamięci (zmiennej, wskaźnika, referencji).
+Wartości (czyli samą zawartość stringa).
+Celem jest zrozumienie: jak referencje i wskaźniki odnoszą się do tej samej zmiennej w pamięci.
+
+2️⃣ Czego Cię to nauczy
+Adresów zmiennych w pamięci (& operator).
+Wskaźników: jak przechowują adres zmiennej i jak odwoływać się do wartości przez *.
+Referencji: aliasu do istniejącej zmiennej i jak działa w porównaniu ze wskaźnikiem.
+Podstaw manipulacji pamięcią w C++, ale w bezpieczny i prosty sposób.
+
+3️⃣ Co masz zrobić w programie
+Utwórz zmienną string z wartością "HI THIS IS BRAIN".
+Utwórz wskaźnik do tej zmiennej.
+Utwórz referencję do tej zmiennej.
+Wypisz w konsoli:
+Adres zmiennej (&stringVar)
+Adres przechowywany w wskaźniku (stringPTR)
+Adres referencji (&stringREF)
+Wypisz w konsoli:
+Wartość zmiennej
+Wartość wskazywaną przez wskaźnik (*stringPTR)
+Wartość referencji (stringREF)
+
+1️⃣ Operator &
+Co robi: bierze adres zmiennej w pamięci.
+Kiedy używamy:
+Gdy chcemy zobaczyć, gdzie w pamięci znajduje się zmienna.
+Gdy tworzymy wskaźnik: std::string* ptr = &brain; → wskaźnik przechowuje adres zmiennej.
+Przykłady w zadaniu:
+&brain → adres zmiennej brain
+&ref → adres zmiennej, bo referencja jest aliasem
+
+2️⃣ Operator *
+Co robi: odwołuje się do wartości, na którą wskazuje wskaźnik.
+Kiedy używamy:
+Gdy mamy wskaźnik i chcemy odczytać lub zmienić wartość zmiennej, na którą wskazuje.
+Przykład w zadaniu:
+*ptr → wypisuje wartość brain, bo ptr wskazuje na brain.
+
+| Symbol | Co robi                                             | Przykład w zadaniu |
+| ------ | --------------------------------------------------- | ------------------ |
+| `&`    | bierze adres zmiennej                               | `&brain`, `&ref`   |
+| `*`    | odwołuje się do wartości wskazywanej przez wskaźnik | `*ptr`             |
+
+4️⃣ Podsumowanie w jednym zdaniu
+& → gdzie jest zmienna w pamięci (adres).
+* → wartość zmiennej wskazywanej przez wskaźnik.
+Referencja (ref) działa jak alias zmiennej – nie trzeba używać *, aby dostać wartość, a &ref to adres tej samej zmiennej.

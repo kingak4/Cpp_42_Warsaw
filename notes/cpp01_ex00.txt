@@ -1,0 +1,342 @@
+📌 4. Kluczowe wyjaśnienia
+🔹 Stos (stack)
+Obiekty tworzone zwyczajnie, np. Zombie z("Foo");
+Istnieją tylko w obrębie bloku, w którym zostały utworzone.
+Automatyczne niszczenie – gdy blok się kończy, destruktor woła się sam.
+Proste i bezpieczne, ale ograniczone czasem życia zmiennej.
+
+🔹 Sterta (heap)
+Obiekty tworzone przez new, np. Zombie* z = new Zombie("Foo");
+Istnieją dopóki Ty je nie usuniesz (delete z;).
+Ręczne zarządzanie pamięcią – jeśli zapomnisz, powstaje memory leak.
+Potrzebne, gdy chcesz żeby obiekt żył dłużej niż zakres funkcji, w której został utworzony.
+
+Konstruktor w C++ — co to jest i po co go używamy (prosto):
+Konstruktor to specjalna funkcja klasy, która jest automatycznie wywoływana w chwili tworzenia obiektu. Służy do inicjalizacji obiektu — czyli ustawienia jego pól (zmiennych) i wykonania wszystkich czynności potrzebnych, żeby obiekt był gotowy do użycia.
+Najważniejsze fakty (krótko)
+Ma taką samą nazwę jak klasa.
+Nie ma typu zwracanego (nie piszesz void, int itp.).
+Wywołuje się automatycznie — nie wołasz go ręcznie.
+Możesz mieć kilka konstruktorów (przeciążenie): np. bez parametrów (domyślny) i z parametrami.
+Używaj go, żeby: ustawić wartości początkowe, otworzyć plik, zaalokować zasoby itp.
+Konstruktor służy do automatycznej inicjalizacji pól obiektu w momencie jego tworzenia.
+Dzięki temu nie ma sytuacji, że pola (np. prywatne zmienne) zostają niezainicjalizowane i zawierają „śmieciowe” wartości.
+To chroni program przed błędami w działaniu (np. nieprzewidywalne wyniki, crashe).
+Konstruktor dodatkowo może przygotować obiekt nie tylko pod kątem liczb, ale też zasobów (np. otwarcie pliku, stworzenie połączenia, zaalokowanie pamięci).
+Konstruktor to specjalna funkcja, która jest automatycznie wywoływana w momencie tworzenia obiektu.
+Nie tylko „przypisuje”, ale też może wykonać dowolną logikę inicjalizacyjną, np. otwarcie pliku, sprawdzenie poprawności wartości, przygotowanie zasobów.
+✅ Czyli: konstruktor = bezpieczny start obiektu.
+
+1) W skrócie — co robi new
+new w C++ alokuje pamięć i wywołuje konstruktor dla obiektu.
+delete wywołuje destruktor i zwalnia pamięć.
+Domyślnie, jeśli alokacja się nie powiedzie, new rzuca wyjątek std::bad_alloc (można też użyć wersji std::nothrow, która zwróci nullptr).
+
+2) A malloc?
+malloc (C) tylko rezerwuje surowe bajty pamięci.
+Nie wywołuje żadnych konstruktorów.
+Zwraca void* (w C++ trzeba rzutować).
+Jeśli alokacja się nie powiedzie, malloc zwraca NULL (nie rzuca wyjątku).
+
+3) Najważniejsze różnice (prosto)
+Konstruktor: new → konstruktor jest wywołany. malloc → NIE.
+Destruktor: delete → destruktor jest wywołany. free → NIE.
+Zwracana wartość: new zwraca wskaźnik już odpowiedniego typu; malloc zwraca void*.
+Błędy alokacji: new → wyjątek (bad_alloc), malloc → NULL.
+Nie mieszać: nigdy nie równaj malloc z delete ani new z free
+
+⚠️ Co warto doprecyzować:
+
+new wywołuje konstruktor dla obiektu — to jest kluczowa różnica względem malloc.
+delete wywołuje destruktor i zwalnia pamięć, a free tego nie robi.
+malloc nie rzuca wyjątku przy błędzie, zwraca NULL; new rzuca wyjątek std::bad_alloc.
+
+💡 Podsumowanie :
+Konstruktor = automatyczna inicjalizacja + możliwość logiki w momencie tworzenia obiektu.
+Prywatne = chroni dane; publiczne = bezpieczny interfejs i kontrola nad tym, co użytkownik może zrobić.
+new/delete = pamięć + konstruktor/destruktor; malloc/free = tylko pamięć (brak konstrukcji i destrukcji).
+
+🔎 Co dokładnie masz zrobić
+1. Stworzyć klasę Zombie
+
+Każdy zombie ma imię (std::string name).
+
+Każdy zombie umie się przedstawić – metodą announce(), np.:
+
+Foo: BraiiiiiiinnnzzzZ...
+
+Gdy zombie „umiera” (czyli wywoła się destruktor), musi wypisać komunikat debugowy, np.:
+
+Zombie Foo destroyed
+
+👉 Dzięki temu będziesz wiedzieć, kiedy zombie powstaje i kiedy zostaje zniszczony.
+
+2. Stworzyć funkcję newZombie(std::string name)
+
+Ta funkcja:
+Tworzy nowego zombie na stercie (heap) za pomocą new.
+Nadaje mu imię (name).
+Zwraca wskaźnik (Zombie*) do tego zombie.
+👉 Po co?
+Bo zombie utworzony w ten sposób będzie żył dalej, nawet po zakończeniu funkcji, dopóki go nie usuniesz (delete).
+
+3. Stworzyć funkcję randomChump(std::string name)
+
+Ta funkcja:
+Tworzy zombie na stosie (stack) – czyli zwykły obiekt lokalny:
+Zombie z(name);
+Wywołuje na nim announce().
+Po zakończeniu funkcji zombie automatycznie się zniszczy (bo był na stosie).
+👉 Po co?
+Żeby pokazać drugi sposób życia obiektu: krótko, tylko w trakcie działania funkcji.
+
+4. Testować w main.cpp
+Masz wywołać oba sposoby i zobaczyć różnicę.
+Przykład:
+
+int main() {
+    Zombie* z1 = newZombie("HeapZombie"); // tworzenie na heap
+    z1->announce();                       // zombie mówi
+    delete z1;                            // ręczne zabicie zombie
+
+    randomChump("StackZombie");           // tworzenie na stack
+    // zombie mówi i sam się niszczy
+}
+
+🎯 Po co to zadanie?
+Żebyś nauczył się pisać klasy (atrybuty, metody, konstruktor, destruktor).
+Żebyś zrozumiał różnicę między heap a stack w praktyce.
+Żebyś nauczył się pilnować pamięci (delete dla obiektów z new).
+✅ Plan – krok po kroku
+
+Zombie.hpp – napisz klasę (atrybut name, konstruktor, destruktor, announce()).
+Zombie.cpp – zaimplementuj metody (announce() i destruktor).
+newZombie.cpp – funkcja Zombie* newZombie(std::string name).
+randomChump.cpp – funkcja void randomChump(std::string name).
+main.cpp – testy obu funkcji.
+
+Uruchom program i obserwuj kolejność komunikatów
+
+Jak działa new w C++?
+new służy do dynamicznej alokacji pamięci na stercie (heap).
+Kiedy tworzysz obiekt normalnie, np. Zombie z("Foo");, to taki obiekt istnieje tylko w aktualnym bloku (na stosie) i znika, gdy program wyjdzie z funkcji.
+Kiedy używasz new, tworzysz obiekt, który pozostaje w pamięci aż do momentu, gdy ręcznie go usuniesz (delete).
+🔹 Jak używa się new krok po kroku:
+Piszesz new i nazwę klasy, np. Zombie.
+Jeśli klasa ma konstruktor, możesz od razu podać argumenty, np. new Zombie("Foo").
+To utworzy obiekt klasy Zombie na heap.
+new zawsze zwraca wskaźnik do tego nowego obiektu.
+Dlatego wynik przypisujesz do zmiennej wskaźnikowej, np. Zombie*.
+Taki wskaźnik możesz potem używać do wywoływania metod (->).
+
+🔹 Pamięć w programie C++ dzieli się m.in. na:
+
+Stos (stack)
+To pamięć automatyczna.
+Każda funkcja dostaje swój kawałek stosu na zmienne lokalne.
+Gdy funkcja się kończy → wszystko ze stosu znika.
+Przykład:
+
+void foo() {
+    Zombie z("Foo");  // ten zombie istnieje tylko w tej funkcji
+} // koniec funkcji → z zostaje automatycznie zniszczony
+
+Sterta (heap)
+To pamięć dynamiczna.
+Program sam decyduje, kiedy coś stworzyć i kiedy to usunąć.
+Obiekt tworzysz za pomocą new i musisz sam go usunąć za pomocą delete.
+
+Przykład:
+
+Zombie* z = new Zombie("Foo"); // zombie żyje, dopóki nie zrobisz delete
+delete z;                      // teraz pamięć jest zwolniona
+
+🔹 Różnica między malloc (z C) a new (z C++)
+malloc (C):
+Rezerwuje kawałek surowej pamięci (np. 32 bajty).
+Nie wywołuje konstruktora obiektu.
+Trzeba rzutować wskaźnik i samodzielnie zarządzać pamięcią.
+Zwolnienie pamięci robisz przez free().
+Przykład w C:
+
+int* ptr = (int*)malloc(sizeof(int) * 10);
+free(ptr);
+
+new (C++):
+
+Tworzy obiekt i od razu wywołuje konstruktor.
+Zwraca wskaźnik właściwego typu (nie trzeba rzutować).
+Zwolnienie pamięci robisz przez delete (dla tablicy: delete[]).
+Przykład w C++:
+Zombie* z = new Zombie("Foo"); // konstruktor zostaje wywołany
+delete z; // wywoływany jest też destruktor
+
+🔹 Dlaczego w C++ wolimy new zamiast malloc?
+Bo new jest bardziej bezpieczne i „inteligentne”: wie, jak wywołać konstruktor i destruktor klasy.
+malloc nie zna się na obiektach – działa tylko jak „zamów kawałek pamięci w bajtach”.
+
+👉 Podsumowanie w jednym zdaniu:
+
+Stack = pamięć automatyczna (obiekt znika sam, gdy kończy się funkcja).
+Heap = pamięć dynamiczna (musisz sam użyć delete).
+malloc = „surowe” rezerwowanie pamięci (C).
+new = nowoczesny sposób w C++ do tworzenia obiektów na heap, wywołuje konstruktor i daje Ci gotowy obiekt.
+
+newZombie
+🔹 Co robi ta funkcja w praktyce
+
+Przyjmuje imię zombie jako parametr.
+Tworzy nowy obiekt Zombie na heap z tym imieniem.
+Zwraca wskaźnik do tego zombie, żeby można było go używać poza funkcją.
+Dlaczego używamy new?
+Bo chcemy, żeby zombie nie znikał od razu po wyjściu z funkcji.
+Jeżeli stworzymy zombie na stacku (lokalnie), np. Zombie z(name);, to zniknie po zakończeniu funkcji i nie możemy go użyć w main()
+
+🔹 Konstruktor Zombie::Zombie(std::string name)
+Zombie::Zombie(std::string name) : name(name) {}
+Po co jest konstruktor?
+Konstruktor to specjalna funkcja klasy, która wywoływana jest automatycznie, gdy tworzysz obiekt.
+
+Tutaj:
+przyjmuje parametr name – imię zombie, które chcesz nadać.
+przypisuje je do atrybutu obiektu name.
+
+Efekt:
+Każdy zombie ma swoje własne imię od razu po utworzeniu.
+Nie musisz robić dodatkowych funkcji do ustawiania imienia.
+
+Po co jest destruktor?
+
+Destruktor to funkcja, która wywołuje się automatycznie, gdy obiekt znika:
+Stack → po wyjściu z funkcji, w której został utworzony.
+Heap → gdy wywołasz delete na wskaźniku do obiektu.
+Tutaj destruktor wypisuje komunikat, że zombie został zniszczony.
+Efekt praktyczny:
+Możesz łatwo debugować, kiedy pamięć jest zwalniana.
+Widać różnicę między zombie na heap (musisz wywołać delete) a stack (niszczy się automatycznie).
+
+1️⃣ Konstruktor
+Zombie::Zombie(std::string name)
+{
+    this->name = name;
+}
+
+Funkcja wywoływana automatycznie, gdy tworzysz obiekt Zombie.
+Przypisuje podane imię (name) do atrybutu obiektu this->name.
+Dzięki temu każdy zombie ma swoje własne imię od razu po utworzeniu.
+Przykład działania:
+Zombie z("Foo");  // konstruktor nada imię "Foo"
+
+~Zombie()
+Znak tylda ~ przed nazwą funkcji w C++ oznacza destruktor.
+Destruktor to specjalna funkcja klasy, która wywoływana jest automatycznie, gdy obiekt przestaje istnieć.
+2️⃣ Destruktor
+Zombie::~Zombie()
+{
+    std::cout << "Destructor zombie: " << this->name << std::endl;
+}
+
+Funkcja wywoływana automatycznie, gdy obiekt znika:
+Stack: po wyjściu z funkcji/bloku, w którym został stworzony.
+Heap: po wywołaniu delete na wskaźniku do obiektu.
+Wypisuje komunikat debugowy, że obiekt został zniszczony i pokazuje jego imię.
+Przykład działania:
+Zombie* z = newZombie("Bar");
+delete z;  // zobaczysz "Destructor zombie: Bar
+
+🔹 Podobieństwa
+
+Zarządzanie pamięcią
+
+malloc + free w C
+konstruktor + destruktor w C++
+Oba mechanizmy wiążą się z tym, że tworzysz obiekt (alokacja) i sprzątasz po nim (dealokacja).
+
+Para operacji
+malloc zawsze musi mieć w parze free.
+Konstruktor zawsze wiąże się z destruktorem (choć nie zawsze jawnie wołanym).
+W obu przypadkach – jeżeli zapomnisz o tej parze – masz wyciek pamięci.
+
+🔹 Różnice
+
+Poziom działania
+malloc/free działają niskopoziomowo – rezerwują/zwracają surowe bajty pamięci.
+Konstruktor/destruktor działają wysokopoziomowo – oprócz samej pamięci zajmują się inicjalizacją i sprzątaniem obiektu.
+👉 W C musisz sam zadbać o ustawienie pól struktury po malloc.
+👉 W C++ konstruktor zrobi to automatycznie.
+
+Obsługa logiki obiektu
+malloc nie wywoła żadnej logiki inicjalizacyjnej – dostajesz „czysty kawałek RAM”.
+Konstruktor ustawia zmienne w obiekcie, otwiera pliki, robi połączenia sieciowe – pełne przygotowanie do użycia.
+
+Podobnie destruktor:
+free tylko oddaje pamięć.
+Destruktor może zamknąć pliki, zwolnić dodatkowe zasoby, wyrejestrować coś z systemu itd.
+
+Integracja z językiem
+W C – malloc i free to funkcje biblioteczne.
+W C++ – konstruktor/destruktor to część języka (automatycznie wywoływane przy tworzeniu i niszczeniu obiektu).
+
+Dlatego w C++ możesz używać np. RAII (Resource Acquisition Is Initialization) – obiekt sam zadba o zasoby, a Ty nie musisz pamiętać o ręcznym free.
+Operator new/delete
+new w C++ to tak naprawdę malloc + wywołanie konstruktora.
+delete to destruktor **+ free`.
+
+Można więc powiedzieć, że:
+malloc <-> new (część pamięciowa)
+free   <-> delete (część pamięciowa)
+constructor <-> new (część inicjalizacyjna)
+destructor  <-> delete (część sprzątająca)
+
+newZombie
+
+Co tu się dzieje krok po kroku
+Zombie* tmp
+Tworzysz wskaźnik do obiektu typu Zombie.
+W C++ kiedy alokujesz obiekt na heapie (czyli dynamicznie), zawsze dostajesz wskaźnik do tej pamięci.
+Dlatego deklarujesz wskaźnik: Zombie* tmp;.
+new Zombie(name)
+
+new robi dwie rzeczy naraz:
+Rezerwuje pamięć na heapie dla obiektu Zombie.
+Wywołuje konstruktor, który ustawia name.
+Wynikiem działania new jest adres nowego obiektu. Ten adres przypisujesz do wskaźnika tmp.
+Przypisanie do tmp
+Wskaźnik tmp przechowuje adres obiektu, który jest na heapie.
+Dzięki temu możesz używać tego obiektu poza funkcją (poza lokalnym zakresem zmiennych funkcji).
+Gdybyś nie użyła wskaźnika i tylko zrobiła np. Zombie z(name); → obiekt powstałby na stacku, i zniknąłby po wyjściu z funkcji.
+return tmp;
+Zwracasz wskaźnik do wywołującego kodu.
+Wywołujący funkcję musi później wywołać delete, żeby zwolnić pamięć i wywołać destruktor
+
+Dlaczego dajemy to do tmp
+To zwykła zmienna wskaźnikowa, żeby:
+łatwiej było operować na obiekcie w obrębie funkcji,
+a potem zwrócić wskaźnik.
+Można też od razu zrobić:
+return new Zombie(name);
+i nie używać zmiennej tmp — efekt byłby taki sam.
+
+✅ Poprawna, robi dokładnie to, czego oczekuje zadanie:
+Tworzy zombie na heapie,
+Ustawia jego imię przez konstruktor,
+Zwraca wskaźnik, żeby można było go używać poza funkcją.
+
+🔹 randomChump
+Tworzy zombie na stosie (stack).
+Obiekt istnieje tylko w funkcji, w której został stworzony.
+Po wyjściu z funkcji destruktor wywołuje się automatycznie.
+Nie musisz nic robić ręcznie.
+
+🔹 newZombie
+Tworzy zombie na stercie (heap).
+Obiekt żyje poza funkcją, możesz go używać w wielu miejscach w programie.
+Musisz ręcznie zarządzać pamięcią:
+Konstruktor wywołuje się automatycznie przy new.
+Destruktor nie wywoła się automatycznie – musisz wywołać delete, żeby zwolnić pamięć i wywołać destruktor.
+
+🔑 Wniosek
+
+Stack → wygodne, bezpieczne, ograniczone czasem życia.
+Heap → elastyczne, pozwala na dłuższe życie obiektu, ale wymaga pamiętania o delete.
+To ćwiczenie ma Cię nauczyć świadomego używania obu sposobów i obserwowania destruktorów.

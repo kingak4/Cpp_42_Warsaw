@@ -7,7 +7,6 @@ int main()
 	std:: string cmd;
 	PhoneBook myPhoneBook;
 	std::cout << "Welcome to Phone Book !";
-	// std::cout << "Commands: ADD, SEARCH, EXIT"; // add this to loop
 	std::cout << std::endl;
 	while(true)
 	{

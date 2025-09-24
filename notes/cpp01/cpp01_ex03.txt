@@ -1,0 +1,161 @@
+1️⃣ O czym jest to zadanie
+Zadanie „Unnecessary violence” to ćwiczenie w C++ dotyczące kompozycji obiektów, referencji i wskaźników.
+Tworzysz klasę Weapon, która reprezentuje broń (jej typ).
+Tworzysz dwie klasy HumanA i HumanB, które używają Weapon i mają imię.
+Obie klasy mają metodę attack(), która wypisuje, czym atakują.
+Różnica między HumanA i HumanB:
+HumanA: zawsze uzbrojony, broń przekazywana przez referencję w konstruktorze.
+HumanB: broń może nie istnieć od razu, więc może mieć wskaźnik do broni, który można ustawić później.
+Zadanie sprawdza Twoją zdolność do projektowania klas z powiązanymi obiektami, czyli jak obiekty „trzymają się nawzajem”.
+
+2️⃣ Czego ma Cię nauczyć
+Różnica między wskaźnikami a referencjami w C++:
+Kiedy używać referencji → zawsze istnieje obiekt, który chcesz „wiązać” od razu (HumanA).
+Kiedy używać wskaźnika → obiekt może być opcjonalny lub dynamiczny (HumanB).
+Getter i setter w klasie (getType() i setType() w Weapon):
+Ćwiczenie pracy z kontrolowanym dostępem do prywatnych atrybutów.
+Kompozycja obiektów:
+HumanA i HumanB mają Weapon → jak klasy mogą zawierać inne klasy.
+Obserwacja zmian w obiekcie Weapon:
+Jeśli zmienisz type w broni, wszystkie obiekty, które mają do niej referencję/wskaźnik, od razu widzą tę zmianę.
+Bezpieczeństwo pamięci:
+Chociaż tu nie ma new/delete koniecznie, musisz rozumieć, kiedy użycie wskaźnika wymaga zarządzania pamięcią, a kiedy referencji nie.
+Tworzenia getterów i setterów w klasach.
+Różnicy między referencją a wskaźnikiem i kiedy co stosować.
+Kompozycji klas – jak jedna klasa może „posiadać” obiekt innej klasy.
+Obserwacji efektów zmian w obiekcie współdzielonym.
+Planowania i organizacji pliku nagłówkowego i źródłowego w projekcie C++.
+
+🔹 Po co jest getter?
+
+Wyobraź sobie, że w klasie Weapon masz atrybut type.
+On jest prywatny (private), czyli nikt spoza klasy nie może go zmieniać ani odczytywać bezpośrednio.
+To jest zasada enkapsulacji – dane są ukryte, dostęp kontrolujesz tylko przez metody.
+👉 Getter pozwala odczytać wartość prywatnego pola w bezpieczny sposób.
+
+Getter = metoda do czytania prywatnych danych.
+Setter = metoda do zmiany prywatnych danych.
+
+Weapon
+Weapon::Weapon(std::string type) : type(type) {}
+Weapon::Weapon → konstruktor klasy Weapon.
+(std::string type) → przyjmuje stringa jako argument (np. "crude spiked club").
+: type(type) → to lista inicjalizacyjna.
+Pierwsze type = prywatny atrybut klasy.
+Drugie type = parametr funkcji.
+Efekt: prywatne pole klasy dostaje wartość przekazaną przy tworzeniu obiektu.
+{} → ciało pustego konstruktora (nie musisz już robić this->type = type;, bo zrobiła to lista inicjalizacyjna).
+👉 Dzięki temu możesz napisać w main:
+Weapon club("crude spiked club");
+i pole type od razu ma wartość "crude spiked club".
+
+Weapon::~Weapon() {}
+Destruktor klasy Weapon.
+Wywoływany automatycznie, gdy obiekt przestaje istnieć (np. wychodzi poza scope).
+Jest pusty, bo klasa Weapon nie używa dynamicznej pamięci (np. new).
+
+std::string const & Weapon::getType() const
+{
+    return (this->type);
+}
+std::string const & → getter zwraca stałą referencję do stringa.
+Referencja = brak kopiowania (wydajność).
+const = użytkownik nie może zmienić wartości przez ten getter.
+Weapon::getType() → definicja funkcji członkowskiej klasy Weapon.
+Ostatnie const → oznacza, że funkcja nie zmienia obiektu (czyli nie rusza pól klasy).
+return this->type; → zwraca aktualny typ broni (np. "crude spiked club").
+👉 Dzięki temu w main możesz zrobić:
+std::cout << club.getType() << std::endl;
+i dostaniesz wartość pola type.
+
+void Weapon::setType(std::string type)
+{
+    this->type = type;
+}
+void → setter nic nie zwraca.
+setType(std::string type) → przyjmuje stringa, który ma być nowym typem broni.
+this->type = type; → przypisanie:
+this->type = pole klasy,
+type = parametr funkcji.
+Efekt:zmienia zawartość pola type na nową wartość.
+
+👉 Dzięki temu możesz napisać w main:
+club.setType("some other type of club");
+std::cout << club.getType() << std::endl;
+i zobaczyć, że broń zmieniła swój typ.
+
+📌 Podsumowanie pliku Weapon.cpp
+Konstruktor → pozwala stworzyć broń od razu z typem.
+Destruktor → nie robi nic specjalnego (brak dynamicznej pamięci), ale jest gotowy na przyszłość.
+Getter getType() → pozwala bezpiecznie odczytać prywatne pole type.
+Setter setType() → pozwala zmienić prywatne pole type.
+
+👉 Cała klasa Weapon uczy Cię enkapsulacji:
+Pole type jest ukryte (private),
+Do interakcji z nim używasz metod (getType, setType).
+
+1️⃣ Konstruktor
+HumanA::HumanA(std::string name, Weapon& weapon): name(name), weapon(weapon) {}
+Tworzymy obiekt HumanA.
+Konstruktor przyjmuje imię i referencję do istniejącego obiektu Weapon.
+Dzięki referencji (Weapon& weapon) HumanA nie kopiuje broni, tylko "patrzy" na tę samą broń, która już istnieje.
+To oznacza, że jeśli zmienisz typ broni w obiekcie Weapon, HumanA od razu zobaczy zmianę.
+
+2️⃣ Funkcja attack()
+Wywołuje się w momencie ataku HumanA.
+Wypisuje:
+name → imię człowieka.
+" attacks with their " → tekst w stringu.
+tualny typ broni, na którą wskazuje referencja.
+
+✅ Podsumowanie
+Konstruktor przyjmuje referencję do broni, więc HumanA zawsze jest uzbrojony.
+attack() korzysta z tej referencji, żeby pobrać typ broni i wypisać komunikat.
+Jeśli zmienisz typ broni w obiekcie Weapon, HumanA automatycznie użyje nowego typu – bo trzyma referencję, a nie kopię.
+
+🔹 HumanB – co robisz w tym pliku
+Konstruktor
+Tworzysz człowieka z imieniem.
+Ustawiasz wskaźnik weapon na nullptr, bo na początku nie ma broni.
+Dzięki temu w funkcji attack() możesz bezpiecznie sprawdzić, czy broń jest przypisana.
+
+Setter (setWeapon)
+Tu przypisujesz adres istniejącego obiektu Weapon do wskaźnika.
+Teraz weapon już nie jest nullptr, tylko wskazuje na konkretną broń.
+
+Funkcja attack()Jeśli weapon != nullptr → wypisuje atak.
+Jeśli weapon == nullptr → wypisuje informację, że broni nie ma.
+Dzięki temu HumanB może być zarówno uzbrojony, jak i nieuzbrojon
+
+
+
+Podsumowanie:
+Weapon
+Klasa przechowuje typ broni (std::string type).
+Posiada:
+Konstruktor do ustawienia początkowego typu broni,
+Getter (getType) — pozwala odczytać typ broni,
+Setter (setType) — pozwala zmienić typ broni w trakcie działania programu.
+
+HumanA
+Konstruktor przyjmuje referencję do broni (Weapon&).
+Dzięki referencji HumanA zawsze ma broń, którą można bezpośrednio używać w funkcji attack().
+attack() wypisuje: <name> attacks with their <weapon type>.
+
+HumanB
+Konstruktor nie przyjmuje broni — może jej nie mieć.
+Przechowuje wskaźnik (Weapon*) na broń.
+Początkowo wskaźnik jest ustawiony na NULL (brak broni).
+setWeapon(Weapon& w) przypisuje wskaźnik do istniejącej broni.
+attack() sprawdza, czy wskaźnik nie jest NULL:
+Jeśli broń jest, wypisuje typ broni.
+Jeśli broni nie ma, wypisuje komunikat np. „has no weapon”.
+
+Różnice między HumanA i HumanB
+HumanA: referencja → zawsze uzbrojony, nie można „zdjąć” broni.
+HumanB: wskaźnik → może nie mieć broni, można przypisać lub zmienić broń w trakcie działania.
+
+Cel edukacyjny
+Zrozumienie różnicy między referencją a wskaźnikiem w C++.
+Umiejętność użycia getterów i setterów do bezpiecznego odczytu i modyfikacji prywatnych atrybutów.
+Zastosowanie zasad OOP: enkapsulacja, konstruktor, destruktor, bezpieczeństwo danych.

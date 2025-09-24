@@ -1,0 +1,39 @@
+2️⃣ O czym jest zadanie
+
+Chodzi o stworzenie klasy, w której:
+Każdy poziom (DEBUG, INFO, WARNING, ERROR) ma swoją funkcję.
+Publiczna funkcja complain wywołuje właściwą funkcję dynamicznie za pomocą wskaźników do funkcji członkowskich, a nie wielokrotnych if/else.
+Zadanie jest typowe do ćwiczenia wskaźników do funkcji członkowskich w C++ i użycia switch lub mapowania string → funkcja.
+
+Czego Cię to nauczy
+
+Wskaźników do funkcji członkowskich – zaawansowany sposób dynamicznego wywoływania metod.
+Mapowania stringów na funkcje – praktyczne w projektach, gdzie decyzje zależą od tekstu.
+Switch, pętle i tablice wskaźników w C++.
+Prywatnych i publicznych metod w klasie – dobre ćwiczenie struktury klas w C++.
+
+compalin :
+Tworzymy tablicę stringów, które reprezentują wszystkie poziomy narzekania Harl’a.
+Dzięki temu możemy dopasować parametr level, który podaje użytkownik
+Zmienna pomocnicza do iterowania po tablicy levels.
+i będzie naszym indeksem, aby przejść przez wszystkie poziomy.
+pos przechowa indeks dopasowanego poziomu w tablicy.
+Wartość -1 oznacza, że jeszcze nic nie znaleziono.
+Dzięki temu możemy potem sprawdzić, czy poziom istnieje
+Tworzymy tablicę wskaźników do prywatnych funkcji członkowskich klasy Harl.
+Każdy wskaźnik w tablicy odpowiada poziomowi w levels:
+Dzięki temu możemy dynamicznie wywołać funkcję, bez używania if/else.
+Iterujemy po tablicy levels.
+Sprawdzamy, czy level (parametr funkcji) pasuje do levels[i].
+Jeśli tak, zapisujemy indeks w pos.
+i++ zwiększa indeks, aby sprawdzić kolejny poziom.
+W efekcie po pętli pos będzie wskazywać pozycję dopasowanego poziomu, albo pozostanie -1, jeśli nie znaleziono dopasowania.
+function[pos] → wskaźnik do funkcji odpowiadającej poziomowi.
+(this->*function[pos])() → wywołanie tej funkcji na bieżącym obiekcie Harl (this).
+Nawiasy są niezbędne, bo operator ->* ma niższy priorytet niż ().
+
+Co robi cała funkcja w skrócie
+Ma tablicę wszystkich poziomów.
+Ma tablicę wskaźników do funkcji odpowiadających poziomom.
+Szuka indeksu poziomu przekazanego jako argument.
+Wywołuje odpowiednią funkcję członkowską na obiekcie Harl.

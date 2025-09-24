@@ -1,0 +1,40 @@
+Treść zadania 
+Program przyjmuje trzy parametry w takiej kolejności:
+nazwa pliku (plik wejściowy),
+ciąg znaków s1,
+ciąg znaków s2.
+
+Program musi:
+
+Otworzyć plik wejściowy (<filename>),
+Skopiować jego zawartość do nowego pliku <filename>.replace,
+Zamienić każdą wystąpienie s1 na s2 w trakcie kopiowania.
+Ograniczenia:
+Nie wolno używać funkcji z C typu fopen/fread/fwrite/fclose — musisz używać C++ (std::ifstream, std::ofstream).
+Możesz używać wszystkich funkcji std::string oprócz replace — musisz kombinować np. find, substr, append itp.
+Dodatkowe wymagania:
+Obsłuż błędy i nieoczekiwane wejścia, np. brak pliku, puste parametry, itp.
+Musisz też stworzyć własne testy, żeby sprawdzić, czy program działa poprawnie.
+
+Krok po kroku, co program robi
+
+Sprawdza argumenty wejściowe
+Jeśli ich liczba jest inna niż 3 → wypisuje komunikat o błędzie i kończy działanie.
+Dzięki temu użytkownik wie, że trzeba podać wszystkie potrzebne dane.
+Otwiera plik wejściowy
+Program próbuje wczytać zawartość pliku filename.
+Jeśli nie uda się otworzyć → wypisuje "Can't open input file!".
+Dzięki temu użytkownik od razu wie, że plik nie istnieje lub jest problem z uprawnieniami.
+Tworzy plik wyjściowy
+Nazwa nowego pliku: <filename>.replace.
+W tym pliku program zapisze już przetworzony tekst.
+Czyta zawartość pliku i przetwarza ją
+W każdej linii (lub całym tekście):
+Program szuka wystąpień s1.
+Każde znalezione wystąpienie zamienia na s2.
+Nie wolno używać gotowej funkcji replace, więc trzeba to zrobić „ręcznie” np. szukając indeksu i budując nowy tekst.
+Zapisuje wynik do pliku wyjściowego
+Po każdej przetworzonej linii (lub po całym tekście) program zapisuje do <filename>.replace.
+Zamyka pliki
+Po skończeniu operacji program zamyka zarówno plik wejściowy, jak i wyjściowy.
+

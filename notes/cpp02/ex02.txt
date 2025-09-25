@@ -1,0 +1,24 @@
+Chapter VII – Exercise 02: Now we’re talking
+
+Ćwiczenie 02: Teraz zaczyna się zabawa
+Katalog do oddania: ex02/
+Pliki do oddania: Makefile, main.cpp, Fixed.{h, hpp}, Fixed.cpp
+Dozwolone funkcje: roundf
+
+Dodaj przeciążenia operatorów:
+6 operatorów porównań: > < >= <= == !=
+4 operatory arytmetyczne: + - * /
+4 operatory inkrementacji/dekrementacji:
+pre (++a, --a)
+post (a++, a--)
+
+Dodaj statyczne funkcje:
+min (dla dwóch obiektów i dwóch const obiektów)
+max (dla dwóch obiektów i dwóch const obiektów)
+Przykład pokazuje:
+operatory ++, *, max
+działanie na liczbach stałoprzecinkowych
+wynik np. 0.00390625 (bo 1/256 przy frac_bits = 8)
+
+Przeciążenie operatorów: porównania, arytmetyczne, inkrementacje/dekrementacje
+Funkcje statyczne min i max

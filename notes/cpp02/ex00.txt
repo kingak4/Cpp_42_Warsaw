@@ -1,0 +1,106 @@
+Chapter V – Exercise 00: My First Class in Orthodox Canonical Form
+
+Ćwiczenie 00: Moja pierwsza klasa w kanonicznej formie ortodoksyjnej
+
+Katalog do oddania: ex00/
+Pliki do oddania: Makefile, main.cpp, Fixed.{h, hpp}, Fixed.cpp
+Zabronione funkcje: brak
+Do tej pory używałaś głównie liczb całkowitych i zmiennoprzecinkowych. Oba typy mają przeciwstawne właściwości. Teraz poznasz coś nowego – liczby stałoprzecinkowe (fixed-point numbers).
+Są one kompromisem między wydajnością, dokładnością, zakresem i precyzją. Dlatego są używane np. w grafice komputerowej, obróbce dźwięku czy naukach ścisłych.
+Twoim zadaniem jest stworzenie klasy w ortodoksyjnej formie kanonicznej (czyli z konstruktorem domyślnym, kopiującym, operatorem przypisania i destruktorem).
+
+Specyfikacja klasy:
+Prywatne pola:
+int przechowujący wartość liczby stałoprzecinkowej
+static const int przechowujący liczbę bitów części ułamkowej (zawsze 8)
+
+Publiczne elementy:
+konstruktor domyślny (ustawia wartość na 0)
+konstruktor kopiujący
+operator przypisania
+destruktor
+int getRawBits(void) const; → zwraca surową wartość
+void setRawBits(int const raw); → ustawia surową wartość
+Przykładowy kod i output pokazujący wywołania konstruktorów, operatorów i metod.
+
+🎯 Czego się nauczę
+
+Ortodox Canonical Form (OCF):
+Konstruktor domyślny, kopiujący, operator przypisania i destruktor → fundamenty poprawnego zarządzania obiektem w C++.
+Liczby stałoprzecinkowe (Fixed-Point Numbers):
+Czym są i jak różnią się od int i float.
+Jak przechowywać liczby jako int i interpretować je z przesunięciem bitowym.
+
+Konwersje typów:
+Z int → fixed
+Z float → fixed
+Z fixed → int i float
+Operator overloading (przeciążanie operatorów):
+Porównania, operatory arytmetyczne, inkrementacja/dekrementacja.
+Operator << do wygodnego wypisywania.
+Statyczne funkcje pomocnicze (min/max).
+
+Podstawy
+Zaimplementować klasę Fixed w OCF: konstruktor, destruktor, copy, operator=
+Metody getRawBits i setRawBits
+
+📚 Lista zagadnień do ogarnięcia przed startem projektu Fixed
+1. Ortodox Canonical Form (OCF)
+Musisz wiedzieć:
+czym są 4 podstawowe metody:
+konstruktor domyślny,
+konstruktor kopiujący,
+operator przypisania,
+destruktor,
+po co się je implementuje,
+jak wyglądają logi wywołań (czyli kiedy wołany jest copy constructor, a kiedy operator=).
+
+2. Fixed-point numbers (liczby stałoprzecinkowe)
+Musisz wiedzieć:
+czym różni się fixed-point od float i int,
+jak działa przechowywanie wartości w postaci całkowitej liczby + przesunięcia bitowego,
+co oznacza liczba fractional bits = 8 → najmniejszy krok to 1 / 2^8 = 1/256 = 0.00390625.
+
+3. Konwersje między typami
+Musisz rozumieć:
+jak zamienić int → fixed (przesunięcie bitowe w lewo),
+jak zamienić float → fixed (mnożenie przez 2^8 i zaokrąglenie),
+jak zamienić fixed → int (dzielenie przez 2^8),
+jak zamienić fixed → float (dzielenie przez 2^8, ale wynik w float).
+
+4. Operator overloading (przeciążanie operatorów)
+Musisz ogarnąć:
+jak wygląda składnia przeciążania operatorów w C++ (np. Fixed operator+(const Fixed& other) const;),
+różnica między operatorem preinkrementacji (++a) a postinkrementacji (a++),
+przeciążenie operatora << dla std::ostream&.
+
+5. Static members i static functions
+Musisz wiedzieć:
+różnica między zmienną statyczną w klasie (static const int fractionalBits = 8;) a polem instancji,
+jak działają funkcje statyczne (Fixed::min, Fixed::max) i czemu zwracają referencję.
+
+6. Roundf i <cmath>
+Musisz znać:
+funkcję roundf(float) → zaokrągla float do najbliższej liczby całkowitej,
+kiedy jej użyć przy konwersji float → fixed.
+
+7. Podstawy debugowania i testów
+Musisz pamiętać:
+dodawanie std::cout w konstruktorach/destruktorach do śledzenia wywołań,
+testowanie operatorów i konwersji na prostych przykładach.
+
+✅ Lista pytań kontrolnych (do „samozgadanki”)
+Co to jest kanoniczna forma ortodoksyjna klasy w C++ i jakie 4 funkcje wchodzą w jej skład?
+Dlaczego liczby stałoprzecinkowe są przydatne w grafice komputerowej i obróbce dźwięku?
+Ile wynosi najmniejsza jednostka różnicy (ϵ) w klasie Fixed z 8 bitami ułamkowymi?
+Jak zapiszesz w Fixed liczbę 5, gdy fractional bits = 8?
+Jak wygląda konwersja float → Fixed i odwrotnie?
+Jak przeciążyć operator << dla klasy w C++?
+Czym różni się ++a od a++ w kontekście przeciążania operatorów?
+Do czego służy roundf i kiedy ją używasz w tym projekcie?
+Czym różni się funkcja statyczna od zwykłej metody w klasie?
+
+Kiedy wywoływany jest:
+konstruktor kopiujący,
+operator przypisania,
+destruktor?

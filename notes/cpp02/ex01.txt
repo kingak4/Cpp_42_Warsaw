@@ -1,0 +1,23 @@
+Ćwiczenie 01: Bardziej użyteczna klasa liczb stałoprzecinkowych
+
+Katalog do oddania: ex01/
+Pliki do oddania: Makefile, main.cpp, Fixed.{h, hpp}, Fixed.cpp
+Dozwolone funkcje: roundf z <cmath>
+
+Klasa z poprzedniego ćwiczenia jest jeszcze bezużyteczna (tylko wartość 0). Trzeba dodać:
+Nowe konstruktory i funkcje:
+konstruktor z int (konwersja na liczbę stałoprzecinkową)
+konstruktor z float (konwersja na liczbę stałoprzecinkową)
+float toFloat(void) const; → konwertuje na float
+int toInt(void) const; → konwertuje na int
+przeciążenie operatora << (wyświetlanie liczby jako float)
+Przykład pokazuje:
+różne wywołania konstruktorów
+przypisania
+konwersję do float i int
+operator <<
+
+Użyteczność
+Dodać konstruktor z int i float
+Metody toFloat() i toInt()
+Przeciążenie <<

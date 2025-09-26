@@ -10,12 +10,10 @@ class Fixed
 			int value;
 			static const int bits = 8;
 	public:
-			// getRawBits() – zwraca _value (niczego nie zmienia → const).
-			// setRawBits(int const raw) – ustawia _value.
 			Fixed();
-			Fixed(const Fixed &other); // copy constructor
-			~Fixed(); // destructor
-			Fixed &operator=(const Fixed &other); // copy assignment
+			Fixed(const Fixed &other);
+			~Fixed(); 
+			Fixed &operator=(const Fixed &other);
 			int getRawBits(void) const;
 			void setRawBits(int const raw);
 };

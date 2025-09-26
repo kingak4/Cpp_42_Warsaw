@@ -21,3 +21,101 @@ Użyteczność
 Dodać konstruktor z int i float
 Metody toFloat() i toInt()
 Przeciążenie <<
+
+1️⃣ Co to jest fixed-point?
+
+W zwykłym int 10 to po prostu dziesięć.
+fixed-point mamy część całkowitą i część ułamkową w jednym int.
+Bits = 8 oznacza, że 8 najmłodszych bitów jest częścią ułamkową.
+Czyli: 10 w fixed-point to 10 << 8 = 2560.
+Dlaczego przesuwamy bity?
+Bo w int nie ma miejsca na przecinek, więc "przesuwamy" liczbę całkowitą w lewo o liczbę bitów ułamkowych, żeby później można było dodawać część ułamkową.
+
+2️⃣ Co robi konstruktor z int?
+Bierze liczbę całkowitą od użytkownika, np. 10.
+Zapisuje ją w _value w formacie fixed-point: 10 << _fractionalBits.
+Dzięki temu _value może później współpracować z innymi konstruktorami i metodami (toFloat, toInt).
+
+3️⃣ Co robi konstruktor z float?
+Bierze float np. 42.42.
+Musi zamienić float na fixed-point, czyli _value = roundf(f * (1 << _fractionalBits)).
+Dzięki temu ułamkowa część jest przechowywana w tych 8 bitach ułamkowych.
+
+Co to jest fixed-point?
+W normalnych liczbach całkowitych (int) przechowujesz tylko liczby całkowite: 1, 2, 3…
+W liczbach zmiennoprzecinkowych (float) masz część całkowitą i ułamkową, np. 3.14.
+Fixed-point to „pośredni” format: zapisujesz liczbę całkowitą, ale część ułamkowa jest zakodowana w bitach liczby całkowitej.
+Masz np. 8 bitów na część ułamkową: liczba 1.5 w value będzie zapisana jako 1.5 × 2^8 = 384.
+
+Przykład:
+Załóżmy 8 bitów na część ułamkową:
+| Liczba | Fixed-point (\_value) = liczba × 2^8 | Bity              |
+| ------ | ------------------------------------ | ----------------- |
+| 1      | 1 × 256 = 256                        | 00000001 00000000 |
+| 1.5    | 1.5 × 256 = 384                      | 00000001 10000000 |
+| 10     | 10 × 256 = 2560                      | 00001010 00000000 |
+Dzięki temu możesz wykonywać operacje całkowite (+, -, *, >>, <<) i nadal obsługiwać liczby ułamkowe.
+To jest szybciej niż float i bardziej przewidywalnie niż normalny float (mniej błędów numerycznych).
+
+Gdzie się używa?
+Gry komputerowe i grafika: np. pozycje obiektów w pikselach.
+Audio: próbki dźwięku mogą być w fixed-point.
+Embedded / mikrokontrolery: sprzęt może nie mieć sprzętowego float, więc fixed-point jest szybszy i mniej pamięciożerny.
+
+fixed-point to taki sprytny sposób zapisywania liczb z ułamkiem, ale nie używając float, tylko całkowitą reprezentację plus ustaloną liczbę bitów na część po przecinku.
+👉 Dzięki temu możesz robić obliczenia na intach, a mimo to „udawać” liczby zmiennoprzecinkowe.
+Czyli:
+float → zmienia się długość części ułamkowej, zależnie od liczby.
+fixed-point → ustalasz „twardo” np. 8 bitów na ułamek i zawsze tak zapisujesz.
+
+O co chodzi w konstruktorze z float?
+Twoim celem jest wzięcie liczby zmiennoprzecinkowej (np. 42.42f) i zapisanie jej w formacie fixed-point, czyli wewnętrznie w postaci całkowitej (int value).
+Problem:
+Float ma część ułamkową.
+My chcemy ją „spakować” do naszego formatu fixed-point, czyli przesuniętego o 8 bitów (bo _fractionalBits = 8).
+Jak się to robi (logika, nie kod):
+Weź liczbę n (np. 42.42).
+Pomnóż ją przez 2^8 = 256.
+bo 8 bitów ma być przeznaczone na ułamki.
+42.42 * 256 ≈ 10859.
+Zaokrąglij wynik (bo float → int może mieć śmieci po przecinku).
+Do tego użyjesz funkcji roundf.
+Zapisz ten wynik w polu value.
+Teraz value = 10859.
+A Ty wiesz, że to reprezentuje 42.42 w systemie fixed-point.
+
+1️⃣ toFloat()
+Cel:
+Konwertuje naszą liczbę w formacie fixed-point na float, żeby można było ją używać w zwykłych obliczeniach zmiennoprzecinkowych lub wyświetlać.
+Dlaczego potrzebne:
+Twój obiekt Fixed przechowuje wartość jako całkowitą (_value) przesuniętą o 8 bitów (fixed-point).
+Jeśli ktoś chce wynik w formie „prawdziwej liczby zmiennoprzecinkowej”, trzeba to przeliczyć.
+Dzięki temu można łatwo np. robić obliczenia z floatami, używać std::cout, itp.
+
+3️⃣ Operator << (insertion operator)
+Cel:
+Umożliwia wypisywanie obiektów klasy Fixed w std::cout tak, jakby były floatami.
+Dlaczego potrzebne:
+Bez tego, std::cout << fixedObj; nie wie jak wyświetlić Twój obiekt.
+Dzięki operatorowi możesz od razu pisać: std::cout << a;, a wynik będzie ładnie w formie zmiennoprzecinkowej.
+
+Prototyp:
+std::ostream &operator<<(std::ostream &stream, Fixed const &fixed)
+Co oznacza każda część:
+std::ostream &
+To typ zwracany funkcji.
+Zwracamy referencję do strumienia wyjściowego (np. std::cout), żeby można było dalej „łańcuchować” wypisywanie:
+std::cout << a << b << c;
+operator<<
+To przeciążony operator, który pozwala używać składni std::cout << obiekt;.
+std::ostream &stream
+Pierwszy argument funkcji, czyli strumień wyjściowy, do którego chcemy wstawić dane.
+Przykład: std::cout lub dowolny inny ostream.
+Fixed const &fixed
+Drugi argument, czyli obiekt klasy Fixed, który chcemy wypisać.
+const – nie zmieniamy obiektu w tej funkcji.
+Referencja & – przekazujemy go bez kopiowania, żeby nie robić nowego obiektu i nie tracić wydajności.
+
+fixed.toFloat() – bierzesz wartość fixed-point i konwertujesz ją na float.
+stream << n – wstawiasz ją do strumienia wyjściowego (np. std::cout).
+return stream – zwracasz strumień, dzięki czemu można łańcuchować wypisywanie, np. std::cout << a << b;.

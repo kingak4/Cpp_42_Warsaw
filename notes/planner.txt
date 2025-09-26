@@ -20,7 +20,7 @@ Czwartek (____/____/2025)
 - robimy cpp03
 
 Piątek (____/____/2025)
-
+- robimy cpp04
 
 Sobota (____/____/2025)
 

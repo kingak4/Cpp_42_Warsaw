@@ -104,3 +104,184 @@ Kiedy wywoływany jest:
 konstruktor kopiujący,
 operator przypisania,
 destruktor?
+
+1. Liczby całkowite (int)
+Są dokładne → jak masz 2, to jest to dokładnie 2. Jak dodasz 1, to zawsze będzie 3.
+Brak precyzji → nie potrafią przechowywać części ułamkowej.
+np. 5 / 2 = 2 (a nie 2.5).
+Można je porównać do cegieł – proste, twarde, dokładne, ale nie da się nimi oddać szczegółowych kształtów (np. kulki).
+
+2. Liczby zmiennoprzecinkowe (float, double)
+Mają dużą precyzję → pozwalają zapisać ułamki i liczby bardzo duże/małe.
+Ale tracą dokładność → nie wszystko da się zapisać dokładnie.
+np. 0.1 w systemie binarnym nie ma dokładnej reprezentacji, komputer zapisze przybliżenie.
+Dlatego dwa wyglądające „tak samo” floaty mogą nie być równe (== da false).
+Można je porównać do plasteliny – można nią uformować krzywizny, szczegóły, ale nigdy nie będzie perfekcyjnie równa (np. nie zrobisz idealnej kostki).
+
+Dokładność vs. precyzja
+Dokładność = jak blisko jesteś do prawdziwej wartości.
+Inty → bardzo dokładne (np. 2 to zawsze dokładnie 2).
+Floaty → nie zawsze dokładne (np. 0.1 może być zapisane jako 0.100000001).
+Precyzja = ile szczegółów możesz przechować.
+Inty → mało precyzyjne (brak ułamków).
+Floaty → bardzo precyzyjne (ułamki, zakres), ale mogą „rozminąć się” z dokładnym wynikiem
+
+Problem z reprezentacją liczb
+Nie każdy ułamek da się zapisać dokładnie w systemie binarnym.
+Przykład: 1/3 → w dziesiętnym to 0.33333... (nieskończone). W binarnym też nigdy się nie kończy.
+Komputer więc zapisuje przybliżenie.
+To przybliżenie prowadzi do błędów np. w porównaniach czy obliczeniach.
+
+Podsumowanie
+Inty (liczby całkowite):
+dokładne, ale bez ułamków → cegły.
+Floaty (liczby zmiennoprzecinkowe):
+mogą zapisać ułamki i szeroki zakres liczb,
+ale nie zawsze dokładnie → plastelina.
+
+Dokładność vs precyzja:
+Int = dokładne, mało precyzyjne.
+Float = precyzyjne, mało dokładne.
+
+Przyczyna problemów z float:
+komputer zapisuje liczby w systemie binarnym,
+niektórych ułamków nie da się zapisać dokładnie,
+stąd biorą się błędy przy obliczeniach i porównaniach.
+
+sedno artykułu:
+Inty są dobre do dokładnych operacji bez ułamków.
+Floaty są dobre do przybliżonych obliczeń z ułamkami.
+Nie istnieje typ „idealny” → dlatego czasem używa się liczb stałoprzecinkowych (fixed-point), żeby znaleźć złoty środek (i to właśnie będziesz robiła w projekcie).
+
+1. Standard IEEE-754
+To zasada, jak komputery zapisują liczby zmiennoprzecinkowe (float, double).
+Najczęściej spotykany w praktyce.
+Liczba zapisana jest w 3 częściach:
+znak (s) → czy liczba jest dodatnia/ujemna,
+wykładnik (e) → „rząd wielkości”, czyli jak bardzo przesuwamy przecinek,
+mantysa (m) → cyfry liczby.
+👉 Ogólny wzór:
+liczba = (znak ? -1 : 1) * 2^(wykładnik) * 1.mantysa
+
+1️⃣ const Fixed &other – co to jest?
+Fixed → typ obiektu, który kopiujemy.
+& → referencja, czyli nie kopiujemy całego obiektu na wejściu, tylko wskazujemy na istniejący obiekt w pamięci. To oszczędza czas i pamięć, bo nie tworzymy nowego tymczasowego obiektu.
+const → obiekt, z którego kopiujemy, nie może zostać zmieniony wewnątrz konstruktora. Chcemy tylko odczytać jego dane, a nie zmieniać go.
+Czyli const Fixed &other oznacza: „weź istniejący obiekt Fixed, nie kopiuj go, i nie zmieniaj go”.
+
+2️⃣ other – co to jest?
+other to nazwa parametru w funkcji (konstruktorze).
+To jest ten obiekt, który chcemy skopiować do nowego obiektu, który właśnie tworzysz.
+W przykładzie:
+Fixed a;       // obiekt a
+Fixed b(a);    // b jest tworzony na podstawie a
+other w tym wywołaniu to a. Konstruktor widzi, że ma skopiować dane z a do b.
+
+3️⃣ this->value = other.value; – co się dzieje?
+this → wskaźnik na nowo tworzony obiekt (b w naszym przykładzie)
+this->value → pole value w nowym obiekcie
+other.value → pole value w obiekcie, z którego kopiujemy (a)
+Efekt: kopiujemy liczbę przechowywaną w value z obiektu other do nowego obiektu this.
+
+4️⃣ Podsumowanie w prostych słowach
+Fixed(const Fixed &other) – konstruktor kopiujący, używany do tworzenia nowego obiektu na podstawie innego.
+other → obiekt, z którego kopiujemy.
+const → nie zmieniamy other.
+& → kopiujemy przez referencję, oszczędzamy pamięć.
+this->value = other.value; → kopiujemy faktyczną wartość liczby.
+
+other (stary obiekt)  ----->  this (nowy obiekt)
+  _value                     _value = other._value
+
+
+1️⃣ Co to jest Fixed& i const Fixed &other?
+Fixed& – oznacza, że funkcja zwraca referencję do obiektu, czyli coś jak „adres rzeczywistego obiektu”, nie kopię. Dzięki temu możemy pisać a = b = c; i wszystko działa.
+const Fixed &other – to obiekt, który chcemy skopiować (czyli bierzemy wartości z niego). const oznacza: nie zmieniamy go, tylko odczytujemy.
+other to po prostu nazwa tego obiektu. W życiu możesz to sobie wyobrazić tak:
+Masz notes (this) i chcesz przepisać w nim zawartość innego notesu (other). Nie zmieniasz tego drugiego notesu, tylko przepisujesz jego zawartość do swojego.
+2️⃣ Dlaczego na początku robimy if (this == &other)?
+To jest sprawdzenie, czy nie przypisujemy obiektu do samego siebie.
+Przykład z życia:
+Masz notes A.
+Chcesz przepisać zawartość z notesu B do A → ok.
+Ale jeśli próbujesz przepisać A do A? Nie musisz nic robić, bo i tak wszystko już jest na miejscu.
+this – to Twój notes (this = ten obiekt, na którym wywołujesz operator).
+&other – adres notesu, który kopiujesz.
+Porównujemy je, jeśli są takie same → zwracamy od razu (*this), nie robimy nic.
+
+3️⃣ Dlaczego robimy this->_value = other._value;?
+To kopiowanie wartości z jednego obiektu do drugiego.
+W życiu: przepisywanie zawartości notesu B do notesu A.
+
+4️⃣ Dlaczego zwracamy *this?
+Funkcja operatora przypisania zawsze zwraca referencję do obiektu, który został zmieniony.
+Dzięki temu możesz robić np.:
+a = b = c;
+Życiowo:
+Notes A = B, B = C.
+Po wykonaniu operacji możesz dalej używać A jako pełnego notesu, bo operator zwraca A.
+
+🔹 Podsumowując w prostym przykładzie życia
+other = notes B → źródło danych
+this = notes A → ten, który chcemy zmienić
+Jeśli próbujesz przepisać A do A → if (this == &other) → nic nie robimy
+W przeciwnym razie kopiujesz zawartość: this->_value = other._value;
+Zwracasz *this → nasz notes (A) jest gotowy do dalszego użycia
+
+Cel całej funkcji operator= w prostych słowach:
+Pozwala przypisać jeden obiekt do drugiego (skopiować jego dane).
+Sprawdza, czy nie przypisujesz obiektu do samego siebie (bo wtedy nic nie trzeba robić).
+Kopiuje wszystkie potrzebne wartości z obiektu źródłowego (other) do docelowego (this).
+Zwraca referencję do obiektu docelowego (*this), żeby można było łańcuchować przypisania, np. a = b = c;.
+W skrócie: umożliwia bezpieczne i poprawne przypisywanie obiektów klasy Fixed.
+
+1️⃣ operator= – kto kogo “widzi”
+Kiedy piszesz a = b;, kompilator wywołuje Twój operator przypisania:
+this → wskazuje na obiekt po lewej stronie (a).
+other → to obiekt po prawej stronie (b).
+W skrócie: this = a, other = b.
+
+2️⃣ Sprawdzamy self-assignment
+if (this == &other)
+    return *this;
+this == &other → sprawdza, czy nie próbujesz przypisać obiektu do samego siebie, np. a = a;.
+Jeśli tak → nic nie robimy, bo kopiowanie siebie do siebie jest zbędne.
+Bez tego w prostych klasach nic się złego nie stanie, ale w bardziej skomplikowanych (dynamiczna pamięć) mogłoby to zniszczyć dane.
+
+3️⃣ Kopiujemy wartość
+this->_value = other._value;
+Teraz faktycznie kopiujemy dane z other do this.
+Czyli a._value dostaje wartość z b._value.
+
+4️⃣ Zwracamy *this
+return *this;
+Zwracamy referencję do obiektu po lewej stronie, czyli do a.
+Dzięki temu możemy robić łańcuchowanie przypisań, np.:
+a = b = c;
+Najpierw b = c zwraca b, potem a = (wynik b=c).
+
+Podsumowanie na prostym przykładzie “notesowym”:
+this → obiekt po lewej stronie (= ten, który dostaje wartość).
+other → obiekt po prawej stronie (= ten, którego kopiujemy).
+Sprawdzamy, czy nie przypisujemy do siebie.
+Kopiujemy wartość _value.
+Zwracamy *this, żeby można było łańcuchować przypisania
+
+1️⃣ Co to jest getRawBits
+To metoda klasy Fixed, która pozwala odczytać wartość prywatnego pola _value.
+value jest private, więc nie możemy jej odczytać z zewnątrz bez takiej funkcji.
+const na końcu oznacza, że metoda nie zmienia obiektu. Czyli można ją wywołać na każdym obiekcie Fixed i na pewno nie zmieni wartości.
+
+2️⃣ Po co to jest
+Kiedy testujesz swój obiekt lub chcesz coś zrobić z jego wartością (np. porównać dwie liczby), potrzebujesz dostępu do _value.
+Bez tej metody _value byłoby niedostępne poza klasą.
+
+3️⃣Jak to wygląda “życiowo”
+Wyobraź sobie bankomat:
+_value → ilość pieniędzy na koncie (private, nikt nie może jej od razu zmienić).
+getRawBits() → wydrukuj stan konta, ale nie zmieniasz pieniędzy.
+Dzięki temu możesz sprawdzić, ile jest pieniędzy, bez ryzyka, że ktoś przypadkowo coś zmieni.
+
+Cel funkcji setRawBits:
+Ma ustawić wartość prywatnego pola value na liczbę całkowitą, którą jej przekażesz (raw).
+Dzięki temu możesz zmienić „surową” wartość Twojego obiektu Fixed bezpośrednio z zewnątrz, ale kontrolując dostęp przez metodę publiczną (bo _value jest prywatne).

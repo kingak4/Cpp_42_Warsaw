@@ -37,3 +37,94 @@ Ma tablicę wszystkich poziomów.
 Ma tablicę wskaźników do funkcji odpowiadających poziomom.
 Szuka indeksu poziomu przekazanego jako argument.
 Wywołuje odpowiednią funkcję członkowską na obiekcie Harl.
+
+Układ bitów (dla float, 32 bity)
+1 bit: znak
+8 bitów: wykładnik
+23 bity: mantysa
+s eeeeeeee mmmmmmmmmmmmmmmmmmmmmmm
+Mantysa ma zawsze domyślne 1. z przodu → dlatego zapisujemy tylko ułamki po przecinku.
+Dzięki temu oszczędzamy miejsce.
+
+Przesunięty wykładnik (bias)
+W floatach (32 bity) wykładnik jest zapisany z przesunięciem 127.
+czyli jeśli w bitach masz 127, to znaczy, że wykładnik = 0.
+jeśli masz 128, to wykładnik = 1.
+jeśli masz 126, to wykładnik = -1
+
+rzypadki specjalne
+Zero → wszystkie bity = 0.
+Nieskończoność (+inf, -inf) → wszystkie bity wykładnika = 1, mantysa = 0.
+NaN („not a number”) → wszystkie bity wykładnika = 1, mantysa ≠ 0.
+
+Epsilon
+Najmniejsza liczba x, dla której 1.0 + x > 1.0.
+Pokazuje granicę precyzji.
+Dla float ≈ 1.19e-7, dla double ≈ 2.22e-16.
+
+6. Problemy programistyczne
+Równość floatów
+== porównuje bity, a nie „wartość w przybliżeniu”.
+Dlatego 0.1 + 0.2 == 0.3 może być fałszem.
+Stosuje się „porównanie z tolerancją” (fabs(a-b) < EPSILON).
+
+Przepełnienie
+Floaty zamiast „zawijać się” jak inty → przechodzą w +inf lub -inf.
+To wygodne, bo łatwiej sprawdzić błędy.
+Utrata precyzji (loss of significance)
+Jeśli odejmujesz liczby bardzo do siebie podobne → tracisz prawie wszystkie cyfry znaczące.
+Jeśli dodajesz bardzo dużą liczbę i bardzo małą → mała może zostać całkiem „połknięta”.
+
+7. Dobre praktyki
+Uważaj na odejmowanie podobnych liczb → może zniszczyć wynik.
+Dodawaj małe liczby do siebie, a dopiero potem do dużych.
+Jeśli możesz, korzystaj z liczb całkowitych (np. trzymając licznik i mianownik zamiast ułamka).
+W poważnych projektach trzeba znać techniki stabilności numerycznej, a nie „ufać floatowi na ślepo”.
+
+✅ Podsumowanie 
+Floaty (IEEE-754) to liczby zapisane jako znak + wykładnik + mantysa.
+Zawsze jest domyślne 1. w mantysie (oprócz zer i wyjątków).
+Wykładnik ma przesunięcie (dla float bias = 127).
+Są specjalne przypadki: 0, +/-inf, NaN.
+Największy problem: brak dokładności → trzeba uważać przy porównaniach i obliczeniach.
+Rozwiązanie: używać tolerancji (EPSILON) i przemyślanego układu obliczeń.
+Czasm zamiast floatów lepiej trzymać dane w intach (np. fixed-point).
+
+👉 To wszystko sprowadza się do jednej myśli:
+Floaty są szybkie i wygodne, ale nie zawsze dokładne – musisz je traktować jak przybliżenia, a nie absolutną prawdę.
+
+🎯 Cel zadania
+Masz stworzyć klasę w C++, która:
+reprezentuje liczbę fixed-point (stałoprzecinkową, z 8 bitami części ułamkowej),
+jest napisana w Orthodox Canonical Form (OCF) – czyli zawiera wszystkie podstawowe metody: konstruktor domyślny, konstruktor kopiujący, operator przypisania, destruktor,
+posiada gettery i settery do surowej wartości.
+👉 Celem tego ćwiczenia jest nauka zasad tworzenia poprawnej klasy w C++ (RCF – Orthodox Canonical Form), a nie jeszcze matematyka fixed-point.
+
+OCF – Orthodox Canonical Form
+konstruktor domyślny,
+konstruktor kopiujący,
+operator przypisania,
+destruktor.
+To jest tzw. rule of three – bo te 3 (copy ctor, operator=, destructor) muszą być spójne, żeby uniknąć błędów w zarządzaniu pamięcią. Konstruktor domyślny jest tu formalnym dodatkiem.
+To jest standardowy zestaw metod, które powinny być w klasie, żeby była poprawna i kompletna.
+Nazywa się to też rule of three.
+Cztery elementy:
+Konstruktor domyślny
+→ np. Fixed(), ustawia początkowe wartości.
+Konstruktor kopiujący
+→ wywoływany przy tworzeniu obiektu na podstawie innego:
+Fixed b(a);   // tutaj działa copy constructor
+Operator przypisania
+→ używany, gdy obiekt istnieje i dostaje nową wartość:
+c = b;        // tutaj działa operator=
+Destruktor
+→ wywoływany automatycznie przy niszczeniu obiektu.
+W Twoim zadaniu np. tylko wypisuje komunikat, ale w prawdziwych projektach zwalnia pamięć, zamyka pliki itp.
+📌 Dlaczego to ważne?
+
+Jeśli masz klasę, która zarządza zasobami (np. wskaźnikami, pamięcią, plikami), to musisz zadbać, żeby kopie i przypisania nie powodowały błędów.
+Dlatego OCF daje spójny zestaw:
+tworzysz → konstruktor,
+kopiujesz → copy constructor,
+przypisujesz → operator=,
+niszczysz → destruktor.

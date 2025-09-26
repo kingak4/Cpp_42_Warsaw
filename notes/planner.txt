@@ -3,25 +3,24 @@
 ===========================
 
 Poniedziałek (____/____/2025)
- - zrobić cpp00 ex 01
- - zrobić cpp01 od 0 - 3
- - wstawić post linkedin
- - live o 17
+ - oddać cpp00 i cpp01
+ - ćwiczyc netpractice
+- cv
 
 Wtorek (____/____/2025)
-- zacząć cpp01
-- oraganc staze i cv
+- zdać netpractice
 
 Środa (____/____/2025)
-- zrobic cpp01
--oraganc staze i cv
-- nuacz sie o konstruktoa i deskruktorach ogldaj filmiki 
+- dokończyc cpp02
+- zacząć cpp03
+-yoga
 
 Czwartek (____/____/2025)
-- cv i wysyłać
+- idziemy do bibiloteki
+- robimy cpp03
 
 Piątek (____/____/2025)
--cpp 02
+
 
 Sobota (____/____/2025)
 

@@ -3,15 +3,13 @@
 ===========================
 
 Poniedziałek (____/____/2025)
- - oddać cpp00 i cpp01
- - ćwiczyc netpractice
-- cv
+
 
 Wtorek (____/____/2025)
 - zdać netpractice
 
 Środa (____/____/2025)
-- dokończyc cpp02
+- zdać netpractice
 - zacząć cpp03
 -yoga
 

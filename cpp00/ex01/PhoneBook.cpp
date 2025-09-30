@@ -4,121 +4,121 @@ int isnb(std::string s)
 {
 	for (size_t i = 0; i < s.length(); ++i)
 	{
-    	char c = s[i];
-    	if (!isdigit(c))
-        	return 0;
+		char c = s[i];
+		if (!isdigit(c))
+			return 0;
 	}
-	return(1);
+	return (1);
 }
 
 int Contact::add_first(std::string s)
 {
-	if(!s.empty())
+	if (!s.empty())
 		this->firstName = s;
 	else
 	{
 		std::cout << "First name cannot be empty. Please try again.." << std::endl;
-		return(0);
+		return (0);
 	}
-	return(1);
+	return (1);
 }
 int Contact::add_last(std::string s)
 {
-	if(!s.empty())
+	if (!s.empty())
 		this->lastName = s;
 	else
 	{
 		std::cout << "Last name cannot be empty. Please try again.." << std::endl;
-		return(0);
+		return (0);
 	}
-	return(1);
+	return (1);
 }
 
 int Contact::add_nick(std::string s)
 {
-	if(!s.empty())
+	if (!s.empty())
 		this->nickname = s;
 	else
 	{
 		std::cout << "Nick name cannot be empty. Please try again.." << std::endl;
-		return(0);
+		return (0);
 	}
-	return(1);
+	return (1);
 }
 
 int Contact::add_number(std::string s)
 {
-	if(!s.empty())
+	if (!s.empty())
 	{
-		if(!isnb(s))
+		if (!isnb(s))
 		{
 			std::cout << "Phone number must be numeric!" << std::endl;
-			return(0);
+			return (0);
 		}
 		this->phoneNumber = atoi(s.c_str());
 	}
 	else
 	{
 		std::cout << "Phone number cannot be empty. Please try again.." << std::endl;
-		return(0);
+		return (0);
 	}
-	return(1);
+	return (1);
 }
 int Contact::add_secret(std::string s)
 {
-	if(!s.empty())
+	if (!s.empty())
 		this->secret = s;
 	else
 	{
 		std::cout << "Darkest secret  cannot be empty. Please try again.." << std::endl;
-		return(0);
+		return (0);
 	}
-	return(1);
+	return (1);
 }
 
 void Contact::add_contact()
 {
 	std::string s;
-	while(true)
+	while (true)
 	{
 		std::cout << "Enter first name:";
-		std::getline(std::cin,s);
-		if(add_first(s))
+		std::getline(std::cin, s);
+		if (add_first(s))
 			break;
 	}
-	while(true)
+	while (true)
 	{
 		std::cout << "Enter last name:";
-		std::getline(std::cin,s);
-		if(add_last(s))
+		std::getline(std::cin, s);
+		if (add_last(s))
 			break;
 	}
-	while(true)
+	while (true)
 	{
 		std::cout << "Enter nickname:";
-		std::getline(std::cin,s);
-		if(add_nick(s))
+		std::getline(std::cin, s);
+		if (add_nick(s))
 			break;
 	}
-	while(true)
+	while (true)
 	{
 		std::cout << "Enter phone number:";
-		std::getline(std::cin,s);
-		if(add_number(s))
+		std::getline(std::cin, s);
+		if (add_number(s))
 			break;
 	}
-	while(true)
+	while (true)
 	{
 		std::cout << "Enter darkest secret:";
-		std::getline(std::cin,s);
-		if(add_secret(s))
+		std::getline(std::cin, s);
+		if (add_secret(s))
 			break;
 	}
 }
 
 void PhoneBook::add_C()
 {
-	Contact	new_phone;
+	Contact new_phone;
 
 	new_phone.add_contact();
 	contacts[curr_id] = new_phone;
@@ -127,4 +127,3 @@ void PhoneBook::add_C()
 		curr_id = 0;
 	std::cout << "Contact added successfully!" << std::endl;
 }
-

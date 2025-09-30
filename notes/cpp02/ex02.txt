@@ -22,3 +22,199 @@ wynik np. 0.00390625 (bo 1/256 przy frac_bits = 8)
 
 Przeciążenie operatorów: porównania, arytmetyczne, inkrementacje/dekrementacje
 Funkcje statyczne min i max
+
+🔹 Jak działają operatory porównań w C++?
+Twoja klasa (np. Fixed)
+Kompilator nie wie, jak porównać dwa obiekty klasy Fixed, dopóki Ty mu tego nie powiesz.
+Dlatego przeciążasz operator:
+np. operator<(const Fixed &other)
+I w środku implementacji sama decydujesz, co porównywać (np. wewnętrzną wartość _value).
+
+🔹 Jakie operatory implementujesz?
+> → zwraca true, gdy lewy obiekt jest większy niż prawy.
+< → zwraca true, gdy lewy obiekt jest mniejszy niż prawy.
+>= → zwraca true, gdy lewy jest większy lub równy.
+<= → zwraca true, gdy lewy jest mniejszy lub równy.
+== → zwraca true, gdy wartości są równe.
+!= → zwraca true, gdy wartości są różne.
+👉 Wszystkie działają na tej samej zasadzie – porównują jakieś pole w obiekcie
+
+this->value → bierzesz wewnętrzną wartość bieżącego obiektu.
+other.value → bierzesz wartość obiektu, z którym porównujesz.
+> → porównujesz te dwie liczby.
+Wynik to true albo false, które C++ i tak zamieni na 1 lub 0, bo masz zwracany typ int.
+
+1. Czemu po słowie operator musi być konkretny operator (<, >, == itd.)?
+Bo w C++ tak się nazywa funkcję specjalną.
+Normalna funkcja nazywa się np. compare().
+Funkcja operatorowa musi mieć nazwę wbudowaną:
+operator<
+operator>
+operator==
+Kompilator wie wtedy: „aha, jeśli ktoś napisze a < b, to mam wywołać a.operator<(b)”.
+Czyli to nie jest „fragment nazwy”, tylko wbudowany mechanizm języka C++.
+
+2. Czemu potrzebuję tego w klasach, a nie wystarczy int?
+Gdybyś pracowała tylko na int, kompilator ma już wbudowane operatory porównań.
+Ale w klasie Fixed masz prywatne pole (np. int value) i dla kompilatora to jest nowy typ – on nie wie, jak porównać dwa obiekty Fixed.
+Ty sama musisz mu powiedzieć, jak to zrobić → właśnie przeciążając operator.
+
+Po co są te funkcje?
+Twoja klasa Fixed udaje liczbę stałoprzecinkową.
+Chcesz, żeby można było pisać:
+
+Fixed a(10.5f);
+Fixed b(2.0f);
+Fixed c = a + b;  // zamiast: a.add(b)
+Fixed d = a - b;
+Fixed e = a * b;
+Fixed f = a / b;
+
+👉 Gdybyś nie napisała tych operatorów, to a + b byłoby błędem kompilacji, bo kompilator nie wie, jak dodać dwa obiekty Fixed.
+
+Ty musisz mu powiedzieć:
+Co zrobić, gdy ktoś użyje + na obiektach Twojej klasy.
+I analogicznie dla -, *, /.
+
+🔹 Jak to działa w środku?
+Operator +
+Tworzysz nowy obiekt Fixed, którego wartość = suma this i other.
+Zwracasz ten obiekt.
+
+Operator -
+To samo, tylko różnica.
+
+Operator *
+Wynik = iloczyn obu wartości.
+
+Operator /
+Wynik = iloraz obu wartości.
+⚠️ Musisz uważać na dzielenie przez zero → dobrze jest dodać sprawdzanie i ewentualnie obsłużyć wyjątek.
+
+Krok po kroku
+toFloat()
+Twoja klasa Fixed ma metodę toFloat(), która zamienia wewnętrzną, „przeskalowaną” wartość (value) na zwykłego float.
+Przykład: jeśli value = 256 i masz 8 bitów ułamkowych, to toFloat() zwróci 1.0f.
+toFloat() + other.toFloat()
+
+Teraz operujesz na normalnych floatach, które C++ umie dodać wbudowanymi operatorami.
+Wynik to zwykły float.
+Przykład: 1.5f + 2.25f = 3.75f.
+
+Fixed(...)
+Konstruktor Fixed(float) zostaje wywołany z tym wynikiem.
+Ten konstruktor konwertuje float z powrotem do formatu stałoprzecinkowego i zapisuje w polu value.
+Przykład: 3.75f → zapisuje jako 960, jeśli masz 8 bitów ułamkowych (3.75 * 256 = 960).
+return
+Funkcja zwraca nowo utworzony obiekt Fixed, który reprezentuje wynik dodawania.
+
+🔹 Dlaczego to podejście jest dobre?
+Poprawność matematyczna – operacje na float dają wynik dokładnie taki, jakiego oczekujesz.
+Uniwersalność – to samo rozwiązanie działa dla +, -, *, /.
+Czytelność – od razu widać: „aha, tu dodajemy liczby zmiennoprzecinkowe, a potem z tego robimy Fixed”.
+
+🔹 Po co one są ++ --?
+W C++ mamy dwie wersje operatorów:
+Pre-inkrementacja / pre-dekrementacja
+++a albo --a
+najpierw zmienia wartość, a potem zwraca już zmienioną.
+np.:
+int a = 5;
+int b = ++a; // a = 6, b = 6
+
+Post-inkrementacja / post-dekrementacja
+a++ albo a--
+najpierw zwraca starą wartość, a dopiero potem ją zmienia.
+np.:
+
+int a = 5;
+int b = a++; // a = 6, b = 5
+🔹 Dlaczego mamy dwie wersje?
+Bo w kodzie czasami chcesz:
+pracować na już zmienionej wartości (++a),
+a czasami na starej, przed zmianą (a++).
+Przykład: w pętli for(int i=0; i<10; i++) używasz postinkrementacji, bo interesuje Cię najpierw aktualna i, a dopiero potem zmiana.
+
+🔹 Jak to działa w naszej klasie Fixed?
+Inkrementacja ++ → zwiększa naszą liczbę o najmniejszą możliwą jednostkę (epsilon).
+W przypadku fixed-point, tym "epsilon" jest 1 jednostka w części ułamkowej (czyli 1 << fractionalBits).
+Dekrementacja -- → analogicznie zmniejsza.
+
+🔹 2. Co to jest *this?
+this jest wskaźnikiem (Fixed*).
+*this to obiekt, na który wskazuje (czyli normalny Fixed).
+Dlatego jak robisz return *this;, to tak naprawdę zwracasz sam obiekt (czyli aktualny Fixed).
+
+🔹 3. Dlaczego zwracamy Fixed& w pre-inkrementacji?
+Wersja pre (++a) powinna zwrócić ten sam obiekt, tylko już zmieniony.
+A skoro zwracamy ten sam obiekt, to najlepiej zwrócić go jako referencję (Fixed&), żeby nie tworzyć kopii.
+
+🔹 5. Jak to działa dla post-inkrementacji (a++)?
+Tu logika jest inna:
+najpierw trzeba zwrócić starą wartość (kopię!),
+potem dopiero zmienić obiekt.
+
+🔹 Dlaczego zwracamy *this?
+
+this → to wskaźnik do bieżącego obiektu (Fixed*).
+Czyli wewnątrz metody operator++ masz dostęp do obiektu, na którym ktoś wywołał ++.
+
+Przykład:
+
+Fixed a;
+++a; // tutaj this pokazuje na a
+
+
+*this → to dereferencja wskaźnika, czyli „sam obiekt, na który wskazuje this”.
+Innymi słowy → to „ja sam” (a w przykładzie wyżej).
+
+Dlaczego zwracamy *this?
+Bo pre-inkrementacja (++a) modyfikuje bieżący obiekt i zwraca jego referencję.
+Dzięki temu możesz np. pisać łańcuchy wywołań:
+++(++a); // działa, bo ++a zwraca referencję do a
+Gdybyś zwróciła kopię, to kolejne ++ działałoby na kopii, a nie na oryginalnym a.
+
+🔹 Krótkie porównanie:
+return *this; → zwracasz sam obiekt po zmianie (dokładnie to, czego wymaga ++a).
+return temp; (w wersji post) → zwracasz kopię starego obiektu, bo a++ najpierw daje starą wartość, a dopiero potem zmienia oryginał.
+
+👉 Podsumowując:
+Zwracasz *this, żeby pozwolić dalej pracować na tym samym obiekcie, a nie na jego kopii.
+
+🔹 Podsumowanie operatorów inkrementacji/dekrementacji
+| Operator     | Typ zwracany | Co robi                                              | Kiedy używać                                         |
+| ------------ | ------------ | ---------------------------------------------------- | ---------------------------------------------------- |
+| `++a` (pre)  | `Fixed&`     | Zwiększa obiekt, zwraca referencję                   | Kiedy od razu chcesz pracować na zmienionym obiekcie |
+| `--a` (pre)  | `Fixed&`     | Zmniejsza obiekt, zwraca referencję                  | Tak samo, ale zmniejsza                              |
+| `a++` (post) | `Fixed`      | Zwraca kopię starej wartości, potem zwiększa obiekt  | Kiedy potrzebujesz starej wartości, np. w pętli      |
+| `a--` (post) | `Fixed`      | Zwraca kopię starej wartości, potem zmniejsza obiekt | Analogicznie do `a++`                                |
+
+
+🔹 Kluczowe zasady do zapamiętania
+Pre (++a, --a) → zwracamy referencję do tego samego obiektu.
+Post (a++, a--) → zwracamy kopię starego obiektu.
+*this → odniesienie do bieżącego obiektu.
+Wartość zmieniamy o najmniejszą jednostkę (epsilon).
+
+🔹 Po co są te funkcje? min i max
+min → zwraca obiekt o mniejszej wartości spośród dwóch podanych.
+max → zwraca obiekt o większej wartości spośród dwóch podanych.
+🔹 Dlaczego są static?
+static oznacza, że nie potrzebujesz mieć obiektu, żeby wywołać funkcję.
+Możesz napisać:
+
+Fixed a, b;
+// wypełniasz wartości a i b
+Fixed c = Fixed::min(a, b);  // nie trzeba pisać a.min(b)
+Funkcje min i max działają tylko na argumentach, nie zmieniają żadnego obiektu, dlatego są statyczne.
+
+🔹 Dlaczego są wersje z const?
+Fixed &min(Fixed &f1, Fixed &f2) → działa na zwykłych obiektach, możesz potem np. zmieniać zwrócony obiekt.
+const Fixed &min(const Fixed &f1, const Fixed &f2) → działa na obiektach const (nie modyfikujesz ich), np. gdy porównujesz stałe wartości.
+Dzięki temu funkcje są uniwersalne i można ich używać w różnych sytuacjach.
+
+🔹 2. Dlaczego nie używamy static w definicji poza klasą?
+Gdy definiujesz funkcję poza klasą:
+Fixed &Fixed::min(Fixed &f1, Fixed &f2)
+Kompilator już wie, że funkcja była zadeklarowana jako statyczna w klasie.
+Jeśli dodasz static ponownie, kompilator interpretuje to inaczej – jako funkcję lokalną w tym pliku (C++ nie pozwala jednocześnie, żeby była statyczna w sensie lokalnym i globalnym).

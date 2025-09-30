@@ -1,0 +1,14 @@
+Ćwiczenie 02 – FragTrap
+Co zrobić:
+Utwórz klasę FragTrap, dziedziczącą po ClapTrap.
+Konstruktory i destruktor: różne komunikaty od ScavTrap i ClapTrap.
+
+Atrybuty:
+Hit points = 100
+Energy points = 100
+Attack damage = 30
+
+Dodaj metodę specjalną:
+void highFivesGuys() → wypisuje pozytywne żądanie „high five”.
+Pamiętaj o łańcuchu konstrukcji/destrukcji tak jak w ScavTrap.
+Podsumowanie: Tworzysz kolejną klasę pochodną, z własnymi wartościami i metodą specjalną, pokazując dziedziczenie i różnicowanie zachowań.

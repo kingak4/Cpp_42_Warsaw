@@ -1,0 +1,14 @@
+V: Ćwiczenie 01 – ScavTrap
+Co zrobić:
+Utwórz klasę ScavTrap, która dziedziczy po ClapTrap.
+Konstruktory i destruktor: wypisują inne komunikaty niż ClapTrap.
+
+Atrybuty:
+Hit points = 100
+Energy points = 50
+Attack damage = 20
+Dodaj własną metodę:
+void guardGate() → informuje, że ScavTrap jest w trybie Gate keeper.
+Pamiętaj o łańcuchu konstrukcji i destrukcji:
+Najpierw ClapTrap, potem ScavTrap. Destrukcja w odwrotnej kolejności.
+Podsumowanie: Tworzysz klasę pochodną, która dziedziczy funkcje i atrybuty, ale z własnymi wartościami i metodą specjalną.

@@ -1,0 +1,81 @@
+Ćwiczenie 00 – ClapTrap
+Co zrobić:
+
+Utwórz klasę ClapTrap z prywatnymi atrybutami:
+Name – przekazywany do konstruktora
+Hit points = 1
+Energy points = 10
+Attack damage = 0
+
+Dodaj publiczne metody:
+void attack(const std::string& target) → zmniejsza hit points celu o attack damage i zużywa 1 energii
+void takeDamage(unsigned int amount) → zmniejsza hit points
+void beRepaired(unsigned int amount) → zwiększa hit points i zużywa 1 energii
+Wyświetlanie wiadomości w każdej metodzie i konstruktorze/destruktorze.
+Nie musisz obsługiwać interakcji między obiektami – target to zwykły string.
+Podsumowanie: Tworzysz podstawową klasę robot-a z metodami ataku, naprawy i obrażeń, z komunikatami.
+
+Ogólne podsumowanie dla wszystkich ćwiczeń
+| Ćwiczenie     | Co robić                  | Kluczowe punkty                                                                                |
+| ------------- | ------------------------- | ---------------------------------------------------------------------------------------------- |
+| ex00 ClapTrap | Tworzysz klasę podstawową | Konstruktor, destruktor, attack, takeDamage, beRepaired, komunikaty, zarządzanie energią i hp  |
+| ex01 ScavTrap | Klasa pochodna            | Dziedziczenie po ClapTrap, własne wartości atrybutów, metoda guardGate(), różne komunikaty     |
+| ex02 FragTrap | Klasa pochodna            | Dziedziczenie po ClapTrap, własne wartości atrybutów, metoda highFivesGuys(), różne komunikaty |
+
+
+Atrybuty prywatne
+
+std::string name – imię robota.
+Po co: identyfikuje robota w komunikatach, np. „ClapTrap <name> attacks …”.
+
+int hitPoints – zdrowie robota.
+Po co: określa, ile obrażeń robot może przyjąć zanim przestanie działać.
+
+int energyPoints – energia robota.
+Po co: każde działanie (atak, naprawa) kosztuje energię. Robot nie może działać przy zerowej energii.
+
+int damage – siła ataku robota.
+Po co: określa, ile punktów życia straci cel podczas ataku.
+Konstruktory i destruktor
+
+ClapTrap(std::string name) – konstruktor z nazwą.
+Po co: tworzy robota o podanej nazwie i ustawia wartości domyślne dla hitPoints, energyPoints i damage.
+Dodatkowo: wyświetla komunikat, że konstruktor został wywołany.
+
+ClapTrap(ClapTrap &other) – konstruktor kopiujący.
+Po co: pozwala utworzyć nowego robota kopiując wartości z innego obiektu.
+Dodatkowo: wyświetla komunikat o kopiowaniu.
+
+ClapTrap &operator=(ClapTrap &other) – operator przypisania.
+Po co: pozwala przypisać wartości jednego obiektu do innego, np. robot1 = robot2.
+Dodatkowo: zwykle sprawdza samoprzydzielenie i kopiuje wszystkie atrybuty.
+
+~ClapTrap() – destruktor.
+Po co: wywoływany przy niszczeniu obiektu.
+Dodatkowo: wyświetla komunikat, że obiekt jest niszczony.
+
+Metody publiczne
+std::string getName(void)
+Po co: zwraca nazwę robota.
+Przydatne, np. przy wyświetlaniu komunikatów lub testach.
+
+void attack(const std::string &target)
+Po co: robot atakuje cel.
+Co robi w praktyce:
+Sprawdza, czy robot ma energię i hitPoints > 0.
+Zużywa 1 energii.
+Wyświetla komunikat: „ClapTrap <name> attacks <target>, causing <damage> points of damage!”.
+
+void takeDamage(unsigned int amount)
+Po co: robot otrzymuje obrażenia.
+Co robi:
+Zmniejsza hitPoints o amount.
+Wyświetla komunikat z informacją o stratach HP.
+
+void beRepaired(unsigned int amount)
+Po co: robot się naprawia i odzyskuje HP.
+Co robi:
+Sprawdza, czy robot ma energię i hitPoints > 0.
+Zwiększa hitPoints o amount.
+Zużywa 1 energii.
+Wyświetla komunikat o naprawie.

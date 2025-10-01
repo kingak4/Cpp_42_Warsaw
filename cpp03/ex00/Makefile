@@ -1,6 +1,6 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-NAME = 
+NAME = claptrap
 SRC = ClapTrap.cpp main.cpp
 OBJ = $(SRC:.cpp=.o)
 
@@ -20,4 +20,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean rels

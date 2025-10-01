@@ -79,3 +79,57 @@ Sprawdza, czy robot ma energię i hitPoints > 0.
 Zwiększa hitPoints o amount.
 Zużywa 1 energii.
 Wyświetla komunikat o naprawie.
+
+Podsumowanie w Twoim stylu
+
+👉 Robimy:
+Konstruktor → inicjalizacja robota (nazwa, HP=10, EN=10, DMG=0).
+Konstruktor kopiujący → żeby można było skopiować robota.
+Operator przypisania → żeby działało = między obiektami.
+Destruktor → żeby było widać kiedy robot jest niszczony.
+Getter (opcjonalny, ale przydatny).
+Funkcje attack, takeDamage, beRepaired → bo tego dokładnie wymaga subject.
+
+Pro Tip – jak się uczyć tego schematu?
+👉 Myśl zawsze w ten sposób:
+Konstruktor = tworzenie i nadawanie początkowych wartości.
+Konstruktor kopiujący = klonowanie innego obiektu.
+Operator przypisania = nadpisywanie istniejącego obiektu wartościami innego.
+Destruktor = sprzątanie i komunikat.
+Getter = bezpieczny dostęp do prywatnej zmiennej
+
+🔹 1. attack(const std::string& target)
+👉 Cel: ClapTrap ma zaatakować jakiś cel.
+
+Co się dzieje w środku:
+Sprawdzasz, czy ClapTrap ma jeszcze punkty życia (hitPoints > 0) i energię (energyPoints > 0).
+Jeśli nie → nic się nie dzieje (wypisz komunikat w stylu "ClapTrap X nie może zaatakować").
+Jeśli może:
+Odejmujesz 1 punkt energii (energyPoints -= 1).
+Wypisujesz komunikat, np. „ClapTrap <name> attacks <target>, causing <damage> points of damage!”.
+
+🔹 2. takeDamage(unsigned int amount)
+👉 Cel: ClapTrap dostaje obrażenia.
+
+Co się dzieje:
+Odejmujesz amount od hitPoints.
+Ale uważaj:
+Jeśli obrażenia są większe niż życie → hitPoints nie mogą spaść poniżej 0.
+Wypisujesz komunikat: „ClapTrap <name> takes <amount> damage, remaining HP: <hitPoints>”.
+
+🔹 3. beRepaired(unsigned int amount)
+👉 Cel: ClapTrap leczy się (odzyskuje HP).
+
+Co się dzieje:
+Sprawdzasz, czy ClapTrap żyje (hitPoints > 0) i czy ma energię (energyPoints > 0).
+Jeśli nie → nic się nie dzieje, wypisz komunikat.
+
+Jeśli tak:
+Odejmujesz 1 punkt energii (energyPoints -= 1).
+Dodajesz amount do hitPoints.
+Wypisujesz komunikat: „ClapTrap <name> repairs itself, +<amount> HP, total: <hitPoints>”.
+
+✨ Podsumowanie
+attack → sprawdza energię/życie → zużywa energię → wypisuje komunikat o ataku.
+takeDamage → zmniejsza życie, nigdy poniżej 0 → wypisuje co się stało.
+beRepaired → sprawdza energię/życie → zużywa energię → dodaje życie → wypisuje komunikat.

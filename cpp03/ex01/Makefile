@@ -1,7 +1,7 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-NAME =  
-SRC = ClapTrap.cpp main.cpp
+NAME =  scavtrap
+SRC = ClapTrap.cpp main.cpp ScavTrap.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

@@ -1,3 +1,25 @@
+🔹 Exercise 01
+Katalog do oddania: ex01/
+Pliki do oddania: Wszystkie z poprzedniego ćwiczenia + nowe pliki .cpp i .hpp.
+Instrukcje krok po kroku:
+Implementacja klasy Brain:
+Klasa ma tablicę 100 stringów o nazwie ideas.
+
+Dog i Cat:
+Każdy obiekt Dog i Cat ma prywatny wskaźnik Brain*.
+W konstruktorze Dog i Cat: tworzymy nowy Brain przy pomocy new Brain().
+W destruktorze Dog i Cat: usuwamy Brain przez delete, żeby uniknąć wycieków pamięci.
+
+W funkcji main:
+Tworzymy i wypełniamy tablicę obiektów Animal.
+Połowa elementów → Dog, połowa → Cat.
+Na końcu programu: usuwamy wszystkie obiekty przez delete, ale używamy wskaźników typu Animal*.
+Właściwe destruktory muszą być wywołane w odpowiedniej kolejności.
+Sprawdzamy wycieki pamięci.
+Kopia obiektów:
+Kopie Dog i Cat nie mogą być płytkie (shallow copy).
+Trzeba przetestować, czy kopiowanie Brain działa jako deep copy
+
 Co masz zrobić:
 Utworzyć klasę Brain z tablicą std::string ideas[100].
 Dog i Cat mają mieć wskaźnik do Brain.
@@ -11,3 +33,81 @@ Czego się nauczysz:
 Zarządzanie pamięcią dynamiczną w C++ (new/delete).
 Rule of Three (destruktor, konstruktor kopiujący, operator=).
 Testowanie deep copy vs shallow copy.
+
+
+this->ideas = other.ideas;
+❌ nie zadziała tak, jak myślisz – bo:
+ideas to tablica o stałym rozmiarze (100), a w C++ tablic nie można przypisywać wprost (= nie jest dozwolone dla całych tablic).
+Kompilator wywali błąd typu: array type 'std::string[100]' is not assignable.
+
+Co się dzieje:
+type = "Cat"; – ustawiasz typ kota, żeby metoda getType() zwracała poprawną nazwę.
+brain = new Brain(); – tu jest kluczowe:
+Tworzysz nowy obiekt klasy Brain na stercie (heap), a nie na stosie.
+Dzięki temu każda instancja Cat ma własny, niezależny Brain.
+new zwraca wskaźnik, który przypisujesz do pola brain (private Brain* brain;).
+std::cout – komunikat pokazuje, że konstruktor został wywołany.
+
+Dlaczego używamy new?
+Bo Brain ma być dynamiczny, a jego rozmiar może być duży (100 stringów).
+Pozwala na tworzenie deep copy, czyli każdy kot ma własny Brain, nie dzieli go z innymi kotami.
+
+Operator przypisania Cat& Cat::operator=(const Cat &other)
+Animal::operator=(other); – kopiujesz zawartość klasy bazowej.
+if (this != &other) – sprawdzasz, czy kopiujesz samą siebie.
+delete(brain); – usuwasz poprzedni Brain kota (ważne, żeby nie było wycieków pamięci).
+brain = new Brain(*other.brain); – tworzysz nową, głęboką kopię Brain z obiektu źródłowego.
+return(*this); – zwracasz obiekt, zgodnie z konwencją operatora przypisania.
+Dlaczego deep copy jest ważne?
+Każdy kot ma niezależny zestaw ideas.
+Gdyby nie było deep copy, zmiany w ideas jednego kota wpłynęłyby na drugiego.
+
+Destruktor Cat::~Cat()
+Co się dzieje:
+delete(brain); – usuwa obiekt Brain z pamięci dynamicznej.
+Dzięki temu nie ma wycieków pamięci.
+std::cout – pokazuje, że destruktor został wywołany.
+
+🔹 Podsumowanie Brain w Cat:
+Brain jest dynamiczny (new Brain()), bo chcemy deep copy i dużą tablicę stringów.
+Konstruktor kopiujący kota robi głęboką kopię Brain, żeby dwa koty nie dzieliły tego samego obiektu.
+Operator przypisania też musi robić deep copy i usuwać stary Brain.
+Destruktor usuwa Brain, żeby nie było wycieków pamięci.
+
+
+Polimorfizm i dziedziczenie – Kot i Pies dziedziczą po klasie bazowej Animal i dzięki temu możemy przechowywać je w tablicy wskaźników do Animal oraz wywoływać wirtualne funkcje (makeSound(), getType()) bez ryzyka pomyłki.
+Kompozycja obiektu – Każdy Kot i Pies posiada w sobie własny obiekt Brain, czyli “zagnieżdżony” obiekt, który przechowuje tablicę ideas. Pokazuje to, że obiekty pochodne mogą mieć własne, prywatne zasoby.
+Dynamiczna alokacja i zarządzanie pamięcią – Brain jest tworzony przez new w konstruktorze i musimy pamiętać o delete w destruktorze. To uczy poprawnego zarządzania pamięcią i zapobiega wyciekom.
+Deep copy – Kopiując psa lub kota, tworzymy nowy obiekt Brain, a nie kopiujemy wskaźnika. Dzięki temu zmiany w jednej kopii nie wpływają na oryginał.
+Testy i bezpieczeństwo – Program testuje konstruktor, destruktor, przypisanie i działanie funkcji wirtualnych oraz pokazuje poprawne użycie tablicy obiektów w polimorficznym kontekście.
+Można powiedzieć, że zadanie uczy 3 kluczowych rzeczy w C++: dziedziczenie, kompozycję obiektów i zarządzanie pamięcią w klasach z dynamicznie alokowanymi zasobami.
+
+            ┌───────────┐
+            │  Animal   │
+            ├───────────┤
+            │ - type    │   <- protected
+            ├───────────┤
+            │ +getType()│
+            │ +makeSound()│ (virtual)
+            └───────────┘
+                 ▲
+                 │
+      ┌──────────┴───────────┐
+      │                      │
+ ┌───────────┐          ┌───────────┐
+ │   Dog     │          │   Cat     │
+ ├───────────┤          ├───────────┤
+ │ - brain*  │          │ - brain*  │
+ ├───────────┤          ├───────────┤
+ │ +makeSound()│        │ +makeSound()│
+ │ +getBrain() │        │ +getBrain() │
+ └───────────┘          └───────────┘
+                 ▲
+                 │
+           ┌─────────┐
+           │  Brain  │
+           ├─────────┤
+           │ -ideas[100]│
+           ├─────────┤
+           │ +getIdeas()│
+           └─────────┘

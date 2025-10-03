@@ -41,3 +41,78 @@ protected vs private w klasach.
 Dziedziczenie w C++.
 virtual przy funkcjach, żeby polimorfizm działał.
 Wskaźniki do klasy bazowej pokazujące na klasy pochodne.
+
+
+🔹 Polimorfizm z virtual
+Animal* a = new Dog();
+a->makeSound();
+
+👉 Jeśli metoda nie jest virtual, wywoła się Animal::makeSound().
+👉 Jeśli metoda jest virtual, wywoła się Dog::makeSound().
+
+Czyli wybierana jest właściwa wersja metody w trakcie działania programu (runtime), a nie w trakcie kompilacji.
+To się nazywa dynamiczne wiązanie (late binding).
+Dzięki virtual program "patrzy", jaki obiekt naprawdę istnieje w pamięci, a nie tylko jaki ma wskaźnik.
+
+🔹 Do czego to się przydaje praktycznie?
+Masz wspólny interfejs (makeSound() w Animal),
+Możesz tworzyć różne klasy (Dog, Cat, Bird),
+A w kodzie operujesz na wskaźnikach do Animal, nie martwiąc się, czym one są.
+
+🔹 Podsumowanie w 2 zdaniach
+Polimorfizm = ta sama funkcja (makeSound) działa różnie w zależności od faktycznego obiektu.
+virtual = słowo-klucz, które sprawia, że w czasie działania programu wybierana jest metoda klasy pochodnej, a nie bazowej.
+
+Dziedziczenie – w nagłówku Cat.hpp klasa Cat nie dziedziczy po Animal. Masz:
+class Cat
+
+powinno być:
+class Cat : public Animal
+
+Bez tego Cat nie jest Animal i nie zadziała polimorfizm.
+
+Animal
+ ├─ Cat
+ └─ Dog
+Cat i Dog dziedziczą po Animal.
+W C++, kiedy tworzysz obiekt klasy pochodnej (np. Cat), najpierw wywołuje się konstruktor klasy bazowej (Animal), a potem konstruktor klasy pochodnej (Cat).
+Dlatego dla każdego Cat lub Dog zobaczysz najpierw Animal constructor called, potem Cat constructor called lub Dog constructor called.
+
+Animal* c = new Cat();
+Wywołuje Animal() → „Animal constructor called”
+Następnie wywołuje Cat() → „Cat constructor called”
+Podobnie dla Dog.
+
+3️⃣ Kolejność działania Twojego programu
+Tworzenie obiektów Animal, Cat, Dog:
+Konstruktor klasy bazowej (Animal) wywołany dla każdego obiektu dziedziczącego.
+Konstruktor klasy pochodnej (Cat, Dog) wywołany zaraz po tym.
+Wywołanie getType():
+Zwraca type zwierzęcia (Cat lub Dog).
+Wywołanie makeSound():
+Dzięki virtual w klasie bazowej, wywołuje właściwą metodę klasy pochodnej.
+Animal → "Animal makes a generic sound"
+Cat → "Meow Meow"
+Dog → "Woof Woof"
+
+Tworzenie obiektów WrongAnimal i WrongCat:
+Brak virtual w makeSound() → wywołanie przez wskaźnik do WrongAnimal zawsze użyje metody WrongAnimal.
+Konstruktor bazowy (WrongAnimal) wywołany najpierw, potem WrongCat.
+Wywołanie getType() i makeSound() dla “złych” zwierząt:
+Typy zwierząt są poprawne (WrongCat), ale dźwięk nie zmienia się przez brak virtual.
+Usuwanie obiektów (delete):
+Destruktory wywołują się w odwrotnej kolejności niż konstruktory:
+najpierw destruktor klasy pochodnej, potem klasy bazowej.
+To jest standardowy mechanizm w C++ dla hierarchii klas.
+
+4️⃣ Podsumowanie reguł
+Konstruktor bazowy wywołuje się zawsze przed konstruktorem pochodnym.
+Destruktor pochodny wywołuje się najpierw, potem bazowy.
+virtual umożliwia polimorficzne wywołanie funkcji (makeSound) przez wskaźnik klasy bazowej.
+Brak virtual → wywołanie metody klasy bazowej niezależnie od rzeczywistego typu obiektu.
+
+Virtual pozwala wywołać metodę klasy pochodnej nawet, gdy wskaźnik ma typ klasy bazowej (Animal*).
+Bez virtual wywoływana byłaby metoda klasy bazowej.
+
+Konstruktor kopiujący kopiuje wszystkie atrybuty obiektu, np. type.
+Operator= przypisuje zawartość innego obiektu do aktualnego i zwraca *this, żeby umożliwić łańcuchowe przypisania (a = b = c).

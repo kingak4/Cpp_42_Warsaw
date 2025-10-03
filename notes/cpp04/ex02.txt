@@ -10,3 +10,29 @@ Czego się nauczysz:
 Klasy abstrakcyjne.
 Czyste metody wirtualne.
 Polimorfizm oparty na klasach abstrakcyjnych.
+
+
+1️⃣ Co znaczy "funkcja czysto wirtualna"?
+Kiedy w klasie bazowej napiszesz coś takiego:
+virtual void makeSound() const = 0;
+to oznacza:
+
+Funkcja nie ma implementacji w klasie bazowej (stąd = 0).
+Każda klasa pochodna musi ją nadpisać, żeby klasa pochodna była kompletna.
+Klasa, która ma przynajmniej jedną funkcję czysto wirtualną, staje się klasą abstrakcyjną.
+
+2️⃣ Co robi klasa abstrakcyjna?
+Nie można jej instanciować.
+Animal a; // błąd! nie można stworzyć obiektu klasy abstrakcyjnej
+Możesz za to robić wskaźniki i referencje do klasy abstrakcyjnej:
+Animal* a = new Dog(); // działa, bo Dog nadpisuje makeSound()
+
+3️⃣ Dlaczego używa się klas abstrakcyjnych?
+Bezpieczeństwo: chroni przed tworzeniem obiektów, które nie mają pełnej funkcjonalności (np. Animal nie ma sensu bez makeSound).
+Polimorfizm: pozwala przechowywać w jednej tablicy lub kolekcji różne zwierzęta (Dog, Cat) i wywoływać ich funkcje wirtualne przez wskaźniki klasy bazowej.
+Projektowanie hierarchii: wymusza, żeby każda klasa pochodna implementowała określone funkcje (np. makeSound()), co daje spójność.
+
+4️⃣ Podsumowując:
+= 0 → deklarujesz funkcję bez implementacji, zmienia klasę w abstrakcyjną.
+new Animal() już nie działa.
+Wskaźniki do Animal wciąż działają i możesz przez nie wywoływać nadpisane funkcje w Dog i Cat.

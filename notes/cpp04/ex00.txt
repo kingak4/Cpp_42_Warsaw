@@ -1,0 +1,43 @@
+🔹 Exercise 00 – Polymorphism
+
+Dla każdego ćwiczenia musisz dostarczyć najbardziej kompletne testy, jakie możesz.
+Konstruktory i destruktory każdej klasy muszą wyświetlać konkretne komunikaty.
+Nie używaj tego samego komunikatu dla wszystkich klas.
+
+Zacznij od zaimplementowania prostej klasy bazowej o nazwie Animal.
+Ma ona jeden chroniony atrybut:
+
+std::string type;
+
+Zaimplementuj klasę Dog, która dziedziczy po Animal.
+Zaimplementuj klasę Cat, która dziedziczy po Animal.
+
+Te dwie klasy pochodne muszą ustawiać swoje pole type odpowiednio do ich nazwy.
+Wtedy Dog będzie miał type zainicjalizowany na "Dog", a Cat na "Cat".
+Pole type klasy Animal może być puste albo ustawione na dowolną wartość według twojego wyboru.
+
+Każde zwierzę musi być w stanie używać funkcji członkowskiej:
+
+makeSound()
+Będzie ona wypisywać odpowiedni dźwięk (koty nie szczekają).
+
+Aby upewnić się, że rozumiesz, jak to działa, zaimplementuj klasę WrongCat, która dziedziczy po klasie WrongAnimal.
+Jeśli w powyższym kodzie zastąpisz Animal i Cat ich błędnymi odpowiednikami, WrongCat powinien wypisać dźwięk klasy WrongAnimal.
+
+Zaimplementuj i oddaj więcej testów niż te podane powyżej.
+
+
+Co masz zrobić:
+Utworzyć klasę bazową Animal z atrybutem std::string type.
+Utworzyć klasy Dog i Cat dziedziczące po Animal.
+Każda klasa musi mieć metodę makeSound(), która robi coś innego (pies szczeka, kot miauczy).
+Konstruktor Dog ustawia type na "Dog", a Cat na "Cat".
+
+W main() stwórz obiekty Animal, Dog i Cat i sprawdź, że dźwięki są poprawne.
+Utwórz również WrongAnimal i WrongCat, które pokażą brak polimorfizmu (brak wirtualnych metod → wywoła się metoda z klasy bazowej, a nie pochodnej).
+
+Czego się nauczysz:
+protected vs private w klasach.
+Dziedziczenie w C++.
+virtual przy funkcjach, żeby polimorfizm działał.
+Wskaźniki do klasy bazowej pokazujące na klasy pochodne.

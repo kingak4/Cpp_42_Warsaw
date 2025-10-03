@@ -1,0 +1,12 @@
+Co masz zrobić:
+Animal nie powinna być już instancjonowana (bo nie ma sensu).
+Zrób z niej klasę abstrakcyjną, czyli ustaw makeSound() jako pure virtual:
+virtual void makeSound() const = 0;
+
+Dzięki temu nie można zrobić new Animal(), ale można new Dog() czy new Cat().
+Cały program ma działać jak w ex01, ale nie da się utworzyć obiektu Animal.
+
+Czego się nauczysz:
+Klasy abstrakcyjne.
+Czyste metody wirtualne.
+Polimorfizm oparty na klasach abstrakcyjnych.

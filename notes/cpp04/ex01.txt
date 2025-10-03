@@ -1,0 +1,13 @@
+Co masz zrobić:
+Utworzyć klasę Brain z tablicą std::string ideas[100].
+Dog i Cat mają mieć wskaźnik do Brain.
+W konstruktorze Dog/Cat robisz new Brain(), a w destruktorze delete Brain.
+
+W main() utwórz tablicę wskaźników Animal* → pół psów, pół kotów.
+Na końcu usuń wszystko i sprawdź, czy destruktory działają poprawnie.
+Zaimplementuj głęboką kopię (copy constructor i operator=) – inaczej pies po skopiowaniu będzie miał wskaźnik do tego samego Brain, co źródło, i zrobi się bałagan w pamięci.
+
+Czego się nauczysz:
+Zarządzanie pamięcią dynamiczną w C++ (new/delete).
+Rule of Three (destruktor, konstruktor kopiujący, operator=).
+Testowanie deep copy vs shallow copy.

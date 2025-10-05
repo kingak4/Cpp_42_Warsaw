@@ -3,22 +3,21 @@
 ===========================
 
 Poniedziałek (____/____/2025)
-
+- zdać cpp04
+- ogarnąć netpractice
 
 Wtorek (____/____/2025)
 - zdać netpractice
 
 Środa (____/____/2025)
-- zdać netpractice
-- zacząć cpp03
+- uczyc sie na egzmain;
+
 -yoga
 
 Czwartek (____/____/2025)
-- idziemy do bibiloteki
-- robimy cpp03
+- uczyc sie na egzmain;
 
 Piątek (____/____/2025)
-- robimy cpp04
 
 Sobota (____/____/2025)
 

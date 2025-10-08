@@ -10,5 +10,63 @@ Attack damage = 20
 Dodaj własną metodę:
 void guardGate() → informuje, że ScavTrap jest w trybie Gate keeper.
 Pamiętaj o łańcuchu konstrukcji i destrukcji:
+
 Najpierw ClapTrap, potem ScavTrap. Destrukcja w odwrotnej kolejności.
 Podsumowanie: Tworzysz klasę pochodną, która dziedziczy funkcje i atrybuty, ale z własnymi wartościami i metodą specjalną.
+
+Nowa klasa ScavTrap
+To jest nowy robot, który dziedziczy po klasie ClapTrap.
+Dziedziczenie oznacza, że ScavTrap ma wszystkie funkcje i atrybuty ClapTrapa, ale może je nadpisywać (np. własne komunikaty w konstruktorze, destruktorze, ataku).
+
+Konstruktor i destruktor
+Kiedy tworzysz ScavTrap, najpierw wywołuje się konstruktor ClapTrap (bo ScavTrap dziedziczy po ClapTrap).
+Kiedy ScavTrap znika, najpierw wywołuje się destruktor ScavTrap, potem destruktor ClapTrap (odwrócona kolejność).
+To jest tzw. proper construction/destruction chaining.
+
+Atrybuty
+name – przekazany z zewnątrz (tak jak w ClapTrap).
+hitPoints – 100 (większe niż ClapTrap).
+energyPoints – 50 (większe niż ClapTrap).
+attackDamage – 20 (większe niż ClapTrap).
+
+Własne funkcje
+attack() – ScavTrap może atakować, ale komunikat wyświetlany jest inny, np. w stylu ScavTrapa.
+guardGate() – nowa specjalna funkcja, która wypisuje, że ScavTrap jest w trybie „Gate keeper”.
+
+🔹 Podsumowanie 
+Tworzysz klasę ScavTrap, która dziedziczy po ClapTrap.
+Nadpisujesz (override) konstruktor, destruktor i attack(), żeby były inne komunikaty.
+Inicjalizujesz atrybuty z własnymi wartościami (HP=100, EP=50, AD=20).
+Dodajesz nową funkcję guardGate().
+W main pokazujesz wszystkie funkcje i sprawdzasz kolejność wywołań konstruktorów i destruktorów.
+
+💡 Najważniejsze zasady:
+Dziedziczenie pozwala na ponowne użycie kodu (ClapTrap).
+Nadpisywanie funkcji – ScavTrap ma własny styl komunikatów.
+Kolejność konstruktorów i destruktorów pokazuje prawidłowe tworzenie i niszczenie obiektów dziedziczących.
+
+1️⃣ Private
+Dostęp: Tylko w samej klasie, która deklaruje te pola/metody.
+Nie można ich używać w klasach pochodnych ani poza klasą.
+
+2️⃣ Protected
+Dostęp: w klasie i w klasach pochodnych, ale nie z zewnątrz (czyli nie można użyć obiektu tej klasy i napisać obj.x = 5;).
+
+| Modyfikator | Dostęp w klasie | Dostęp w klasie pochodnej | Dostęp z zewnątrz |
+| ----------- | --------------- | ------------------------- | ----------------- |
+| private     | ✅               | ❌                         | ❌                 |
+| protected   | ✅               | ✅                         | ❌                 |
+| public      | ✅               | ✅                         | ✅                 |
+
+💡 Reguła praktyczna:
+Dane, które mają być dostępne tylko w klasie: private.
+Dane, które mają być dostępne w klasach dziedziczących: protected.
+Dane/metody, które mają być dostępne wszędzie: public.
+ClapTrap::operator=(other);
+wywołujesz operator przypisania klasy bazowej (ClapTrap). Co się wtedy dzieje:
+
+Wszystkie pola zdefiniowane w ClapTrap (czyli name, hitPoints, energyPoints, damage) są kopiowane z other do *this.
+
+Nie musisz ich ręcznie przypisywać w ScavTrap — robi to za Ciebie kod w ClapTrap::operator=.
+Dzięki temu Twój kod jest krótszy, bezpieczniejszy i łatwiejszy w utrzymaniu — jeśli w ClapTrap dodasz nowe pole w przyszłości, nie trzeba zmieniać ScavTrap.
+Czyli tak naprawdę to zastępuje dokładnie to, co miałaś w swoim ręcznym przypisywaniu pól, ale w sposób bardziej elegancki i odporny na błędy.

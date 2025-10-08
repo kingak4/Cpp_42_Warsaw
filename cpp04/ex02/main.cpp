@@ -11,7 +11,6 @@ int main()
 {
 	Animal *cat = new Cat();
 	Animal *dog = new Dog();
-
 	delete(cat);
 	delete(dog);
 }

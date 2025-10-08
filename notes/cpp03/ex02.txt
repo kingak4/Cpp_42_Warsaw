@@ -12,3 +12,14 @@ Dodaj metodę specjalną:
 void highFivesGuys() → wypisuje pozytywne żądanie „high five”.
 Pamiętaj o łańcuchu konstrukcji/destrukcji tak jak w ScavTrap.
 Podsumowanie: Tworzysz kolejną klasę pochodną, z własnymi wartościami i metodą specjalną, pokazując dziedziczenie i różnicowanie zachowań.
+
+1️⃣ public ClapTrap
+To oznacza dziedziczenie publiczne.
+W praktyce:
+Wszystkie publiczne i protected członki klasy ClapTrap stają się publiczne/protected w FragTrap.
+Pozwala obiektom FragTrap używać funkcji ClapTrap, np. attack(), takeDamage().
+Jeśli dziedziczyłabyś private, wtedy publiczne funkcje ClapTrap stałyby się prywatne w FragTrap i nie można by ich wywołać na obiekcie FragTrap.
+
+💡 Podsumowanie prosto:
+public ClapTrap – dziedzicz wszystko publiczne i protected ClapTrap do FragTrap.
+virtual – zapobiega duplikacji klasy bazowej przy dziedziczeniu wielokrotnym.

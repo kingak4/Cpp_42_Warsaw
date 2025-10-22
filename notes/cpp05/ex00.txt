@@ -69,15 +69,6 @@ std::ostream& operator<<(std::ostream& os, const Bureaucrat& b);
 aby można było wypisywać urzędnika tak:
 Bob, bureaucrat grade 42.
 
-6. Testy:
-
-W main.cpp zrób przykłady:
-poprawne tworzenie Bureaucrata
-próby stworzenia z błędnym grade → łapanie wyjątków
-testy incrementGrade() i decrementGrade()
-std::cout << bureaucrat; (operator <<)
-
-
 🧩 2. Operator <<
 
 Zobacz, w zadaniu masz wymagany format:
@@ -288,3 +279,130 @@ Lista inicjalizacyjna jest zawsze po nazwie konstruktora, przed {}.
 Służy do ustawienia const, referencji i wszystkich pól, które muszą być stworzone od razu.
 Pozwala też ustawić wartości innych pól, zanim program wejdzie do środka konstruktora.
 Daje bezpieczeństwo – nie da się zapomnieć o przypisaniu const.
+
+friend → pozwala operatorowi korzystać z prywatnych danych, bo normalnie nie mógłby dostępu do name i grade.
+Zawsze zwracamy out → to pozwala na łańcuchowe wypisywanie.
+Nie robimy tu żadnej logiki zmieniającej obiekt, tylko wypisujemy jego stan.
+
+🔹 Co to jest try
+try { ... } — to blok kodu, w którym mogą wystąpić wyjątki.
+Umieszczasz w nim operacje, które mogą się nie udać (np. stworzenie obiektu z niepoprawnym parametrem).
+Jeśli coś w środku rzuci wyjątek (throw), reszta kodu w try jest pomijana.
+Program od razu „przeskakuje” do odpowiedniego bloku catch, który potrafi obsłużyć dany typ wyjątku.
+Przykład logiczny (bez kodu):
+„Spróbuj wykonać to, ale jeśli coś się nie uda — przejdź do części, która opisuje, jak reagować na błąd.”
+
+Main
+
+🔹 Co to jest catch
+catch to obsługa wyjątku, czyli część programu, która mówi, co zrobić, gdy coś poszło nie tak.
+W przykładzie:
+catch(const std::exception& e)
+
+oznacza:
+„Jeśli zostanie rzucony wyjątek typu std::exception (lub jego pochodne), złap go i nazwij e.”
+
+🔹 Jak działa to wewnętrznie
+Kiedy np. Twój konstruktor Bureaucrata wykona:
+throw GradeTooHighException();
+to:
+
+Program przerywa aktualne działanie (np. kończy konstruktor w połowie),
+Szuka najbliższego bloku try, w którym ten wyjątek może być obsłużony,
+Skacze do odpowiadającego mu catch.
+
+🔹 Co oznacza const std::exception& e
+To znaczy:
+złap obiekt wyjątku (który został rzucony),
+traktuj go jako stałą referencję (żeby nie kopiować go niepotrzebnie),
+jego typ to std::exception, czyli klasa bazowa wszystkich wyjątków w C++.
+W kodzie to działa, bo Twoje wyjątki (GradeTooHighException, GradeTooLowException) dziedziczą po std::exception — czyli pasują do tego catch.
+
+🔹 Co robi e.what()
+what() to metoda klasy std::exception, która zwraca tekstowy opis błędu.
+W Twoich wyjątkach ta metoda została nadpisana i zwraca np.:
+const char *Bureaucrat::GradeTooHighException::what() const throw()
+{
+	return("Grade too high");
+}
+Więc, gdy piszesz:
+std::cout << e.what() << '\n';
+to na ekranie pojawia się komunikat:
+Grade too high
+lub
+Grade too low
+— w zależności od tego, który wyjątek został rzucony.
+
+🔹 Jak wygląda pełny przepływ w Twoim kodzie
+Weźmy ten przykład:
+
+try
+{
+	Bureaucrat bc4("Kinga", 155);
+	bc4.incrementGrade();
+	std::cout << bc4;
+}
+catch(const std::exception& e)
+{
+	std::cout << e.what() << '\n';
+}
+Program wchodzi w try.
+Próbuje stworzyć Bureaucrat("Kinga", 155).
+Konstruktor wykrywa, że 155 > 150, więc:
+→ throw GradeTooLowException();
+Tworzenie obiektu się przerywa.
+Program przeskakuje do catch.
+W catch masz:
+std::cout << e.what() << '\n';
+co wypisuje komunikat:
+Grade too low
+Program wychodzi z catch i kontynuuje działanie dalej.
+
+| Fragment                                | Co testuje           | Co się dzieje                                              |
+| --------------------------------------- | -------------------- | ---------------------------------------------------------- |
+| `Bureaucrat bc("Bob", 5)`               | poprawne dane        | działa normalnie                                           |
+| `bc.incrementGrade()`                   | test zwiększenia     | działa, grade staje się 4                                  |
+| `bc2->decrementGrade()`                 | test zmniejszenia    | działa, grade staje się 6                                  |
+| `try { Bureaucrat("Bobik", 7); }`       | poprawny konstruktor | działa, nic nie rzuca                                      |
+| `try { Bureaucrat("Daniel", 60); ... }` | poprawne dane        | działa, wypisuje                                           |
+| `try { Bureaucrat("Kate", 0); ... }`    | zbyt wysoki grade    | wyjątek: "Grade too high"                                  |
+| `try { Bureaucrat("Carol", 150); ... }` | graniczny przypadek  | działa, dopóki nie zdekrementujesz (potem "Grade too low") |
+| `try { Bureaucrat("Kinga", 155); ... }` | zbyt niski grade     | wyjątek: "Grade too low"                                   |
+
+
+| Słowo kluczowe       | Znaczenie                               |
+| -------------------- | --------------------------------------- |
+| **`try { }`**        | blok, w którym może wystąpić wyjątek    |
+| **`throw`**          | rzuca wyjątek, przerywa bieżący kod     |
+| **`catch`**          | przechwytuje wyjątek i reaguje na niego |
+| **`std::exception`** | klasa bazowa dla wszystkich wyjątków    |
+| **`e.what()`**       | zwraca tekstowy opis błędu              |
+
+
+🔹 1️⃣ Co robi Twój operator
+
+Ta funkcja:
+std::ostream& operator<<(std::ostream& out, const Bureaucrat& b)
+{
+	out << b.getName() << ", bureaucrat grade " << b.getGrade() << std::endl;
+	return(out);
+}
+
+oznacza:
+👉 „Jeśli ktoś spróbuje wypisać obiekt klasy Bureaucrat przez std::cout,
+to ma się wyświetlić jego imię i stopień.”
+
+Czyli:
+out → to jest Twój std::cout
+b → to jest Twój urzędnik
+Funkcja zwraca out, żeby można było wypisywać dalej (np. std::cout << a << b;).
+
+🔹 2️⃣ Jak użyć tego w main()
+Nie musisz wołać tej funkcji ręcznie — C++ zrobi to automatycznie,
+kiedy użyjesz operatora << z obiektem klasy Bureaucrat.
+
+Pseudokod (czyli logika):
+stwórz Bureaucrata z imieniem i grade
+użyj std::cout << ten_Bureaucrat;
+Operator << działa automatycznie,
+bo C++ rozpoznaje, że istnieje dla tej klasy przeciążenie operatora <<.

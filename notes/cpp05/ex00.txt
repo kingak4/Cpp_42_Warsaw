@@ -1,0 +1,290 @@
+💼  Wyjaśnienie projektu i jego celu
+
+Ten moduł to symulacja biurokratycznego świata, w którym:
+są urzędnicy (Bureaucrat),
+są formularze (Form, AForm, itd.),
+i reguły oraz wyjątki, które sterują ich interakcjami.
+
+Celem modułu jest:
+zrozumienie klas, dziedziczenia, polimorfizmu,
+nauka rzucania i obsługi wyjątków (try/catch),
+oraz projektowania hierarchii klas w sposób czysty i logiczny.
+
+🧩 ex00 – Bureaucrat
+
+Cel: stworzyć klasę Bureaucrat z:
+stałą nazwą (const std::string name)
+zmiennym stopniem (grade, od 1 do 150)
+
+Zasady:
+Gdy grade < 1 → rzuć GradeTooHighException
+Gdy grade > 150 → rzuć GradeTooLowException
+
+Funkcje:
+getName(), getGrade()
+incrementGrade() → zmniejsza wartość (bo 1 to najwyższy)
+decrementGrade() → zwiększa wartość
+
+Przeciąż operator << do wypisywania:
+<name>, bureaucrat grade <grade>.
+
+Przetestuj wyjątki i działanie inkrementacji/dekrementacji.
+
+🔍 Uczysz się:
+konstruktorów, destruktorów,
+wyjątków (throw, try/catch),
+operatorów (<<).
+
+⚙️ Wymagania dotyczące klasy Bureaucrat:
+1. Atrybuty:
+const std::string name → imię urzędnika (stałe – nie można go zmienić po stworzeniu obiektu)
+int grade → poziom/stopień urzędnika (1 = najwyższy, 150 = najniższy)
+
+2. Zasady walidacji:
+Jeśli spróbujesz stworzyć urzędnika z grade < 1 → rzuć wyjątek Bureaucrat::GradeTooHighException
+Jeśli grade > 150 → rzuć wyjątek Bureaucrat::GradeTooLowException
+To samo dotyczy sytuacji, gdy modyfikujesz jego grade później (np. w funkcji incrementGrade() lub decrementGrade()).
+
+3. Funkcje członkowskie:
+Nazwa funkcji	Opis
+getName()	zwraca imię urzędnika
+getGrade()	zwraca aktualny stopień
+incrementGrade()	zmniejsza wartość grade o 1 (bo im mniejsza liczba, tym wyższy stopień). Jeśli wyjdzie poza 1 → wyjątek
+decrementGrade()	zwiększa wartość grade o 1 (czyli obniża rangę). Jeśli przekroczy 150 → wyjątek
+
+4. Wyjątki:
+
+Musisz stworzyć dwie klasy wyjątków wewnątrz klasy Bureaucrat:
+class GradeTooHighException : public std::exception
+class GradeTooLowException : public std::exception
+Każda z nich ma nadpisywać funkcję what() i zwracać odpowiedni komunikat, np.:
+
+const char* what() const throw() {
+    return "Grade is too high!";
+}
+
+5. Operator wypisywania:
+Masz przeciążyć operator <<:
+std::ostream& operator<<(std::ostream& os, const Bureaucrat& b);
+aby można było wypisywać urzędnika tak:
+Bob, bureaucrat grade 42.
+
+6. Testy:
+
+W main.cpp zrób przykłady:
+poprawne tworzenie Bureaucrata
+próby stworzenia z błędnym grade → łapanie wyjątków
+testy incrementGrade() i decrementGrade()
+std::cout << bureaucrat; (operator <<)
+
+
+🧩 2. Operator <<
+
+Zobacz, w zadaniu masz wymagany format:
+
+<name>, bureaucrat grade <grade>.
+
+To ma się pojawiać, kiedy użyjesz:
+std::cout << someBureaucrat;
+
+📘 Co to znaczy technicznie?
+
+W C++ możesz przeciążyć operator <<, żeby działał dla własnych klas.
+To nie jest metoda klasy, tylko osobna funkcja, która:
+przyjmuje jako pierwszy argument std::ostream & (czyli np. std::cout)
+przyjmuje jako drugi argument Twojego Bureaucrata
+zwraca std::ostream &, żeby można było pisać std::cout << a << b;
+
+📘 Deklaracja operatora w Twoim nagłówku:
+W pliku Bureaucrat.hpp dodajesz to poza klasą:
+
+std::ostream& operator<<(std::ostream& out, const Bureaucrat& b);
+
+📘 Co ma robić ten operator:
+Ma po prostu wypisać dane urzędnika w podanym formacie:
+<name>, bureaucrat grade <grade>.
+np.
+Bob, bureaucrat grade 42.
+
+🧩  Klasy wyjątków
+🔹 Po co to jest?
+W Twoim programie „urzędnik” (Bureaucrat) ma mieć stopień (grade) między 1 a 150.
+
+Jeśli ktoś spróbuje stworzyć urzędnika z grade = 0 albo 151,
+albo użyje incrementGrade() i przekroczy granice — musisz rzucić wyjątek.
+Czyli przerwać normalne działanie programu i poinformować użytkownika o błędzie.
+
+🔹 Dlaczego klasy wewnątrz Bureaucrat?
+Bo te wyjątki dotyczą tylko klasy Bureaucrat.
+Nie chcesz ich używać nigdzie indziej.
+Dlatego umieszcza się je w środku klasy, jako coś w stylu „części mechanizmu”.
+
+🔹 Jak to wygląda logicznie
+Pomyśl o tym tak:
+
+klasa Bureaucrat:
+    ma dwie małe klasy wewnętrzne:
+        - GradeTooHighException
+        - GradeTooLowException
+
+Każda z nich mówi coś w stylu:
+„Ej, próbujesz ustawić grade zbyt wysoki / zbyt niski.”
+
+🔹 Po co metoda what()?
+To standard w C++ — każda klasa wyjątku ma metodę what(),
+która zwraca wiadomość tekstową, gdy złapiesz wyjątek w try / catch.
+
+Przykład w myśleniu (nie kod):
+spróbuj:
+    utwórz Bureaucrat z grade = 200
+złap wyjątek:
+    wyświetl błąd_what()
+
+i wtedy pojawi się np.:
+Grade is too low
+
+Operator << jako friend
+🔹 Po co to jest?
+Operator << (czytany jako „stream insertion”) służy do drukowania obiektów Twojej klasy przez std::cout.
+
+Chcesz napisać:
+std::cout << kinga;
+
+i dostać np.:
+Kinga, bureaucrat grade 5.
+
+🔹 Dlaczego friend?
+name i grade są prywatne (private),
+więc kod spoza klasy nie może ich używać bezpośrednio.
+
+Ale operator << jest funkcją spoza klasy.
+Żeby mógł zajrzeć do tych pól (name, grade), musisz mu pozwolić — i to robisz właśnie słowem kluczowym friend.
+
+🔹 Jak to zapisać logicznie (pseudokod)
+W środku Twojej klasy, w sekcji public, dopiszesz:
+
+friend std::ostream& operator<<(std::ostream& out, const Bureaucrat& b);
+
+To mówi kompilatorowi:
+„Ta funkcja operator<< jest moim przyjacielem,
+więc może mieć dostęp do moich prywatnych pól.”
+
+
+🧩 1️⃣ Dlaczego klasy wyjątków są „wewnątrz” klasy Bureaucrat
+Nie robimy dwóch osobnych plików, bo:
+te wyjątki są ściśle powiązane tylko z jedną klasą,
+nie chcesz ich używać w innych projektach,
+dzięki temu zachowujesz porządek — wyjątek jest częścią Bureaucrat, a nie niezależnym bytem.
+
+Inaczej mówiąc:
+➡️ one są „częścią mechanizmu” Bureaucrat,
+tak jak śruby są częścią silnika — nie mają sensu bez niego.
+
+🧩 2️⃣ Co one robią w praktyce
+Wewnątrz Twojego kodu, gdy grade będzie za duży lub za mały, nie chcesz kończyć programu, tylko rzucić wyjątek, który potem możesz złapać (try/catch).
+Dlatego każda taka wewnętrzna klasa ma jedno zadanie
+„Opisać konkretny rodzaj błędu i dać komunikat, który program może później odczytać.”
+To jest właśnie rola what() — ma zwrócić tekstowy opis błędu.
+
+Co znaczy to „public”
+To jest poziom dostępu.
+Jeśli napiszesz public, to Twoja klasa zachowa publiczne metody rodzica.
+Czyli np. metoda what() z std::exception będzie dostępna,
+i możesz ją nadpisać własną wersją.
+
+1️⃣ Typ zwracany przez what()
+Funkcja what() musi zwracać const char* (czyli wskaźnik na tekst).
+Nie może być typu void.
+
+Dlaczego?
+→ Bo funkcja what() w klasie std::exception (z której dziedziczysz) ma właśnie taki typ.
+Jeśli dasz inny, to nie będzie nadpisywać poprawnie oryginalnej wersji, a to spowoduje ostrzeżenie lub błąd przy kompilacji.
+
+2️⃣ const przy what()
+what() musi być const, bo nie może zmieniać obiektu wyjątku.
+(W skrócie: metoda ma tylko informować, nie modyfikować).
+
+1️⃣ Skąd w ogóle what()?
+
+std::exception to bazowa klasa dla wszystkich wyjątków w C++.
+Jedną z jej publicznych metod jest właśnie:
+virtual const char* what() const noexcept;
+Jej zadanie: zwraca tekstowy opis wyjątku, który można wyświetlić w catch.
+Dlatego gdy tworzysz własny wyjątek, np. GradeTooHighException, nadpisujesz what(), żeby Twój wyjątek też miał swój opis.
+
+2️⃣ Dlaczego const char*, a nie std::string?
+
+Bezpieczeństwo w pamięci: std::exception::what() musi działać zawsze i nie może rzucać nowych wyjątków.
+const char* jest „statycznym” stringiem w pamięci – znasz "tekst" w c++? To właśnie const char*.
+Nie tworzymy nowego obiektu typu std::string w funkcji, więc nic się nie psuje w momencie rzucania wyjątku.
+std::string może alokować pamięć dynamicznie, a jeśli coś pójdzie nie tak przy alokacji w what(), moglibyśmy wpaść w kolejny wyjątek podczas obsługi wyjątku – koszmar C++!
+
+3️⃣ Dlaczego const i noexcept?
+
+const: metoda nie zmienia stanu obiektu wyjątku. Wyjątek już istnieje, my tylko chcemy przeczytać tekst.
+noexcept: gwarancja, że funkcja nigdy nie rzuci wyjątku.
+To jest bardzo ważne w catch, bo jeśli what() rzuci wyjątek w trakcie obsługi innego wyjątku, program zazwyczaj kończy się katastrofalnie.
+
+4️⃣ Jak to działa w pamięci
+
+Wyobaź sobie:
+throw Bureaucrat::GradeTooHighException();
+Tworzony jest obiekt wyjątku na stosie lub w pamięci automatycznej.
+Kiedy wyłapiesz go w catch:
+
+catch (std::exception &e)
+{
+    std::cout << e.what() << std::endl;
+}
+Wywoływana jest metoda what() tego obiektu.
+what() zwraca adres statycznego tekstu "Grade too high" (albo innego, który ustalisz).
+Dzięki temu można bezpiecznie wyświetlić komunikat, nie ryzykując kolejnego wyjątku ani błędu w pamięci.
+
+5️⃣ Logika implementacji
+W ciele klasy wyjątków robimy coś jak „stała tablica znaków w pamięci”:
+what() -> zwraca "opis błędu"
+
+Nie tworzymy nowych stringów dynamicznie.
+Dzięki temu jest zgodne ze standardem C++ i możesz używać catch(std::exception &e) uniwersalnie.
+
+6️⃣ Jak o tym myśleć „dla siebie”
+
+const char* → statyczny, niezmienny tekst w pamięci.
+what() → informacja tylko do odczytu o tym, co poszło źle.
+Dziedziczenie po std::exception → Twój wyjątek zachowuje się jak wszystkie inne wyjątki w C++.
+Dzięki temu w main() możesz pisać:
+try {
+    // coś, co może rzucić Bureaucrat::GradeTooHighException
+} catch (std::exception &e) {
+    std::cout << e.what() << std::endl;
+}
+I wszystko działa bezpiecznie i elegancko.
+
+🔹 Proste notatki co do funkcji
+
+Konstruktor główny
+Tworzy obiekt z imieniem i grade.
+Sprawdza poprawność grade i rzuca wyjątki.
+
+Konstruktor kopiujący
+Tworzy kopię istniejącego obiektu.
+Kopiuje wszystkie pola, w tym const name.
+
+Operator przypisania
+Zastępuje wartości w istniejącym obiekcie wartościami z innego.
+Nie możemy zmieniać const name, więc kopiujemy tylko grade.
+Zwraca referencję do siebie, żeby umożliwić łańcuchowe przypisania.
+
+Destruktor
+Sprząta obiekt.
+W tym projekcie nie trzeba zwalniać pamięci dynamicznej (nie używasz new), więc może być pusty.
+
+1️⃣ Co to jest lista inicjalizacyjna?
+W C++ lista inicjalizacyjna to specjalny zapis po nazwie konstruktora, w którym inicjalizujesz pola obiektu zanim wejdziesz do ciała konstruktora.
+Jest konieczna dla pól const i referencji (&), bo nie da się ich przypisać w ciele konstruktora.
+Daje też często lepszą wydajność, bo pola są tworzone od razu z odpowiednią wartością, zamiast tworzyć puste i potem przypisywać.
+
+Lista inicjalizacyjna jest zawsze po nazwie konstruktora, przed {}.
+Służy do ustawienia const, referencji i wszystkich pól, które muszą być stworzone od razu.
+Pozwala też ustawić wartości innych pól, zanim program wejdzie do środka konstruktora.
+Daje bezpieczeństwo – nie da się zapomnieć o przypisaniu const.

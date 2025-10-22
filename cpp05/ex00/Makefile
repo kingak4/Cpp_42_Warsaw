@@ -1,6 +1,6 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-NAME = bure
+NAME = bureaucrat
 SRC = main.cpp Bureaucrat.cpp
 OBJ = $(SRC:.cpp=.o)
 

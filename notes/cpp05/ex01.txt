@@ -1,0 +1,25 @@
+🧩 ex01 – Form
+
+Cel: dodać klasę Form, którą może podpisywać Bureaucrat.
+
+Atrybuty:
+const std::string name
+bool isSigned
+const int gradeToSign
+const int gradeToExecute
+
+Zasady:
+Rzucaj GradeTooHighException / GradeTooLowException, jeśli grade nie mieści się w 1–150.
+beSigned(Bureaucrat) → jeśli urzędnik ma wystarczająco wysoki grade, form jest podpisany.
+Jeśli nie – wyjątek.
+Bureaucrat ma nową funkcję: signForm() → próbuje podpisać form.
+
+Wypisy:
+Alice signed TaxForm
+Bob couldn’t sign TaxForm because grade too low.
+
+
+🔍 Uczysz się:
+współpracy klas,
+przekazywania obiektów jako argumentów,
+obsługi wyjątków między klasami.

@@ -8,7 +8,7 @@ Wtorek (____/____/2025)
 
 Środa (____/____/2025)
 
--zacząć cpp05
+-zrobic ex00 i ex01.
 
 Czwartek (____/____/2025)
 

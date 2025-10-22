@@ -1,0 +1,19 @@
+🧩 ex03 – Intern
+Cel: stworzyć klasę Intern, która potrafi tworzyć formularze na żądanie.
+
+Funkcja:
+AForm* makeForm(std::string formName, std::string target)
+
+Jeśli rozpoznaje nazwę (np. „robotomy request”) → tworzy i zwraca odpowiedni formularz.
+Jeśli nie rozpoznaje → wypisuje błąd.
+
+Przykład:
+Intern someRandomIntern;
+AForm* rrf = someRandomIntern.makeForm("robotomy request", "Bender");
+
+➡️ wypisze: Intern creates RobotomyRequestForm
+
+🔍 Uczysz się:
+wskaźników na obiekty,
+dynamicznego tworzenia (new),
+prostego fabrycznego wzorca projektowego (factory pattern).

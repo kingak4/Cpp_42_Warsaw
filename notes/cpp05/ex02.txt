@@ -1,0 +1,24 @@
+🧩 ex02 – AForm + konkretne formularze
+
+Cel: stworzyć bazową klasę abstrakcyjną AForm, po której dziedziczą konkretne formularze:
+
+ShrubberyCreationForm
+RobotomyRequestForm
+PresidentialPardonForm
+Każda ma inny cel i wymagany poziom:
+
+| Formularz              | Grade do podpisu | Grade do wykonania | Akcja                                                 |
+| ---------------------- | ---------------- | ------------------ | ----------------------------------------------------- |
+| ShrubberyCreationForm  | 145              | 137                | Tworzy plik `<target>_shrubbery` z ASCII drzewami 🌳  |
+| RobotomyRequestForm    | 72               | 45                 | 50% szansy na sukces „robotomizacji” 🤖               |
+| PresidentialPardonForm | 25               | 5                  | Informuje o ułaskawieniu przez Zaphoda Beeblebroxa 👑 |
+
+
+Każdy formularz ma funkcję execute(Bureaucrat const &executor) const
+Bureaucrat dostaje executeForm() – próbuje wykonać dany formularz.
+
+🔍 Uczysz się:
+dziedziczenia,
+klas abstrakcyjnych (= 0),
+polimorfizmu,
+pracy z plikami (ofstream).

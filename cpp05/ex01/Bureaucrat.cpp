@@ -46,6 +46,7 @@ void Bureaucrat::incrementGrade()
 	else
 		grade = grade - 1;
 }
+
 void Bureaucrat::decrementGrade()
 {
 	if(grade == 150)
@@ -53,6 +54,7 @@ void Bureaucrat::decrementGrade()
 	else
 		grade = grade + 1;
 }
+
 const char *Bureaucrat::GradeTooHighException::what() const throw()
 {
 	return("Grade too high");
@@ -67,12 +69,12 @@ void Bureaucrat::signForm(Form &f) const
 {
 	try
 	{
-		form.beSigned(*this);
+		f.beSigned(*this);
 	}
 	catch(const Form::GradeTooLowException &e)
 	{
-		std::cout << "Couldn't sign " << form.getName() << " because " << getName() << "'s grade is too low!" << std::endl;
-	}	
+		std::cerr << "Couldn't sign " << f.getName() << " because " << getName() << "'s grade is too low!" << std::endl;
+	}
 }
 
 std::ostream& operator<<(std::ostream& out, const Bureaucrat& b)

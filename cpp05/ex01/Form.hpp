@@ -5,6 +5,8 @@
 # include <string>
 # include "Bureaucrat.hpp"
 
+class Bureaucrat;
+
 class Form
 {
 	private:
@@ -17,10 +19,10 @@ class Form
 		Form(Form &other);
 		Form &operator=(Form &other);
 		~Form();
-		std::string	getName(void) const;
 		bool getIsSigned(void) const;
 		int getSignGrade(void) const;
 		int getExecGrade(void) const;
+		std::string	getName(void) const;
 		void beSigned(const Bureaucrat &bureaucrat);
 		friend std::ostream& operator<<(std::ostream& out, const Form& f);
 

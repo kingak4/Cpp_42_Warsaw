@@ -14,12 +14,58 @@ beSigned(Bureaucrat) → jeśli urzędnik ma wystarczająco wysoki grade, form j
 Jeśli nie – wyjątek.
 Bureaucrat ma nową funkcję: signForm() → próbuje podpisać form.
 
-Wypisy:
-Alice signed TaxForm
-Bob couldn’t sign TaxForm because grade too low.
-
 
 🔍 Uczysz się:
 współpracy klas,
 przekazywania obiektów jako argumentów,
 obsługi wyjątków między klasami.
+
+| Zmienna     | Typ          | Rola w programie                         | Wartość początkowa       |
+| ----------- | ------------ | ---------------------------------------- | ------------------------ |
+| `name`      | const string | Nazwa formularza                         | ustalana w konstruktorze |
+| `isSigned`  | bool         | Czy formularz został podpisany           | false                    |
+| `signGrade` | const int    | Wymagany stopień do podpisania           | ustalany w konstruktorze |
+| `execGrade` | const int    | Wymagany stopień do wykonania formularza | ustalany w konstruktorze |
+
+
+void Bureaucrat::signForm(Form &f) const
+1. Co robi ta funkcja
+signForm jest metodą klasy Bureaucrat.
+Jej zadaniem jest próba podpisania formularza (Form) przez tego biurokratę.
+Funkcja przyjmuje referencję do obiektu Form (Form &f), czyli formularza, który chcemy podpisać.
+
+2. Mechanizm działania
+try – próbujemy wykonać podpis:
+form.beSigned(*this);
+beSigned(*this) wywołuje funkcję beSigned w klasie Form.
+*this oznacza obiekt bieżącego biurokraty, który próbuje podpisać formularz.
+
+Co robi Form::beSigned:
+Sprawdza, czy grade biurokraty jest wystarczająco wysoki (bureaucrat.getGrade() <= signGrade).
+Jeśli tak → ustawia isSigned = true.
+Jeśli nie → rzuca wyjątek Form::GradeTooLowException.
+catch – obsługa wyjątku:
+
+catch(const Form::GradeTooLowException &e)
+{
+	std::cerr << "Couldn't sign " << f.getName() << " because " << getName() << "'s grade is too low!" << std::endl;
+}
+
+Jeśli beSigned rzuci GradeTooLowException (czyli biurokrata ma zbyt niski stopień), program nie zakończy się błędem.
+Zamiast tego wypisuje komunikat, np.:
+Couldn't sign TaxForm because Alice's grade is too low!
+
+3. Jak to łączy się z klasą Form
+Bureaucrat nie zmienia bezpośrednio pól Form.
+Wszystko dzieje się w metodzie Form::beSigned, do której przekazujemy biurokratę.
+Bureaucrat::signForm jest interfejsem użytkownika, który pozwala biurokracie "spróbować podpisać" formularz i wypisać wynik.
+
+4. Podsumowanie działania krok po kroku
+Wywołanie b.signForm(f) (gdzie b to Bureaucrat, f to Form).
+Funkcja próbuje wywołać f.beSigned(b).
+
+W beSigned:
+jeśli b.getGrade() <= f.getSignGrade() → formularz podpisany (isSigned = true)
+jeśli nie → rzucany wyjątek GradeTooLowException
+Jeśli wyjątek został rzucony → catch przechwytuje go i wypisuje komunikat o nieudanym podpisaniu.
+Jeśli wyjątku nie ma → podpisano, można dodatkowo wypisać komunikat sukcesu (opcjonalnie).

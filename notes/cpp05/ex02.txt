@@ -22,3 +22,106 @@ dziedziczenia,
 klas abstrakcyjnych (= 0),
 polimorfizmu,
 pracy z plikami (ofstream).
+
+Dlaczego AForm ma być klasą abstrakcyjną — konkretne powody i zastosowania
+To znaczy, że AForm to szablon (plan), a nie gotowa rzecz.
+Wyobraź sobie, że masz urzędowy system, w którym różni urzędnicy obsługują różne formularze:
+
+jeden sadzi drzewka (ShrubberyCreationForm),
+drugi robotyzuje (RobotomyRequestForm),
+trzeci ułaskawia (PresidentialPardonForm).
+
+Ale każdy formularz ma pewne wspólne zasady:
+ma nazwę,
+ma poziomy uprawnień do podpisu i wykonania,
+może być podpisany lub nie,
+można go próbować wykonać,
+może rzucać wyjątki.
+
+💡 AForm to klasa, która definiuje te wspólne rzeczy.
+Ale sama nie robi żadnego konkretnego działania, bo nie wiadomo, co miałaby zrobić — posadzić drzewko, zrobotyzować kogoś czy ułaskawić?
+Dlatego AForm jest abstrakcyjna — mówi:
+„Każda konkretna forma musi mieć własny sposób wykonania (action()). Ja tylko określam zasady.”
+
+🔹 Przykład z życia (bardzo obrazowy)
+Wyobraź sobie formularz urzędowy:
+„Formularz do załatwienia sprawy.”
+Wiesz, że każdy formularz musi mieć:
+
+pole z nazwiskiem,
+pole z numerem sprawy,
+podpis urzędnika.
+
+Ale nie wiesz, do czego on służy — może do podatków, może do wniosku o paszport, może o pozwolenie na budowę.
+Więc taki formularz jest abstrakcyjny — sam w sobie bezużyteczny.
+Dopiero, gdy powstaje konkretny:
+
+„Wniosek o paszport” → (czyli PresidentialPardonForm)
+„Zgłoszenie budowy” → (czyli ShrubberyCreationForm)
+„Wniosek o robotyzację” → (czyli RobotomyRequestForm)
+— wtedy wiadomo, co konkretnie robi ten formularz, czyli jaka jest jego akcja.
+
+🔹 Polimorfizm — najprostsze wyjaśnienie
+Polimorfizm = „różne zachowania przez ten sam interfejs”.
+Czyli możesz mieć np. listę formularzy (AForm*),
+a mimo to każdy z nich wykona coś innego po wywołaniu execute().
+
+Przykład w uproszczonym pseudokodzie:
+AForm* forms[3] = {
+    new ShrubberyCreationForm("home"),
+    new RobotomyRequestForm("Bender"),
+    new PresidentialPardonForm("Arthur")
+};
+
+for (int i = 0; i < 3; i++)
+    forms[i]->execute(bureaucrat);
+
+Tutaj:
+dla 1. elementu – posadzi drzewko,
+dla 2. – spróbuje robotyzować,
+dla 3. – wypisze ułaskawienie.
+
+Ty nie musisz wiedzieć, która to klasa.
+Program sam wie, bo każda forma ma swoją wersję execute().
+To właśnie polimorfizm — ta sama funkcja (execute()), ale różne zachowanie zależnie od rodzaju formularza.
+
+🔹 Co znaczy „wspólny interfejs”?
+To znaczy, że każda forma ma te same metody, np.:
+beSigned()
+execute()
+getName()
+getTarget()
+Dzięki temu możesz napisać kod, który działa z dowolnym formularzem — nie musisz pisać osobno dla każdej klasy.
+
+🔹 Co znaczy „separation of concerns” — po ludzku
+
+Podział obowiązków.
+Czyli:
+AForm zajmuje się biurokratyczną stroną (czy podpisano, czy grade jest ok).
+konkretna forma (Shrubbery, Robotomy, Presidential) zajmuje się tym, co się dzieje po wykonaniu.
+
+Tak jak w urzędzie:
+Sekretarka sprawdza, czy wniosek jest kompletny (czy podpisany, czy masz wymagany dokument).
+Dopiero potem urzędnik wykonuje czynność (np. wydaje paszport).
+
+🔹 Co daje to Tobie jako programiście?
+✅ Możesz łatwo dodawać nowe formularze, np. MarriageApprovalForm, SpaceTravelForm, itp.
+Nie musisz nic zmieniać w Bureaucrat ani w AForm. Po prostu dodajesz nową klasę dziedziczącą i piszesz nową action().
+✅ Możesz przechowywać różne formularze w jednej tablicy lub wektorze (std::vector<AForm*>).
+✅ Kod jest czystszy, bardziej logiczny i łatwiejszy do utrzymania.
+
+🔹 Bardzo krótka analogia 
+
+
+Konkretna lista zadań do wykonania (skrót — tick-lista)
+
+ Zaprojektuj AForm.hpp z prywatnymi polami, getterami, beSigned(), execute() i czystą wirtualną action().
+ Zadeklaruj i zaimplementuj wyjątki (GradeTooHigh, GradeTooLow, NotSigned).
+ Zaimplementuj AForm.cpp (konstruktor, beSigned, execute).
+ Zaktualizuj/zaimplementuj Bureaucrat.hpp/cpp z signForm i executeForm.
+ Dodaj nagłówki i implementacje ShrubberyCreationForm, RobotomyRequestForm, PresidentialPardonForm.
+ Zaimplementuj action() w każdej klasie (zachowanie opisane wyżej).
+ Napisz main.cpp z wymienionymi testami.
+ Uzupełnij Makefile i przetestuj make, make fclean, make re.
+ Uruchom testy; popraw błędy.
+ (Opcjonalnie) Uruchom valgrind i popraw wycieki.

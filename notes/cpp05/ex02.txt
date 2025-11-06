@@ -125,3 +125,137 @@ Konkretna lista zadań do wykonania (skrót — tick-lista)
  Uzupełnij Makefile i przetestuj make, make fclean, make re.
  Uruchom testy; popraw błędy.
  (Opcjonalnie) Uruchom valgrind i popraw wycieki.
+
+ 🧠 2. Co to znaczy, że klasa ma być abstrakcyjna?
+
+Klasa abstrakcyjna to taka, której nie można tworzyć bezpośrednio (nie można zrobić AForm form;), tylko można dziedziczyć z niej.
+To osiągamy przez wprowadzenie co najmniej jednej czysto wirtualnej funkcji, czyli takiej, która nie ma implementacji w tej klasie,
+Samo = 0 na końcu mówi kompilatorowi:
+„Ta funkcja musi być zdefiniowana w klasie pochodnej, bo tutaj nie ma ciała.”
+
+🧩 5. Co się stanie po dodaniu tej funkcji
+
+Twoja klasa AForm stanie się abstrakcyjna.
+→ Nie będziesz mogła stworzyć obiektu typu AForm bezpośrednio.
+Klasy dziedziczące (ShrubberyCreationForm, RobotomyRequestForm, PresidentialPardonForm)
+będą musiały zaimplementować tę funkcję, bo inaczej one też staną się abstrakcyjne.
+
+W praktyce: każda z tych klas zrobi coś innego w execute():
+jedna zapisze do pliku,
+inna wypisze komunikat lub losowy wynik,
+jeszcze inna wypisze informację o ułaskawieniu.
+
+Wyobraź sobie sytuację:
+Masz bazową klasę AForm.
+To taki szablon dla wszystkich formularzy — definiuje, czym jest formularz, ale nie mówi jeszcze co on konkretnie robi.
+
+Każdy konkretny formularz (np. ShrubberyCreationForm, RobotomyRequestForm, PresidentialPardonForm) ma robić swoją unikalną rzecz.
+Czyli — wszystkie są formularzami, ale każdy działa inaczej.
+
+| Klasa                    | Funkcja `execute()`        | Co robi                                   |
+| ------------------------ | -------------------------- | ----------------------------------------- |
+| `AForm`                  | `= 0` (czyli nie ma ciała) | tylko mówi „każdy formularz musi to mieć” |
+| `ShrubberyCreationForm`  | własna `execute()`         | tworzy plik z ASCII drzewkiem             |
+| `RobotomyRequestForm`    | własna `execute()`         | robi 50% szans robotyzacji                |
+| `PresidentialPardonForm` | własna `execute()`         | wypisuje, że ktoś został ułaskawiony      |
+
+
+📦 Jak to wygląda w praktyce (na przykładzie użycia)
+Masz funkcję w Bureaucrat:
+bureaucrat.executeForm(form);
+
+Tutaj form może być dowolnym typem dziedziczącym po AForm.
+Kompilator wie, że execute() jest wirtualna, więc w momencie uruchomienia programu (runtime) wykona odpowiednią wersję tej funkcji, zależnie od tego, jaki konkretny formularz przekazano.
+Czyli:
+AForm *f1 = new ShrubberyCreationForm("home");
+AForm *f2 = new RobotomyRequestForm("Bender");
+
+bureaucrat.executeForm(*f1); // wywoła ShrubberyCreationForm::execute()
+bureaucrat.executeForm(*f2); // wywoła RobotomyRequestForm::execute()
+
+To jest tzw. polimorfizm – jedno wywołanie (execute()) zachowuje się inaczej w zależności od konkretnego obiektu.
+
+💡 Proste porównanie z życia
+
+Wyobraź sobie AForm jako instrukcję dla urzędnika:
+„Każdy formularz ma być wypełniony, podpisany i wykonany, ale ja nie mówię co dokładnie robisz, tylko że coś masz zrobić.”
+
+A konkretne formularze (Shrubbery, Robotomy, Presidential) to już różne wersje tej instrukcji:
+jeden każe sadzić krzaczki 🌳,
+drugi robotyzować 🤖,
+trzeci ułaskawiać 👑.
+Każdy wie, co robi, ale wszyscy stosują się do wspólnego interfejsu AForm.
+
+🧠 Co to jest polimorfizm
+
+Słowo pochodzi z greckiego:
+„poli” = wiele,
+„morfizm” = formy / kształty.
+Czyli dosłownie:
+👉 „wiele form” albo „jedna rzecz, która może przybierać różne formy”.
+
+🎯 W programowaniu
+Polimorfizm oznacza, że ten sam typ (np. wskaźnik do klasy bazowej)
+może zachowywać się inaczej,
+w zależności od tego, jaki obiekt rzeczywiście wskazuje.
+
+🧩 Jak to sobie łatwo zapamiętać
+Zapamiętaj to jednym zdaniem:
+
+Polimorfizm = jedno polecenie, wiele możliwych zachowań.
+Albo bardziej obrazowo:
+Jeden pilot – różne urządzenia.
+
+🧩 Jak to działa w C++
+
+Wszystko opiera się na funkcjach wirtualnych (virtual).
+To one pozwalają, żeby w czasie działania programu (runtime)
+C++ sprawdził, której wersji funkcji użyć.
+
+Bez virtual — kompilator wybiera funkcję po typie wskaźnika.
+Z virtual — wybiera ją po rzeczywistym typie obiektu.
+
+💡 1️⃣ Jak działa zapisywanie pliku w C++
+
+W C++ do pracy z plikami używasz strumieni plikowych z biblioteki <fstream>.
+
+std::ofstream → otwiera plik do zapisu (output file stream),
+std::ifstream → otwiera plik do odczytu (input file stream),
+std::fstream → pozwala na czytanie i pisanie.
+
+🔹 Jak to łatwo zapamiętać
+
+👉 „.c_str() = C version of string.”
+czyli „daj mi wersję tego stringa w stylu języka C”.
+🔹 W Twoim przypadku:
+
+Masz:
+std::ofstream shrubberyFile(fileName.c_str());
+
+Czyli:
+
+„Otwórz plik o nazwie, która jest zapisana w zmiennej fileName.”
+Bez .c_str() kompilator by się wkurzył, bo ofstream nie rozumie bezpośrednio „nowoczesnego” napisu (std::string).
+On potrzebuje „starego” napisu (czyli właśnie tego, co zwraca .c_str()).
+
+🔹 Co robi ta klasa?
+
+ShrubberyCreationForm dziedziczy po AForm, więc:
+ma w sobie wszystko, co ma AForm (np. name, isSigned, signGrade, execGrade, execute() itd.),
+ale dodaje coś swojego — w tym przypadku target (czyli nazwę pliku, do którego zapisze drzewko 🌳).
+
+Dwukropek : po nazwie konstruktora oznacza listę inicjalizacyjną.
+To sposób, w jaki w C++ ustawiasz wartości pól (zmiennych członkowskich) od razu przy tworzeniu obiektu.
+
+| Konstruktor      | Kiedy się wywołuje                    | Co robi                                       |
+| ---------------- | ------------------------------------- | --------------------------------------------- |
+| **Domyślny**     | gdy tworzysz obiekt bez argumentów    | ustawia wartości startowe („z góry ustalone”) |
+| **Z argumentem** | gdy tworzysz obiekt z jakąś wartością | ustawia wartości przekazane przez użytkownika |
+
+
+| Typ funkcji              | Nazwa                                                 | Co robi                                       |
+| ------------------------ | ----------------------------------------------------- | --------------------------------------------- |
+| Konstruktor domyślny     | `ShrubberyCreationForm()`                             | tworzy pusty obiekt z domyślnymi wartościami  |
+| Konstruktor z argumentem | `ShrubberyCreationForm(std::string target)`           | tworzy obiekt z konkretnym celem              |
+| Konstruktor kopiujący    | `ShrubberyCreationForm(ShrubberyCreationForm &other)` | tworzy kopię innego obiektu                   |
+| Operator przypisania     | `operator=`                                           | przypisuje dane z jednego obiektu do drugiego |

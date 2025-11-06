@@ -1,5 +1,6 @@
 #include "AForm.hpp"
 
+
 AForm::AForm(std::string name, int signGrade, int execGrade) : name(name), isSigned(false), signGrade(signGrade), execGrade(execGrade)
 {
 	if(signGrade < 1 || execGrade < 1)
@@ -8,12 +9,12 @@ AForm::AForm(std::string name, int signGrade, int execGrade) : name(name), isSig
 		throw GradeTooLowException();
 }
 
-AForm::AForm(Form &other) : name(other.name), signGrade(other.signGrade), execGrade(other.execGrade)
+AForm::AForm(AForm &other) : name(other.name), signGrade(other.signGrade), execGrade(other.execGrade)
 {
 	this->isSigned = other.isSigned;
 }
 
-AForm& AForm::operator=(Form &other)
+AForm& AForm::operator=(AForm &other)
 {
 	if(this == &other)
 		return(*this);
@@ -65,4 +66,18 @@ const char *AForm::GradeTooHighException::what() const throw()
 const char *AForm::GradeTooLowException::what() const throw()
 {
 	return("Grade is too low");
+}
+
+const char *AForm::FormNotSignedException::what() const throw()
+{
+	return("Form is not signed!");
+}
+
+void AForm::checkForm(Bureaucrat const &executor) const
+{
+	if (this->isSigned == false)
+		throw FormNotSignedException();
+	if (executor.getGrade() > this->execGrade)
+		throw GradeTooLowException();
+	std::cout << executor.getName() << " executed " << getName() << std::endl;
 }

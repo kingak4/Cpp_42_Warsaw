@@ -52,7 +52,7 @@ void AForm::beSigned(const Bureaucrat &bureaucrat)
 		throw GradeTooLowException();
 }
 
-std::ostream& operator<<(std::ostream& out, const Form& f)
+std::ostream& operator<<(std::ostream& out, const AForm& f)
 {
 	out << f.getName() << ", isSigned: " << f.getIsSigned() << ", signGrade: " << f.getSignGrade() << ", execGrade: " << f.getExecGrade() << std::endl;
 	return(out);

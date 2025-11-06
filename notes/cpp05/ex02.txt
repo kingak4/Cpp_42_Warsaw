@@ -259,3 +259,164 @@ To sposób, w jaki w C++ ustawiasz wartości pól (zmiennych członkowskich) od 
 | Konstruktor z argumentem | `ShrubberyCreationForm(std::string target)`           | tworzy obiekt z konkretnym celem              |
 | Konstruktor kopiujący    | `ShrubberyCreationForm(ShrubberyCreationForm &other)` | tworzy kopię innego obiektu                   |
 | Operator przypisania     | `operator=`                                           | przypisuje dane z jednego obiektu do drugiego |
+
+
+1️⃣ RobotomyRequestForm::RobotomyRequestForm()
+→ To konstruktor domyślny tej klasy.
+Wywoływany, gdy utworzysz obiekt bez argumentów, np.:
+
+RobotomyRequestForm form;
+
+
+2️⃣ : AForm("RobotomyRequestForm", 72, 45)
+→ To lista inicjalizacyjna.
+Tutaj wywołujesz konstruktor klasy bazowej AForm.
+Każdy formularz dziedziczy po AForm, więc najpierw musi się utworzyć część bazowa.
+
+W praktyce:
+
+nazwa formularza = "RobotomyRequestForm",
+minimalny grade do podpisania = 72,
+minimalny grade do wykonania = 45.
+
+Czyli w AForm tworzysz obiekt z tymi parametrami.
+
+3️⃣ , target("default")
+→ Ustawiasz wartość pola target (cel robotomizacji) na "default".
+To zwykły string — czyli jeśli nie podasz celu, domyślnie jest „default”.
+
+4️⃣ {}
+→ Ciało konstruktora jest puste, bo wszystko zrobiono w liście inicjalizacyjnej.
+
+3️⃣ , target(target)
+→ Inicjalizujesz swoje prywatne pole target wartością przekazaną do konstruktora.
+Czyli:
+
+argument funkcji target (ten w nawiasach) jest kopiowany do
+pola klasy target (tego prywatnego).
+Tak naprawdę dzieje się coś w stylu:
+
+this->target = target;
+
+ale zrobione bezpośrednio przy tworzeniu obiektu (bardziej wydajnie).
+
+1️⃣ To konstruktor kopiujący,
+czyli używany, gdy robisz np.:
+
+RobotomyRequestForm a("Bender");
+RobotomyRequestForm b(a);   // <-- tutaj!
+
+
+2️⃣ : AForm(other)
+→ Wołasz konstruktor kopiujący klasy bazowej AForm.
+Dzięki temu kopiujesz część wspólną (czyli nazwę, grade'y, status podpisania itp.).
+
+3️⃣ , target(other.getTarget())
+→ Ustawiasz target nowego obiektu na taki sam, jak w obiekcie other.
+other.getTarget() wywołuje funkcję zwracającą target z innego obiektu.
+
+4️⃣ {}
+→ Puste ciało, bo wszystko załatwione w liście inicjalizacyjnej.
+
+
+RobotomyRequestForm &RobotomyRequestForm::operator=(RobotomyRequestForm &other)
+{
+    (void)other;
+    return (*this);
+}
+🔍 Krok po kroku:
+1️⃣ To operator przypisania,
+czyli używany, gdy piszesz:
+
+cpp
+Skopiuj kod
+RobotomyRequestForm a("Bender");
+RobotomyRequestForm b;
+b = a;   // <-- tutaj!
+2️⃣ (void)other;
+→ To tylko po to, żeby kompilator nie ostrzegał, że „other” jest nieużywane.
+Na razie operator nic nie robi (bo nie kopiujesz żadnych danych ręcznie).
+
+3️⃣ return (*this);
+→ Zwracasz referencję do tego samego obiektu, który właśnie przypisujesz.
+To standardowy zapis w operatorach przypisania.
+
+💡 W praktyce – tutaj operator przypisania nie kopiuje niczego,
+bo AForm i target nie są przypisane.
+Ale to jest minimalna poprawna wersja, która kompiluje się i działa bez błędów.
+
+| Konstruktor / Operator | Kiedy używany                         | Co robi                                |
+| ---------------------- | ------------------------------------- | -------------------------------------- |
+| **Domyślny**           | `RobotomyRequestForm form;`           | Tworzy obiekt z targetem `"default"`   |
+| **Z argumentem**       | `RobotomyRequestForm form("Bender");` | Tworzy obiekt z podanym targetem       |
+| **Kopiujący**          | `RobotomyRequestForm b(a);`           | Tworzy kopię istniejącego formularza   |
+| **Operator=**          | `b = a;`                              | Przypisuje jeden formularz do drugiego |
+| **Destruktor**         | `~RobotomyRequestForm()`              | Usuwa obiekt z pamięci (tu pusty)      |
+
+
+rand() daje Ci duże liczby, więc żeby mieć mały zakres (np. tylko 0 lub 1), używamy operatora %.
+
+Przykład:
+
+int result = rand() % 2;
+
+
+Jak to działa:
+
+% to reszta z dzielenia.
+
+rand() % 2 może dać tylko:
+0 (jeśli liczba była parzysta),
+1 (jeśli była nieparzysta).
+
+Więc masz 50% szans na 0 i 50% na 1 🎯
+
+
+🔍 Co się tu dzieje linijka po linijce
+1️⃣ try { ... }
+
+To jak powiedzenie:
+
+„Spróbuj wykonać ten fragment kodu — ale miej się na baczności, bo coś tu może się nie udać.”
+
+Czyli np.:
+otwieranie pliku,
+rzutowanie,
+
+wywołanie funkcji, która może „rzucić wyjątek”.
+
+2️⃣ catch (const std::exception &e)
+
+To blok, który „łapie” wyjątek, jeśli coś poszło nie tak.
+W C++ błędy są przekazywane w postaci obiektów typu std::exception (albo klas pochodnych).
+
+e to po prostu nazwa tego błędu, który został złapany.
+const – bo nie chcemy go modyfikować, tylko odczytać,
+
+& – żeby nie kopiować całego obiektu błędu, tylko użyć referencji,
+std::exception – to główna klasa wszystkich wyjątków w C++.
+
+3️⃣ e.what()
+
+Każdy wyjątek ma funkcję what(), która zwraca opis błędu — jako tekst (const char*).
+
+Czyli jakbyś spytała błąd:
+
+„Hej, co się stało?”
+A on odpowiada:
+„Grade is too low!” albo „File not found!”
+
+4️⃣ std::cerr << e.what() << std::endl;
+
+To wypisuje komunikat o błędzie do tzw. standardowego strumienia błędów (cerr).
+To działa prawie jak std::cout, ale:
+cout → normalne komunikaty programu,
+cerr → komunikaty błędów (np. żeby łatwo je było rozróżnić).
+
+🔁 Co to daje w praktyce?
+
+Bez try/catch:
+→ jeśli funkcja rzuci wyjątek, program się natychmiast zatrzyma.
+
+Z try/catch:
+→ program się nie wywali, tylko przejdzie do bloku catch i spokojnie wypisze, co poszło nie tak.

@@ -65,13 +65,13 @@ const char *Bureaucrat::GradeTooLowException::what() const throw()
 	return("Grade too low");
 }
 
-void Bureaucrat::signForm(Form &f) const
+void Bureaucrat::signForm(AForm &f) const
 {
 	try
 	{
 		f.beSigned(*this);
 	}
-	catch(const Form::GradeTooLowException &e)
+	catch(const AForm::GradeTooLowException &e)
 	{
 		std::cout << "Couldn't sign " << f.getName() << " because " << getName() << "'s grade is too low!" << std::endl;
 	}

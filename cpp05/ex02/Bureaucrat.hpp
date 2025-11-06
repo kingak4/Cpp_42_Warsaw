@@ -3,9 +3,9 @@
 
 # include <iostream>
 # include <string>
-#include "Form.hpp"
+#include "AForm.hpp"
 
-class Form;
+class AForm;
 
 class Bureaucrat
 {
@@ -21,7 +21,7 @@ class Bureaucrat
 		int	getGrade(void) const;
 		void incrementGrade();
 		void decrementGrade();
-		void signForm(Form &f) const;
+		void signForm(AForm &f) const;
 		friend std::ostream& operator<<(std::ostream& out, const Bureaucrat& b);
 
 		class GradeTooHighException : public std::exception

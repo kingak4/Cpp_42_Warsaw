@@ -23,11 +23,11 @@ std::string ShrubberyCreationForm::getTarget(void) const
 	return(target);
 }
 
-void ShrubberyCreationForm::execute(Bureaucrat const &executor) const
+void ShrubberyCreationForm::checkForm(Bureaucrat const &executor) const
 {
 	try
 	{
-		checkForm(executor);
+		AForm::checkForm(executor);
 		std::string fileName = getTarget() + "_shrubbery";
 		std::ofstream shrubberyFile(fileName.c_str());
 		shrubberyFile << "  *      *" << std::endl;

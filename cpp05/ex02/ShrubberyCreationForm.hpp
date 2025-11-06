@@ -18,8 +18,8 @@ class ShrubberyCreationForm : public AForm
 			ShrubberyCreationForm &operator=(ShrubberyCreationForm &other);
 			~ShrubberyCreationForm();
 			std::string getTarget(void) const;
-			void execute(Bureaucrat const &executor) const;
+			void checkForm(Bureaucrat const &executor) const;
 
-}
+};
 
 #endif

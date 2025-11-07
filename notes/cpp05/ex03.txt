@@ -17,3 +17,17 @@ AForm* rrf = someRandomIntern.makeForm("robotomy request", "Bender");
 wskaźników na obiekty,
 dynamicznego tworzenia (new),
 prostego fabrycznego wzorca projektowego (factory pattern).
+
+🔍 Co to jest ten target (np. "Bebok")?
+
+W skrócie:
+👉 target to obiekt, osoba albo rzecz, na której formularz ma wykonać swoją akcję.
+
+Każdy z trzech typów formularzy (AForm) ma inne „działanie”, a więc ten target jest konkretnym celem operacji.
+
+🧩 Po co to jest?
+
+To dzięki temu wszystkie klasy (ShrubberyCreationForm, RobotomyRequestForm, PresidentialPardonForm) mogą działać na różnych „celach”, ale korzystają z tego samego interfejsu AForm
+
+Każdy formularz robi co innego, ale wszystkie mają ten sam schemat:
+🟢 „stwórz formularz” → „podpisz go” → „wykonaj na targetcie”.

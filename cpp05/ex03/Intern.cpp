@@ -5,7 +5,7 @@
 
 Intern::Intern(){}
 
-Intern::Intern(Intern &other){}
+Intern::Intern(Intern &other){(void)other;}
 
 Intern &Intern::operator=(Intern &other)
 {

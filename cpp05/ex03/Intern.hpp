@@ -8,10 +8,11 @@ class AForm;
 
 class Intern
 {
-	Intern();
-	Intern(Intern &other);
-	Intern &operator=(Intern &other);
-	~Intern();
-	AForm* makeForm(std::string formName, std::string target);
+	public :
+			Intern();
+			Intern(Intern &other);
+			Intern &operator=(Intern &other);
+			~Intern();
+			AForm* makeForm(std::string formName, std::string target);
 };
 #endif

@@ -1,7 +1,7 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-NAME = 
-SRC = 
+NAME = Serializer
+SRC = Serializer.cpp main.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

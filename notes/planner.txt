@@ -4,10 +4,10 @@
 
 Poniedziałek (____/____/2025)
 
+- ogranać ex 01 i ex00
 
 Wtorek (____/____/2025)
--zrobic  ex02 i ex03.
-- zdać cpp05
+
 
 Środa (____/____/2025)
 

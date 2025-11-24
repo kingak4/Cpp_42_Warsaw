@@ -328,3 +328,334 @@ nanf, +inff, -inff → float pseudo
 nan, +inf, -inf → double pseudo
 wszystko inne → złe dane
 
+1. Liczby całkowite (int)
+
+Przykłady poprawnych:
+"0"
+"-42"
+"123"
+"+7"
+
+Warunki:
+Tylko cyfry + opcjonalny znak + lub - na początku.
+Mieści się w zakresie int (sprawdzasz później).
+
+2. Liczby zmiennoprzecinkowe typu float
+Przykłady poprawnych:
+"0.0f"
+"-12.3f"
+"4.2f"
+"nanf"
+"+inff"
+Warunki:
+Musi kończyć się na f.
+Może mieć część dziesiętną.
+Może mieć znak + lub -.
+Specjalne literały: nanf, +inff, -inff.
+
+3. Liczby zmiennoprzecinkowe typu double
+Przykłady poprawnych:
+
+"0.0"
+"-12.3"
+"4.2"
+"nan"
+"+inf"
+"-inf"
+Warunki:
+Bez f na końcu.
+Może zawierać kropkę.
+Może być znak + lub -.
+Specjalne literały: nan, +inf, -inf.
+4. Jeden znak (char)
+
+Przykłady poprawnych:
+"a"
+"Z"
+"*"
+"3" (też uznajemy jako char)
+
+Warunki:
+Długość 1 i nie jest cyfrą – wtedy traktujesz jako char.
+
+Jeśli długość > 1 → nie jest char.
+
+❌ NA CO PARSER NIE MOŻE POZWALAĆ
+Parser ma odrzucać wszystko inne, czyli:
+
+❌ 1. Mieszane typy
+"12a"
+"abc"
+"1.2.3"
+"--3"
+"4f4"
+"3ff"
+
+❌ 2. Float bez f
+"12."
+"42."
+"5.f"
+"5."
+
+❌ 3. Double z f
+"12.3ff"
+"4.2f " (spacja niedozwolona)
+
+❌ 4. Spacje wokół
+Parser nie akceptuje:
+" 42"
+"42 "
+" 12.3 "
+Masz dokładnie jeden argument i ma być idealnie poprawny.
+
+❌ 5. Puste stringi
+""
+❌ 6. Jakiekolwiek inne znaki
+
+"\n"
+"\t"
+"%"
+
+🧱 Co robisz w etapie 1?
+
+Twoim zadaniem jest:
+✔ 1. Napisać funkcję parse(), która:
+bierze const std::string & literal
+analizuje ją
+
+decyduje:
+czy to char
+czy to int
+czy to float
+czy to double
+czy to specjalny literał
+
+✔ 2. Jeśli nie pasuje do NICZEGO → rzucasz wyjątek “Invalid literal”.
+
+✅ Co to są specjalne literały?
+To są wartości, które nie są normalnymi liczbami, ale istnieją w typach float i double.
+I dlatego język C++ pozwala je zapisać specjalnymi słowami.
+
+🧠 1. nan – Not A Number
+
+Oznacza:
+👉 „To nie jest liczba”.
+
+Przykłady, kiedy tak powstaje:
+dzielenie 0.0 / 0.0
+pierwiastek z liczby ujemnej
+operacje matematyczne bez sensu
+
+W projekcie traktujesz nan jak double, a nanf jak float.
+🧠 2. +inf, -inf – nieskończoność
+
+Oznacza:
+👉 wynik działania, który jest tak duży, że nie mieści się w liczbie.
+
+Przykład:
+1.0 / 0.0 → +inf
+-1.0 / 0.0 → -inf
+
+To też są ważne przypadki, bo musisz je poprawnie sparsować i wypisać.
+
+W wersji float masz:
++inff
+-inff
+
+| Zapis  | Znaczenie                                  |
+| ------ | ------------------------------------------ |
+| `nan`  | Nie da się obliczyć / wynik jest bez sensu |
+| `+inf` | Nieskończenie duża liczba                  |
+| `-inf` | Nieskończenie mała liczba                  |
+
+📌 Dlaczego to ważne?
+
+Bo te stringi nie są błędne.
+Są poprawnymi wartościami double/float, które możesz zrzutować na inne typy.
+Twój parser MUSI je wykrywać jako:
+nan, +inf, -inf → double
+nanf, +inff, -inff → float
+
+
+1) Usuń spacje z początku i końca
+
+Ludzie mogą wpisać:
+
+"   42"
+"42    "
+"   4.2f   "
+→ Najpierw trims.
+
+2) Sprawdź czy to pseudo-literal (special value)
+
+Obsługiwane:
+"nan"
+"nanf"
+"+inf", "-inf"
+"+inff", "-inff"
+Jeśli taki string → od razu znasz typ:
+wersje bez f → double
+wersje z f → float
+Nic więcej tu nie sprawdzasz.
+
+3) Sprawdź, czy to CHAR literal
+Ale UWAGA – nie 'a', tylko a.
+
+W Module 06 char nie ma apostrofów.
+Jeśli masz pojedynczy znak, który:
+nie jest cyfrą
+jest ASCII i da się wyświetlić
+→ to jest char.
+Przykład:
+"a" → char
+"Z" → char
+"!" → char
+"1" → to NIE char (traktujemy jako liczbę)
+
+4) Sprawdź, czy to INT
+
+Warunki:
+
+może zaczynać się od + lub -
+
+musi być tylko z cyfr
+
+nie może mieć kropki
+
+nie może mieć litery f
+
+Przykłady poprawne:
+
+"0"
+
+"-42"
+
+"+123"
+
+To daje typ: int
+
+Dodatkowo:
+Po wykryciu → spróbuj rzutować std::stoll,
+sprawdź czy mieści się w INT_MIN / INT_MAX.
+
+Jeśli nie → int = impossible
+ale typ wejścia to dalej INT.
+
+5) Sprawdź, czy to FLOAT
+
+Warunki:
+
+musi mieć kropkę (.)
+
+musi mieć f na końcu
+
+cyfry po bokach kropki (chociaż jedna strona może być pusta jak .5f)
+
+może mieć + / - na początku
+
+Przykłady:
+
+"4.2f"
+
+"-3.0f"
+
+"+0.0f"
+
+"12.f" → poprawne
+
+".5f" → poprawne
+
+"nanf" → już wykryte wcześniej
+
+Typ: float
+
+6) Sprawdź, czy to DOUBLE
+
+Warunki:
+
+musi mieć kropkę
+
+NIE może mieć f na końcu
+
+może mieć +/-
+
+Przykłady:
+
+"4.2"
+
+"0.0"
+
+"12."
+
+".5"
+
+"nan" → wcześniej wykryte
+
+Typ: double
+
+❌ CO TWÓJ PARSER MA ODRZUCAĆ (NIEPRAWIDŁOWE)**
+Jeżeli string:
+zawiera więcej niż jedną kropkę
+ma litery inne niż f
+ma spacje w środku "4 2"
+zaczyna się lub kończy na śmieci "42g"
+mieszane formaty "4.f2"
+puste: ""
+→ to nie jest żaden typ i musisz wypisać komunikaty „impossible”.
+
+📌 PODSUMOWANIE – NA CO POZWALAĆ, NA CO NIE
+✔ POZWALAĆ NA:
+char: jeden znak niebędący cyfrą
+int: same cyfry + opcjonalny znak
+float: liczba z kropką i f na końcu
+double: liczba z kropką bez f
+special values (nan, +inf, …)
+
+❌ NIE POZWALAĆ NA:
+stringi typu „hello”, „abc”, „42abc”
+dwie kropki „4.2.1”
+kropka ale bez contextu „.”
+puste wartości
+niedozwolone znaki
+mieszanie float i double „4.2ff” albo „4.2f3”
+
+✅ 2) ALGORYTM KONWERTUJĄCY (CASTOWANIE)
+
+Jak parser powie: „to jest double”, to dopiero teraz:
+zamieniasz string → double
+double → float
+double → int
+double → char
+
+i zapisujesz wyniki (albo „impossible”).
+
+To samo dla każdego typu.
+Tu właśnie używasz:
+std::stoi
+std::stol
+std::stof
+std::stod
+rzutowania (char), (int) itd.
+Czyli:
+„Jeśli znam oryginalny typ → zamieniam go na pozostałe”.
+
+✅ CO TO JEST CASTOWANIE?
+Castowanie („rzutowanie”) to zamiana jednej wartości na inną wartość w innym typie danych.
+Mówiąc po ludzku:
+👉 Masz wartość typu A
+👉 i chcesz zrobić z niej wartość typu B
+
+np.
+double → int
+int → char
+char → float
+float → double
+To właśnie castowanie.
+
+Castowanie w życiu codziennym programisty służy do:
+Kontroli precyzji w obliczeniach
+Manipulacji znakami i ASCII
+Optymalizacji pamięci
+Dopasowania typów do funkcji/bibliotek
+Sprawdzania zakresów i bezpieczeństwa
+Programowania gier, grafiki i hardware

@@ -1,0 +1,330 @@
+2. Co musi robić Twój program?
+Twoje ./convert <literal> powinno:
+Wykryć typ przekazanego literału:
+
+’a’ → char
+42 → int
+4.2f → float
+4.2 → double
+
+nanf / +inff / -inff → float specjalne
+nan / +inf / -inf → double specjalne
+
+Przekonwertować go na pozostałe typy, z obsługą:
+
+nadmiaru (overflow)
+konwersji niemożliwej
+znaków niedrukowalnych
+
+Wyświetlić wynik w dokładnym formacie, np.:
+char: '*'
+int: 42
+float: 42.0f
+double: 42.0
+
+
+ETAP 1 — Zrozumienie celu
+
+Musisz napisać:
+parser typu literału
+konwerter między typami
+formater wyjścia
+Wszystko zamknięte w jednej metodzie convert.
+
+ETAP 2 — Zablokowanie tworzenia obiektu ScalarConverter
+
+Klasa ma zawierać tylko statyczną funkcję.
+Blokujesz konstruktory.
+
+ETAP 3 — Wykrywanie typu wejściowego
+
+To jest najważniejsza część.
+
+Musisz wykrywać:
+
+1) char
+
+format 'c'
+długość == 3
+pierwszy znak ' i ostatni '
+
+2) int
+
+tylko cyfry z opcjonalnym znakiem + lub -
+żadnych kropek
+żadnego „f” na końcu
+
+3) float (zwykły)
+
+musi zawierać kropkę
+musi kończyć się na f
+
+4) float (pseudoliteraly)
+
+"nanf"
+"+inff"
+"-inff"
+
+5) double (zwykły)
+musi zawierać kropkę
+nie kończy się na f
+
+6) double (pseudoliteraly)
+
+"nan"
+"+inf"
+"-inf"
+
+ETAP 4 — Konwersja
+
+Gdy już wiesz, co to jest:
+Konwertujesz string → bazowy typ
+Konwertujesz bazowy typ do pozostałych typów jawnie (C-style albo static_cast)
+
+Dla char:
+sprawdzasz czy da się wyświetlić (ASCII 32–126)
+
+Dla int:
+uważasz na overflow (long long → int)
+
+Dla float / double:
+wypisujesz odpowiedni sufiks f dla float
+specjalne wartości zawsze wypisujesz, nawet gdy inne typy są „impossible
+
+2) Doprecyzowanie formatów wejścia
+
+char: postać 'c' — zawsze 3 znaki: ', znak, '. (Załóż, że nie podasz niedrukowalnych znaków.)
+int: dziesiętna notacja, opcjonalny + lub -, bez kropek czy sufiksów (np. 0, -42, 42).
+float: ma mieć kropkę i kończyć się f (np. 4.2f, -0.0f), oraz pseudoliteraly: nanf, +inff, -inff.
+double: ma kropkę, nie kończy się f (np. 4.2, 0.0), oraz pseudoliteraly: nan, +inf, -inf.
+Uwaga: wejścia typu 42.0 → double; 42.0f → float. 42 → int. 'a' → char.
+
+3) Co wyświetlasz w każdej konwersji
+
+Dla każdego z czterech typów musisz wypisać jedną z możliwości:
+poprawna wartość (np. int: 42, float: 42.0f, double: 42.0, char: 'A'),
+impossible — gdy konwersja logicznie nie ma sensu (np. nan → int),
+Non displayable — gdy wartość istnieje, ale char nie jest drukowalny (np. wynik to ASCII 10),
+odpowiedni format pseudoliterali (nanf, nan, +inff, +inf, itd.).
+
+
+Typowy algorytm działania funkcji convert
+Trim wejścia (usuń białe znaki) — najlepiej wymagać braku spacji, ale dobry parser może tolerować.
+Sprawdź pseudoliteraly najpierw (porównanie stringów do nan, nanf, +inf, -inff itd.). Jeśli trafione — obsłuż jako osobny przypadek.
+Sprawdź char: czy string ma format 'x'. Jeśli tak — baza = char.
+Sprawdź int: czy cały string pasuje do wzoru ^[+-]?\d+$ → baza = int.
+Sprawdź float: czy kończy się f i przed f jest poprawna notacja liczby z kropką lub bez (np. 42f to ambiwalentne — zadanie jednak zakłada kropkę; trzymaj się reguły: float ma kropkę). Możesz rozróżniać: jeżeli kończy f → spróbuj std::stof.
+Sprawdź double: w przeciwnym wypadku, jeśli string zawiera kropkę → spróbuj std::stod.
+Jeśli nic nie pasuje → wypisz komunikat o błędzie (np. unknown literal albo impossible).
+
+
+7) Formatowanie wyniku (zalecenia)
+
+Dla float zawsze dodaj sufiks f (np. 0.0f, 42.0f).
+Zachowaj jedną cyfrę po przecinku, gdy to potrzeba (np. 42.0 zamiast 42) — zadanie w przykładach pokazuje .0 gdy to liczba całkowita w formacie float/double. Możesz to osiągnąć używając std::fixed + ustawienie precyzji (np. std::setprecision(1)), ale pamiętaj, żeby dla wartości typu nan/inf nie używać fixed/precyzji — wypisz tekstowe reprezentacje.
+Dla char wypisz 'c' (z apostrofami) gdy jest drukowalny.
+
+🔥 CO ZNACZY „KLSA NIE POWINNA BYĆ INSTANCJOWALNA”?
+To znaczy:
+Użytkownik NIE może zrobić czegoś takiego:
+ScalarConverter s;    // ❌ niedozwolone
+lub:
+ScalarConverter *ptr = new ScalarConverter();   // ❌ niedozwolone
+Czyli nie można tworzyć obiektów tej klasy.
+
+🔥 CO MASZ ZROBIĆ, ŻEBY TAK BYŁO?
+1) Zrobić wszystkie metody statyczne
+
+Najważniejsza jest jedna metoda:
+static void convert(std::string const & literal);
+Statyczna = wołasz ją tak:
+ScalarConverter::convert("42.0f");
+Bez tworzenia obiektu.
+
+2) ZABLOKOWAĆ KONSTRUKTOR
+
+To kluczowy element:
+musisz sprawić, że konstruktora nie da się użyć.
+Robi się to tak:
+deklarujesz konstruktor jako private
+deklarujesz destruktor jako private
+deklarujesz copy constructor i operator= jako private
+nie piszesz implementacji
+(żeby kompilator nie pozwolił ich użyć)
+
+Efekt:
+każdy, kto spróbuje utworzyć obiekt → dostanie błąd kompilacji.
+
+🔥 Dlaczego konstruktor jest “pusty”?
+Jeśli metoda jest tylko zadeklarowana:
+ScalarConverter();
+…to oznacza:
+kompilator wie, że konstruktor istnieje
+ale nikt spoza klasy nie ma do niego dostępu (bo jest private)
+a Ty nie implementujesz go, bo nigdy nie będzie użyty
+To jest w pełni poprawne.
+
+🔥 Dlaczego NIE piszemy implementacji w .cpp?
+
+Bo:
+Te metody i tak nigdy nie będą wywołane.
+Ich jedyny sens to zakazać instancjowania.
+Jeśli ktoś SPRÓBUJE ich użyć (np. przez pomyłkę), to i tak:
+dostanie błąd kompilacji (bo są private)
+a gdyby udało się jakoś obejść (co jest prawie niemożliwe), brak implementacji wywoła błąd linkera → i to dobrze, bo klasa ma być nieużywalna jako obiekt.
+
+W tym zadaniu liczy się tylko convert(), a nie cykl życia obiektu.
+Dlatego puste deklaracje wystarczą i są normalną praktyką w C++.
+
+🔥 Czy to jest “dziwne”?
+Nie — to standardowy sposób w C++ na blokowanie tworzenia obiektów.
+
+Tak robi się w:
+klasach narzędziowych (utility classes)
+klasach singletonowych (stare podejście)
+klasach statycznych (np. konwertery, loggery)
+bibliotekach STL (np. niektóre klasy pomocnicze)
+systemie plików <filesystem>
+To jest uznany, profesjonalny wzorzec.
+Konstruktory są puste, bo mają istnieć tylko po to, żeby zablokować tworzenie obiektów — a skoro NIKT nigdy ich nie wywoła, nie potrzebują żadnej implementacji.
+
+
+🔥 NA CO PARSER MA POZWALAĆ, A NA CO MA REAGOWAĆ BŁĘDEM?
+
+Poniżej masz kompletną listę przypadków, które musisz obsłużyć.
+Po przeczytaniu tego wiesz dokładnie co robić.
+
+1) CHAR
+Format:
+'a', 'b', '@', '#'
+
+Warunki:
+długość = 3
+pierwszy znak '
+ostatni znak '
+środkowy znak to 1 znak ASCII
+Akceptujesz:
+'a', 'Z', '+', ' '
+
+Odrzucasz:
+'ab'
+a
+"a"
+' 'a'
+'
+2) INT
+
+Format:
+0, -42, +42, 123456
+
+Warunki:
+opcjonalnie + lub - na początku
+reszta MUSI być cyframi
+NIE może być:
+
+kropki
+litery
+sufiksu f
+spacji
+innych znaków
+
+Akceptujesz:
+0, -42, 42, +1234
+
+Odrzucasz:
+42.0 (to double)
+42f (niepoprawne)
+4a
+123 4
+--42
+
+3) FLOAT (NORMALNE)
+Format:
+4.2f, 0.0f, -1.25f
+
+Warunki:
+musi zawierać kropkę
+musi kończyć się f
+przed f musi być poprawna liczba
+znak + lub - na początku dozwolony
+
+Akceptujesz:
+4.2f, 0.0f, -4.0f, +3.5f
+
+Odrzucasz:
+4f (brak kropki → niezalecane)
+4.f (różne implementacje: Ty możesz przyjąć że musi być cyfra przed i po)
+4.2ff
+4.2 (to double)
+.5f (w module 06 niezalecane)
+
+4) FLOAT (PSEUDOLITERALS)
+
+Tylko te 3:
+nanf
++inff
+-inff
+
+Akceptujesz 100% zawsze
+Bo one oznaczają specjalne wartości IEEE.
+
+Nie próbujesz ich parsować jako liczby.
+Od razu uznajesz: „to float pseudo”.
+
+5) DOUBLE (NORMALNE)
+
+Format:
+4.2, 0.0, -1.25
+
+Warunki:
+musi mieć kropkę
+NIE może mieć f na końcu
+musi to być poprawna notacja liczby dziesiętnej
+
+Akceptujesz:
+4.2, 0.0, -1.25
+
+Odrzucasz:
+4.
+.4
+4.2f
+4,2 (przecinek = błąd)
+4.2.1
+
+6) DOUBLE (PSEUDOLITERALS)
+
+Tylko te 3:
+nan
++inf
+-inf
+To są dokładnie odpowiedniki double bez sufiksu f.
+
+7) CO, JEŚLI KTOŚ WPISZE STRING TYPU:
+hello
+a12
+f
+something
+abc123
+"tekst"
+
+👉 Masz zwrócić: "impossible" dla wszystkich konwersji
+Albo wypisać informacyjnie, że literał jest błędny.
+To nie jest poprawny literał C++, więc parser ma go odrzucić.
+Przykład:
+./convert hello
+char: impossible
+int: impossible
+float: impossible
+double: impossible
+
+🔥 PODSUMOWANIE – PARSER MA OBSŁUŻYĆ TYLKO TE KATEGORIE:
+
+'c' → char
+[+-]?\d+ → int
+[+-]?\d+\.\d+f → float
+[+-]?\d+\.\d+ → double
+
+nanf, +inff, -inff → float pseudo
+nan, +inf, -inf → double pseudo
+wszystko inne → złe dane
+

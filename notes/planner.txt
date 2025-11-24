@@ -5,6 +5,7 @@
 Poniedziałek (____/____/2025)
 
 - ogranać ex 01 i ex00
+- dodaj readme do cppi ogranij minishella repo 
 
 Wtorek (____/____/2025)
 

@@ -6,9 +6,8 @@ std::string trim(char *s)
 		return(NULL);
 	int start = 0;
 	int end = 0;
-	int c = 0;
-	int sc = 0;
-	std:: string st;
+	int len = 0;
+	int i = 0;
 
 	while(s[end])
 		end++;
@@ -21,11 +20,12 @@ std::string trim(char *s)
 		start++;
 	if (start > end)
 		return(NULL);
-	c = end - start + 1;
-	sc = start;
-	std:: string st = c;
-	while(sc <= end)
+	len = end - start + 1;
+	std::string st(len, ' ');
+	while(i < len)
 	{
-		st[sc] = s[sc];
+		st[i] = s[start + i];
+		i++;
 	}
+	return(st);
 }

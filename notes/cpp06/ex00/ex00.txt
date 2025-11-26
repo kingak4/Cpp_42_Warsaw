@@ -659,3 +659,13 @@ Optymalizacji pamięci
 Dopasowania typów do funkcji/bibliotek
 Sprawdzania zakresów i bezpieczeństwa
 Programowania gier, grafiki i hardware
+
+napisz trim
+napisz isPseudoLiteral
+napisz isCharLiteral, isIntLiteral, isFloatLiteral, isDoubleLiteral
+napisz detectType i testuj wykrywanie typów (bez konwersji)
+napisz safeParseInt, safeParseFloat, safeParseDouble, parseChar
+zdefiniuj Result
+napisz convertFromInt, convertFromChar, convertFromFloat, convertFromDouble
+napisz printResult
+złoż convert() z powyższych i testuj kompletne przypadki

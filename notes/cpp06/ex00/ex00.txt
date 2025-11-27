@@ -669,3 +669,18 @@ zdefiniuj Result
 napisz convertFromInt, convertFromChar, convertFromFloat, convertFromDouble
 napisz printResult
 złoż convert() z powyższych i testuj kompletne przypadki
+
+Funkcja strtol
+Jak działa krok po kroku
+
+strtol przetwarza string znak po znaku, ignorując początkowe spacje.
+Jeśli pierwszy znak to + lub - → zapisuje znak liczby.
+Następnie czyta kolejne cyfry, aż napotka znak nie będący cyfrą.
+Jeśli nie ma żadnej cyfry → wynik = 0 i endptr = nptr.
+Jeśli liczba jest większa niż LONG_MAX lub mniejsza niż LONG_MIN → ustawia errno = ERANGE i zwraca LONG_MAX lub LONG_MIN.
+endptr pozwala Ci sprawdzić, czy cały string został poprawnie odczytany.
+
+Dlaczego to działa lepiej niż atoi
+atoi po prostu zwraca int → przepełnienie nie jest wykrywane → wynik może być zupełnie niepoprawny.
+strtol zwraca long → daje większy zakres i informuje, jeśli liczba nie mieści się w typie.
+Dodatkowo daje endptr, więc można sprawdzić, czy w stringu nie było dodatkowych znaków (np. spacji w środku).

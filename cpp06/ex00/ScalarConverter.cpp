@@ -1,6 +1,7 @@
 #include "ScalarConverter.hpp"
 
 
+// checker for spaces 
 int checker_a(char *s)
 {
 	if(!s)
@@ -47,6 +48,26 @@ int is_char(char *s)
 	return(0);
 }
 
+
+// check for only number f or .
+int check_nb(char *s)
+{
+	int i = 0;
+
+	if(s[i] == '-' || s[i]  == "+")
+		i++;
+	while (s[i])
+	{
+		if(!isdigit(s[i]))
+		{
+			if(s[i] != '.' && s[i] != 'f')
+				return(0);
+		}
+		i++;
+	}
+	return(1);
+}
+
 int is_nb(char *s)
 {
 	int i = 0;
@@ -74,14 +95,6 @@ int is_nb(char *s)
 		if(s[i] == '0')
 			return(0);
 	}
-	if(s[i] == '-' || s[i]  == "+")
-		i++;
-	while (s[i])
-	{
-		if(!isdigit(s[i]))
-			return(0);
-		i++;
-	}
 	char *endptr;
 	errno = 0;
 	long val = strtol(s, &endptr, 10);
@@ -94,3 +107,62 @@ int is_nb(char *s)
 	int v = val;
 	return(v);
 }
+
+// chekcs ++ -- +- and + or - shoud be fisrt
+// checks two .. and  more than one f char
+
+int only_one(char *s)
+{
+	int plus = 0;
+	int minus = 0;
+	int dot = 0;
+	int flag = 0;
+	int where = -1;
+	int w = -1;
+	int i = 0;
+
+	while (s[i] != '\0')
+	{
+		if (s[i] == '+')
+		{
+			plus++;
+			where = i;
+		}
+		else if (s[i] == '-')
+		{
+			minus++;
+			w = i;
+		}
+		else if(s[i] == 'f')
+			flag++;
+		else if (s[i] == '.')
+			dot++;
+		i++;
+	}
+	if ((where != -1 && where != 0) || (w != -1 && w != 0))
+		return (0);
+	if(dot > 1 || flag > 1)
+		return(0);
+	if (minus >= 1 && plus >= 1)
+		return(0);
+	return(1); 
+}
+
+int is_flo(char *s)
+{
+	int i = 0;
+
+	while(s[i])
+	{
+		if(s[i] == )
+	}
+}
+
+
+Nie może być:
+liter innych niż f
+nawiasów
+dwóch minusów
+przecinków
+spacji
+apostrofów

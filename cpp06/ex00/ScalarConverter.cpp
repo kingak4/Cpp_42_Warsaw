@@ -1,6 +1,5 @@
 #include "ScalarConverter.hpp"
 
-
 // checker for spaces 
 int checker_a(char *s)
 {
@@ -48,8 +47,7 @@ int is_char(char *s)
 	return(0);
 }
 
-
-// check for only number f or .
+// check for only numbers, char f or .
 int check_nb(char *s)
 {
 	int i = 0;
@@ -148,21 +146,30 @@ int only_one(char *s)
 	return(1); 
 }
 
+
+// check is f is last 
+// if we have . in input 
+// if we don't have f char this is double
 int is_flo(char *s)
 {
 	int i = 0;
+	int flag = 0;
+	int f = 0;
 
 	while(s[i])
 	{
-		if(s[i] == )
+		if(s[i] == '.')
+			flag = 1;
+		if(s[i] == 'f')
+			f = 1;
+		if(s[i] == 'f' && s[i + 1] != '\0')
+			return(0); 
+		i++;
 	}
+	if (flag == 0)
+		return(0);
+	if(f != 1)
+		return(2);
+	return(1);
 }
 
-
-Nie może być:
-liter innych niż f
-nawiasów
-dwóch minusów
-przecinków
-spacji
-apostrofów

@@ -36,7 +36,7 @@ int is_char(char *s)
 		{
 			i += 2;
 			if (s[i] == '\'')
-				return(1);
+				return(2);
 			else
 				return (0);
 		}
@@ -179,34 +179,49 @@ int final(char *s)
 		std::cout << "Input can't have any spaces" << std::endl;
 		return(0);
 	}
-	if(checker_s(s) == 1)
+	std::string str = s;
+	if(checker_s(str) == 1)
 	{
 		std::cout << "char: impossible " << std::endl;
 		std::cout << "int: impossible " << std::endl;
-		if( s == "nanf"|| s == "+inff" || s == "-inff")
+		if( str == "nanf"|| str == "+inff" || str == "-inff")
 		{
-			std::string d = s;
-			std::cout << "float: " << s << std::endl;
-			d.erase(d.size() - 1, 1);
-			std::cout << "double: " << d << std::endl;
+			std::cout << "float: " << str << std::endl;
+			str.erase(str.size() - 1, 1);
+			std::cout << "double: " << str << std::endl;
 		}
 		else
 		{
-			std::cout << "double: " << s << std::endl;
-			std::cout << "float: " << s << "f" << std::endl;
+			std::cout << "double: " << str << std::endl;
+			std::cout << "float: " << str << "f" << std::endl;
 		}
 	}
+	if(is_char(s) == 1)
+	{
+		if(isprint(*s))
+			std::cout << "char: " <<"'"<< s <<"'" << std::endl;
+		else
+			std::cout << "char: Non displayable"<< std::endl;
+		std::cout << "int: " << (int)*s << std::endl;
+		std::cout << "float: " << (float)*s << ".0f" <<std::endl;
+		std::cout << "double: " << (double)*s << ".0" <<std::endl;
+	}
+	else if (is_char(s) == 2)
+	{
+		char c = s[1];
+		if(isprint(c))
+			std::cout << "char: " << s << std::endl;
+		else
+			std::cout << "char: Non displayable"<< std::endl;
+		std::cout << "int: " << (int)c << std::endl;
+		std::cout << "float: " << (float)c << ".0f" <<std::endl;
+		std::cout << "double: " << (double)c << ".0" <<std::endl;
+	}
 }
-
-// Krok 4 — Funkcje pomocnicze do drukowania
-// printChar(double value)
-// printInt(double value)
-// printFloat(double value)
-// printDouble(double value)
-// Przyjmowanie double jako wspólny typ jest wygodne.
-// Krok 5 — Obsługa pseudo-literals
-// nan, inf, nanf, +inf, +inff itd.
-// char = impossible
-// int = impossible
-// float = "nanf"
-// double = "nan"
+//     // int
+//     wartosc_int = (int) znak
+//     wypisz "int: wartosc_int"
+//     // float
+//     wypisz "float: wartosc_int.0f"
+//     // double
+//     wypisz "double: wartosc_int.0"

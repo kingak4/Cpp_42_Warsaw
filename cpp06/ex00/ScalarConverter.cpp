@@ -19,8 +19,7 @@ int	checker_s(std::string s)
 	if (s == "nan" || s == "nanf" || s == "+inf" || s == "-inf"
 		|| s == "+inff" || s == "-inff")
 		return(1);
-	else
-		return(0);
+	return(0);
 }
 
 int is_char(char *s)
@@ -173,3 +172,41 @@ int is_flo(char *s)
 	return(1);
 }
 
+int final(char *s)
+{
+	if(checker_a(s) == 0)
+	{
+		std::cout << "Input can't have any spaces" << std::endl;
+		return(0);
+	}
+	if(checker_s(s) == 1)
+	{
+		std::cout << "char: impossible " << std::endl;
+		std::cout << "int: impossible " << std::endl;
+		if( s == "nanf"|| s == "+inff" || s == "-inff")
+		{
+			std::string d = s;
+			std::cout << "float: " << s << std::endl;
+			d.erase(d.size() - 1, 1);
+			std::cout << "double: " << d << std::endl;
+		}
+		else
+		{
+			std::cout << "double: " << s << std::endl;
+			std::cout << "float: " << s << "f" << std::endl;
+		}
+	}
+}
+
+// Krok 4 — Funkcje pomocnicze do drukowania
+// printChar(double value)
+// printInt(double value)
+// printFloat(double value)
+// printDouble(double value)
+// Przyjmowanie double jako wspólny typ jest wygodne.
+// Krok 5 — Obsługa pseudo-literals
+// nan, inf, nanf, +inf, +inff itd.
+// char = impossible
+// int = impossible
+// float = "nanf"
+// double = "nan"

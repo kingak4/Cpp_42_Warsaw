@@ -65,7 +65,11 @@ int check_nb(char *s)
 	return(1);
 }
 
-int is_nb(char *s)
+
+// chceker if we have matching '1' or is only one 0
+// and this example 02828
+
+int checker_int(char *s)
 {
 	int i = 0;
 	int len = 0;
@@ -92,6 +96,11 @@ int is_nb(char *s)
 		if(s[i] == '0')
 			return(0);
 	}
+	return(1);
+}
+
+int make_int(char *s,int *out)
+{
 	char *endptr;
 	errno = 0;
 	long val = strtol(s, &endptr, 10);
@@ -101,8 +110,8 @@ int is_nb(char *s)
 		return(0);
 	if (val < INT_MIN || val > INT_MAX)
 		return(0);
-	int v = val;
-	return(v);
+	*out = (int)val;
+	return(1);
 }
 
 // chekcs ++ -- +- and + or - shoud be fisrt
@@ -218,10 +227,35 @@ int final(char *s)
 		std::cout << "double: " << (double)c << ".0" <<std::endl;
 	}
 }
-//     // int
-//     wartosc_int = (int) znak
-//     wypisz "int: wartosc_int"
-//     // float
-//     wypisz "float: wartosc_int.0f"
-//     // double
-//     wypisz "double: wartosc_int.0"
+
+int print_int(char *s)
+{
+	int value = 0;
+	char c = 0;
+	int len = 0;
+	if(check_nb(s) == 0 || only_one(s) == 0 || checker_int(s) == 0)
+	{
+		std::cout << "Wrong format" << std::endl;
+		return(0);
+	}
+	if (make_int(s, &value))
+	{
+		c = (char)value;
+		if (isprint(c))
+		{
+			std::cout << "char: " <<"'"<< c <<"'" << std::endl;
+			std::cout << "Int: " << value << std::endl;
+			std::cout << "float: " << (float)c << ".0f" <<std::endl;
+			std::cout << "double: " << (double)c << ".0" <<std::endl;
+		}
+		else
+		{
+			std::cout << "char: Non displayable"<< std::endl;
+			std::cout << "Int: " << value << std::endl;
+			std::cout << "float: " << (float)c << ".0f" <<std::endl;
+			std::cout << "double: " << (double)c << ".0" <<std::endl;
+		}
+	}
+	
+}
+

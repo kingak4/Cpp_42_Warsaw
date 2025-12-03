@@ -1,0 +1,12 @@
+Ćwiczenie 01 – Serializer
+
+Stwórz pliki: Serializer.hpp, Serializer.cpp
+
+W klasie Serializer:
+prywatny konstruktor (nieinstancjonowalna)
+statyczne metody serialize(Data*) i deserialize(uintptr_t)
+
+W main.cpp:
+utwórz obiekt Data z polami
+przetestuj serializację i deserializację
+sprawdź, czy wskaźnik po deserializacji jest taki sam jak oryginalny

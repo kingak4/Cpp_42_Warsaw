@@ -250,12 +250,16 @@ int print_int(char *s)
 		}
 		else
 		{
-			std::cout << "char: Non displayable"<< std::endl;
+			std::cout << "char: impossible"<< std::endl;
 			std::cout << "Int: " << value << std::endl;
 			std::cout << "float: " << (float)c << ".0f" <<std::endl;
 			std::cout << "double: " << (double)c << ".0" <<std::endl;
 		}
 	}
-	
+	return(1);
 }
 
+int print_float_and_double(char *s)
+{
+	
+}

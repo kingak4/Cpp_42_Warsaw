@@ -1,0 +1,8 @@
+| Krok | Zadanie                                                                      | Pliki               |
+| ---- | ---------------------------------------------------------------------------- | ------------------- |
+| 1    | Utwórz klasę `Base` z **virtual destructor**                                 | Base.hpp / Base.cpp |
+| 2    | Utwórz klasy: `A`, `B`, `C` dziedziczące po `Base`                           | A.hpp, B.hpp, C.hpp |
+| 3    | Funkcja `generate()` → losowo tworzy obiekt `A/B/C` i zwraca `Base*`         | generate.cpp        |
+| 4    | Funkcje `identify(Base*)` i `identify(Base&)` z użyciem `dynamic_cast`       | identify.cpp        |
+| 5    | Program testowy tworzący obiekt przez `generate()` i wywołujący `identify()` | main.cpp            |
+| 6    | Makefile do kompilacji wszystkiego                                           | Makefile            |

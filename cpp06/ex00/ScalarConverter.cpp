@@ -261,5 +261,14 @@ int print_int(char *s)
 
 int print_float_and_double(char *s)
 {
-	
+	if(check_nb(s) == 0 || only_one(s) == 0 || is_flo(s) == 0)
+	{
+		std::cout << "Wrong format" << std::endl;
+		return(0);
+	}
+	if(is_flo(s) == 1)
+	{
+
+	}
+	else if (is_flo(s) == 2)
 }

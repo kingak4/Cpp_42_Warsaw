@@ -272,3 +272,4 @@ int print_float_and_double(char *s)
 	}
 	else if (is_flo(s) == 2)
 }
+// need to make test and final function to completa task 

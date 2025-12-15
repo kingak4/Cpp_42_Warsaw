@@ -245,15 +245,15 @@ int print_int(char *s)
 		{
 			std::cout << "char: " <<"'"<< c <<"'" << std::endl;
 			std::cout << "Int: " << value << std::endl;
-			std::cout << "float: " << (float)c << ".0f" <<std::endl;
-			std::cout << "double: " << (double)c << ".0" <<std::endl;
+			std::cout << "float: " << (float)value << ".0f" <<std::endl;
+			std::cout << "double: " << (double)value << ".0" <<std::endl;
 		}
 		else
 		{
 			std::cout << "char: impossible"<< std::endl;
 			std::cout << "Int: " << value << std::endl;
-			std::cout << "float: " << (float)c << ".0f" <<std::endl;
-			std::cout << "double: " << (double)c << ".0" <<std::endl;
+			std::cout << "float: " << (float)value << ".0f" <<std::endl;
+			std::cout << "double: " << (double)value << ".0" <<std::endl;
 		}
 	}
 	return(1);
@@ -261,6 +261,7 @@ int print_int(char *s)
 
 int print_float_and_double(char *s)
 {
+	char c = 0;
 	if(check_nb(s) == 0 || only_one(s) == 0 || is_flo(s) == 0)
 	{
 		std::cout << "Wrong format" << std::endl;
@@ -272,4 +273,43 @@ int print_float_and_double(char *s)
 	}
 	else if (is_flo(s) == 2)
 }
+// Co robisz, gdy to FLOAT
+// Masz liczbę typu float.
+// Twoje zadanie:
+// Spróbować wypisać cha
+// Spróbować wypisać int
+// Wypisać float
+// Wypisać double
+// Char (najważniejsze edge-casey)
+// jeśli wartość po rzutowaniu na int:
+// < 0 lub > 127 → char: impossible
+// w zakresie 127:
+// isprint → wypisujesz znak
+// inaczej → Non displayable
+// Nie pytasz „czy to było kiedyś char”.
+// Sprawdzasz, czy DA SIĘ tym char być.
+
+// Int
+// jeśli float po obcięciu:
+// mieści się w INT_MIN / INT_MAX → wypisujesz
+// inaczej → int: impossible
+
+// Float
+// zawsze wypisujesz
+// zawsze z f
+// jeśli to liczba całkowita → .0f
+// Double
+// zawsze wypisujesz
+// bez f
+// jeśli całkowita → .0
+
+// 5⃣ Co robisz, gdy to DOUBLE
+// Logika identyczna jak float, różnica tylko w źródle:
+
+// źródło: double
+// float:
+// jeśli przekracza zakres float → float: impossible
+// inaczej → rzutujesz i wypisujesz
+// Char i int:
+// dokładnie te same zasady, co wyżej
 // need to make test and final function to completa task 

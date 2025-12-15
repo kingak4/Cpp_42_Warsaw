@@ -108,7 +108,7 @@ int make_int(char *s,int *out)
 		return(0);
 	if (errno == ERANGE)
 		return(0);
-	if (val < INT_MIN || val > INT_MAX)
+	if (val < -2147483648 || val > 2147483648)
 		return(0);
 	*out = (int)val;
 	return(1);
@@ -269,10 +269,16 @@ int print_float_and_double(char *s)
 	}
 	if(is_flo(s) == 1)
 	{
-
+		
 	}
 	else if (is_flo(s) == 2)
 }
+
+// Masz zrobić:
+// make_double
+// print_float_and_double
+// Wszystkie casty i sprawdzenia robisz po konwersji
+// Zakresy sprawdzasz przed drukowaniem, nie przed konwersją
 // Co robisz, gdy to FLOAT
 // Masz liczbę typu float.
 // Twoje zadanie:

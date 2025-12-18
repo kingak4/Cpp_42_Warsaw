@@ -51,7 +51,7 @@ int check_nb(char *s)
 {
 	int i = 0;
 
-	if(s[i] == '-' || s[i]  == "+")
+	if(s[i] == '-' || s[i]  == '+')
 		i++;
 	while (s[i])
 	{
@@ -226,18 +226,16 @@ int final(char *s)
 		std::cout << "float: " << (float)c << ".0f" <<std::endl;
 		std::cout << "double: " << (double)c << ".0" <<std::endl;
 	}
+	return(1);
 }
 
 int print_int(char *s)
 {
 	int value = 0;
 	char c = 0;
-	int len = 0;
-	if(check_nb(s) == 0 || only_one(s) == 0 || checker_int(s) == 0)
-	{
-		std::cout << "Wrong format" << std::endl;
-		return(0);
-	}
+	//int len = 0;
+	//if(only_one(s) == 0 || checker_int(s) == 0)
+	//	return(0);
 	if (make_int(s, &value))
 	{
 		c = (char)value;
@@ -259,63 +257,17 @@ int print_int(char *s)
 	return(1);
 }
 
-int print_float_and_double(char *s)
-{
-	char c = 0;
-	if(check_nb(s) == 0 || only_one(s) == 0 || is_flo(s) == 0)
-	{
-		std::cout << "Wrong format" << std::endl;
-		return(0);
-	}
-	if(is_flo(s) == 1)
-	{
+//int print_float_and_double(char *s)
+//{
+//	char c = 0;
+//	if(check_nb(s) == 0 || only_one(s) == 0 || is_flo(s) == 0)
+//	{
+//		std::cout << "Wrong format" << std::endl;
+//		return(0);
+//	}
+//	if(is_flo(s) == 1)
+//	{
 		
-	}
-	else if (is_flo(s) == 2)
-}
-
-// Masz zrobić:
-// make_double
-// print_float_and_double
-// Wszystkie casty i sprawdzenia robisz po konwersji
-// Zakresy sprawdzasz przed drukowaniem, nie przed konwersją
-// Co robisz, gdy to FLOAT
-// Masz liczbę typu float.
-// Twoje zadanie:
-// Spróbować wypisać cha
-// Spróbować wypisać int
-// Wypisać float
-// Wypisać double
-// Char (najważniejsze edge-casey)
-// jeśli wartość po rzutowaniu na int:
-// < 0 lub > 127 → char: impossible
-// w zakresie 127:
-// isprint → wypisujesz znak
-// inaczej → Non displayable
-// Nie pytasz „czy to było kiedyś char”.
-// Sprawdzasz, czy DA SIĘ tym char być.
-
-// Int
-// jeśli float po obcięciu:
-// mieści się w INT_MIN / INT_MAX → wypisujesz
-// inaczej → int: impossible
-
-// Float
-// zawsze wypisujesz
-// zawsze z f
-// jeśli to liczba całkowita → .0f
-// Double
-// zawsze wypisujesz
-// bez f
-// jeśli całkowita → .0
-
-// 5⃣ Co robisz, gdy to DOUBLE
-// Logika identyczna jak float, różnica tylko w źródle:
-
-// źródło: double
-// float:
-// jeśli przekracza zakres float → float: impossible
-// inaczej → rzutujesz i wypisujesz
-// Char i int:
-// dokładnie te same zasady, co wyżej
-// need to make test and final function to completa task 
+//	}
+//	else if (is_flo(s) == 2)
+//}

@@ -7,7 +7,6 @@ int main(int ac, char *av[])
 {
 	if(ac > 2)
 		return(0);
-	final(av[1]);
-	print_int(av[1]);
+	ScalarConverter::convert(av[1]);
 
 }

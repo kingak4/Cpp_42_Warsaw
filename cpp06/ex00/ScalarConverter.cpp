@@ -116,7 +116,7 @@ int make_int(const char *s, int *out)
 		return (0);
 	if (errno == ERANGE)
 		return (0);
-	if (val < -2147483648 || val > 2147483648)
+	if (val < -2147483648L || val > 2147483647L)
 		return (0);
 	*out = (int)val;
 	return (1);
@@ -260,8 +260,7 @@ int print_int(const char *s)
 }
 int print_float(const char *s)
 {
-	if (!checker_spaces(s) || !is_float(s) || !sign_is_valid(s) || !dot_is_valid(s) || f_is_valid(s)
-		|| !flo_checker(s))
+	if (!checker_spaces(s) || !is_float(s) || !sign_is_valid(s) || !dot_is_valid(s) || !f_is_valid(s) || !flo_checker(s))
 		return 0;
 	std::string str = s;
 	int len = str.size();
@@ -275,11 +274,11 @@ int print_float(const char *s)
 		std::cout << "Conversion error" << std::endl;
 		return (0);
 	}
-	char c = static_cast<char>(val);
 	int i = static_cast<int>(val);
 	float f = static_cast<float>(val);
-	if (val >= 0 && val <= 127)
+	if (val >= 0 && val <= 127 && val == static_cast<int>(val))
 	{
+		char c = static_cast<char>(val);
 		if (isprint(c))
 			std::cout << "char: '" << c << "'" << std::endl;
 		else
@@ -297,7 +296,7 @@ int print_float(const char *s)
 }
 int print_dobule(const char *s)
 {
-	if (!checker_spaces(s) || !sign_is_valid(s) || !dot_is_valid(s) || flo_checker(s) == 2)
+	if (!checker_spaces(s) || !sign_is_valid(s) || !dot_is_valid(s))
 		return 0;
 	std::string str = s;
 	char *endptr;
@@ -308,11 +307,11 @@ int print_dobule(const char *s)
 		std::cout << "Conversion error" << std::endl;
 		return (0);
 	}
-	char c = static_cast<char>(val);
 	int i = static_cast<int>(val);
 	float f = static_cast<float>(val);
-	if (val >= 0 && val <= 127)
+	if (val >= 0 && val <= 127 && val == static_cast<int>(val))
 	{
+		char c = static_cast<char>(val);
 		if (isprint(c))
 			std::cout << "char: '" << c << "'" << std::endl;
 		else
@@ -329,18 +328,37 @@ int print_dobule(const char *s)
 	return (1);
 }
 
-void ScalarConverter::convert(std::string const & literal)
+void ScalarConverter::convert(std::string const &literal)
 {
-	//int len = literal.size();
-	if (checker_spaces(literal.c_str()) == 0)
+	if (!checker_spaces(literal.c_str()))
 	{
 		std::cout << "Input can't have any spaces" << std::endl;
-		return ;
+		return;
 	}
-	print_char(literal.c_str());
-	//if(len >= 4)
-	//	print_int(literal.c_str());
-	//if(is_float(literal.c_str()))
-	//	print_float(literal.c_str());
-	//print_dobule(literal.c_str());
+	if (checker_string(literal))
+	{
+		print_char(literal.c_str()); // obsłuży specjalne przypadki
+		return;
+	}
+	if (is_char(literal.c_str()))
+	{
+		print_char(literal.c_str());
+		return;
+	}
+	int int_val;
+	if (make_int(literal.c_str(), &int_val))
+	{
+		print_int(literal.c_str());
+		return;
+	}
+	int float_check = flo_checker(literal.c_str());
+	if (is_float(literal.c_str()))
+	{
+		if (float_check == 1)
+			print_float(literal.c_str());
+		else if (float_check == 2)
+			print_dobule(literal.c_str());
+		return;
+	}
+	std::cout << "Unknown literal type" << std::endl;
 }

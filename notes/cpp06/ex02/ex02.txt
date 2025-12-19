@@ -205,3 +205,10 @@ dynamic_cast<T*>(ptr) → zwraca nullptr, jeśli typ się nie zgadza → łatwe 
 dynamic_cast<T&> → rzuca wyjątek, więc łatwiej użyć wskaźnika dla referencji
 generate() + identify() → pokazuje, jak działają polimorfizm i RTTI w praktyce
 Program uczy, jak rozpoznać rzeczywisty typ obiektu bazowego w runtime bez typeid
+
+Base* pp = generate();
+identify(pp);   // identyfikacja przez wskaźnik
+identify(*pp);  // identyfikacja przez referencję
+Najpierw wywołujemy funkcję dla wskaźnika → wypis: „Pointer identified as X”
+Następnie wywołujemy funkcję dla referencji → wypis: „Identified as X”
+Dlatego każdy obiekt daje dwa wypisy jeden po drugim

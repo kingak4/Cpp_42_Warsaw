@@ -41,7 +41,7 @@ int main()
 {
 	srand(time(0));
 	int i = 0;
-	while(i < 5)
+	while(i < 2)
 	{
 		Base* pp = generate();
 		identify(pp);

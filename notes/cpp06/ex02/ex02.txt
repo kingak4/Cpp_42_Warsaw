@@ -1,8 +1,207 @@
-| Krok | Zadanie                                                                      | Pliki               |
-| ---- | ---------------------------------------------------------------------------- | ------------------- |
-| 1    | Utwórz klasę `Base` z **virtual destructor**                                 | Base.hpp / Base.cpp |
-| 2    | Utwórz klasy: `A`, `B`, `C` dziedziczące po `Base`                           | A.hpp, B.hpp, C.hpp |
-| 3    | Funkcja `generate()` → losowo tworzy obiekt `A/B/C` i zwraca `Base*`         | generate.cpp        |
-| 4    | Funkcje `identify(Base*)` i `identify(Base&)` z użyciem `dynamic_cast`       | identify.cpp        |
-| 5    | Program testowy tworzący obiekt przez `generate()` i wywołujący `identify()` | main.cpp            |
-| 6    | Makefile do kompilacji wszystkiego                                           | Makefile            |
+RTTI = Run-Time Type Information.
+Po polsku: informacja o typie obiektu dostępna w czasie działania programu.
+
+Co daje RTTI
+RTTI pozwala C++ w czasie działania programu sprawdzić:
+
+jaki jest rzeczywisty typ obiektu
+czy obiekt da się rzutować na inny typ
+Czyli umożliwia:
+dynamic_cast
+
+Wyobraź sobie:
+Base* = karton
+w środku jest A / B / C
+
+Bez RTTI:
+❌ nie wolno zajrzeć do środka
+
+Z RTTI:
+✅ możesz sprawdzić, co jest w środku, bez łamania kartonu
+
+Dlaczego tylko destruktor?
+virtual → umożliwia RTTI (dynamic_cast)
+
+destruktor musi być wirtualny, żeby:
+
+usuwanie przez Base* było bezpieczne
+polimorfizm w ogóle działał
+
+❌ Nie dodajesz nic więcej
+❌ Nie robisz Orthodox Canonical Form
+
+Klasy A, B i C są puste, bo zadanie sprawdza identyfikację rzeczywistego typu obiektu przez 
+klasę bazową. Wirtualny destruktor w Base jest konieczny, aby umożliwić RTTI i bezpieczne użycie dynamic_cast
+oraz poprawne niszczenie obiektów pochodnych.
+
+1. Po co w ogóle istnieje generate()
+
+Ta funkcja ma jeden cel:
+Stworzyć obiekt o NIEZNANYM typie i oddać go jako Base*.
+
+To jest symulacja realnej sytuacji:
+masz wskaźnik do klasy bazowej
+nie wiesz, czy pod spodem jest A, B czy C
+później musisz to rozpoznać
+
+Bez tej funkcji:
+wszystko byłoby „na sztywno”
+identify() nie miałoby sensu
+
+Dlaczego zwracamy Base*, a nie A*, B*, C*
+Bo:
+
+chcemy stracić informację o typie
+to jest klucz ćwiczenia
+
+Jeśli byś zwróciła A*:
+❌ od razu wiesz, że to A
+❌ identify() nie ma sensu
+
+Base* = „wiem, że to coś z tej rodziny, ale nie wiem co”.
+
+Dlaczego obiekt musi być tworzony dynamicznie
+
+Bo:
+Base* b = generate();
+
+Jeśli obiekt byłby lokalny:
+po wyjściu z funkcji przestaje istnieć
+wskaźnik byłby dangling
+
+Dynamiczna alokacja:
+obiekt żyje dalej
+możesz go później zniszczyć przez delete
+
+Dlaczego losowo
+Bo:
+chcesz testować różne przypadki
+bez zmiany kodu
+każde uruchomienie programu może dać inny wynik
+
+To wymusza:
+poprawne działanie identify()
+brak „oszukiwania”
+
+Myśl o generate() jak o maszynie losującej:
+wrzucasz monetę
+dostajesz pudełko (Base*)
+w środku jest A / B / C
+nie wolno Ci zajrzeć
+później sprawdzisz zawartość inną funkcją
+
+o co ta funkcja
+Funkcja ma sprawdzić, jaki jest rzeczywisty typ obiektu, do którego wskazuje wskaźnik Base*.
+wejście: Base* p (nie wiemy, czy to A, B czy C)
+wyjście: wypisanie „A”, „B” lub „C”
+
+dynamic_cast<A*>(p)
+
+dynamic_cast to operator rzutowania typu w C++, który działa w runtime dzięki RTTI.
+A* → oznacza, że próbujemy rzutować wskaźnik p na wskaźnik typu A.
+
+Co robi dokładnie:
+Sprawdza, czy obiekt wskazywany przez p naprawdę jest typu A (albo dziedziczy po A, ale w tym zadaniu A jest pustą klasą).
+Jeśli tak → zwraca wskaźnik do tego obiektu typu A.
+Jeśli nie → zwraca nullptr.
+
+3. (p)
+To jest nasz wskaźnik do obiektu bazowego Base*.
+dynamic_cast bierze go i sprawdza, czy można go bezpiecznie „przekonwertować” na typ A*.
+
+4. Jak działa w kontekście if
+if (dynamic_cast<A*>(p))
+Jeśli obiekt faktycznie jest typu A → wskaźnik nie jest nullptr → warunek jest true → wykonuje się ciało if.
+Jeśli obiekt nie jest typu A → dynamic_cast zwraca nullptr → warunek jest false → idzie do następnego else if lub else.
+
+5. Wizualizacja w pamięci
+Wyobraź sobie:
+p → wskazuje na blok pamięci (obiekt A/B/C)
+dynamic_cast<A*>(p) pyta w runtime: „Czy to A?”
+
+odpowiedź:
+tak → wskaźnik do A
+nie → nullptr
+
+if interpretuje każdy wskaźnik różny od nullptr jako true.
+6. Podsumowanie znak po znaku
+if → sprawdza warunek
+dynamic_cast<A*>(p) → próbuje rzutować wskaźnik p na typ A*
+p → wskaźnik do obiektu bazowego, który sprawdzamy
+wynik → jeśli nie nullptr → obiekt jest typu A, jeśli nullptr → obiekt nie jest typu A
+
+void identify(Base& p)
+Funkcja przyjmuje referencję do obiektu klasy Base (lub klasy pochodnej).
+Referencja oznacza, że mamy bezpośredni dostęp do oryginalnego obiektu, a nie jego kopię.
+
+Base* ptr = &p;
+&p → pobiera adres obiektu, czyli zamienia referencję na wskaźnik (Base*).
+Teraz mamy wskaźnik ptr, który wskazuje na dokładnie ten sam obiekt, co p.
+To jest potrzebne, bo dynamic_cast na wskaźniku nie rzuca wyjątku, w przeciwieństwie do rzutowania na referencję.
+
+if (dynamic_cast<A*>(ptr))
+dynamic_cast<A*>(ptr) próbuje sprawdzić, czy obiekt wskazywany przez ptr jest typu A.
+Jeśli tak → zwraca wskaźnik do obiektu typu A
+Jeśli nie → zwraca nullptr
+if interpretuje każdy wskaźnik różny od nullptr jako true.
+Czyli: jeśli obiekt jest A → warunek jest spełniony → wykonuje się ciało if.
+
+Podsumowanie logiki
+Zamieniamy referencję na wskaźnik (Base* ptr = &p)
+Sprawdzamy kolejno typy przez dynamic_cast na wskaźniku
+Pierwszy pasujący typ → wypisujemy i kończymy sprawdzanie
+Jeśli żaden nie pasuje → obiekt jest typu C
+
+Masz bazową klasę Base i trzy klasy pochodne: A, B, C.
+Trzeba zrobić funkcje, które rozpoznają w runtime, jaki jest rzeczywisty typ obiektu, nawet gdy mamy wskaźnik lub referencję do Base.
+Nie można używać typeid.
+Musisz też stworzyć funkcję generate(), która losowo tworzy obiekty A, B lub
+
+Base ma wirtualny destruktor → to pozwala na RTTI (mechanizm w C++, dzięki któremu dynamic_cast wie w runtime, jaki jest rzeczywisty typ obiektu).
+A, B, C są puste, bo nie potrzebujemy żadnych dodatkowych pól ani metod.
+To jest minimalna struktura potrzebna do rozpoznawania typu.
+
+rand() % 3 → losuje liczbę 0, 1 lub 2
+W zależności od wyniku:
+0 → tworzy obiekt A
+1 → tworzy obiekt B
+2 → tworzy obiekt C
+Funkcja zwraca wskaźnik typu Base*, który w runtime wskazuje na właściwy obiekt pochodny
+
+dynamic_cast<A*>(p) → sprawdza, czy obiekt wskazywany przez p jest typu A.
+Jeśli tak → zwraca wskaźnik (nie nullptr) → warunek jest true
+Jeśli nie → zwraca nullptr → warunek false
+To samo dla B i C.
+Dzięki temu funkcja wypisuje rzeczywisty typ obiektu, nawet jeśli mamy wskaźnik do klasy bazowej.
+
+&p → pobiera adres obiektu, czyli zamienia referencję na wskaźnik (Base*)
+Teraz można użyć dynamic_cast na wskaźniku (nie rzuca wyjątków)
+Sprawdzamy kolejno typy A → B → C, jak w wersji wskaźnikowej
+Wypisujemy rzeczywisty typ
+
+Dlaczego tak:
+dynamic_cast na referencji bezpośrednio rzucałby wyjątek, jeśli typ się nie zgadza.
+Zamiana na wskaźnik pozwala uniknąć try/catch.
+
+srand(time(0)) → losowe wyniki przy każdym uruchomieniu programu
+Pętla tworzy 5 losowych obiektów
+Każdy obiekt jest sprawdzany dwoma funkcjami, żeby pokazać, że identyfikacja działa zarówno dla wskaźnika, jak i referencji
+delete → pamięć zwalniana, żeby nie było wycieków
+
+7. Mechanizm całego programu – w skrócie
+generate() losuje obiekt A/B/C i zwraca go jako Base*
+identify(Base*) sprawdza typ przez dynamic_cast na wskaźniku
+identify(Base&) sprawdza typ przez dynamic_cast na wskaźniku, który powstał z referencji
+Output pokazuje, który typ został wylosowany
+
+8. Co się dzieje „pod maską” (RTTI)
+Base ma wirtualny destruktor → każdy obiekt A/B/C ma vtable
+dynamic_cast w runtime sprawdza vtable, żeby określić rzeczywisty typ obiektu
+Dzięki temu program może poprawnie powiedzieć „A”, „B” lub „C”, nawet jeśli ma tylko wskaźnik do klasy bazowej
+
+Kluczowe wnioski
+virtual ~Base() → konieczne dla dynamic_cast i bezpieczeństwa przy usuwaniu obiektów
+dynamic_cast<T*>(ptr) → zwraca nullptr, jeśli typ się nie zgadza → łatwe sprawdzanie typu
+dynamic_cast<T&> → rzuca wyjątek, więc łatwiej użyć wskaźnika dla referencji
+generate() + identify() → pokazuje, jak działają polimorfizm i RTTI w praktyce
+Program uczy, jak rozpoznać rzeczywisty typ obiektu bazowego w runtime bez typeid

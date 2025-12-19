@@ -684,3 +684,78 @@ Dlaczego to działa lepiej niż atoi
 atoi po prostu zwraca int → przepełnienie nie jest wykrywane → wynik może być zupełnie niepoprawny.
 strtol zwraca long → daje większy zakres i informuje, jeśli liczba nie mieści się w typie.
 Dodatkowo daje endptr, więc można sprawdzić, czy w stringu nie było dodatkowych znaków (np. spacji w środku).
+
+
+char *endptr;
+errno = 0;
+double val = strtod(str.c_str(), &endptr);
+strtod konwertuje string na double.
+endptr wskaże, gdzie konwersja się zatrzymała.
+errno = 0 → resetujemy zmienną błędu, żeby później sprawdzić overflow/underflow.
+
+if (*endptr != '\0' || errno == ERANGE)
+{
+	std::cout << "Conversion error" << std::endl;
+	return (0);
+}
+Sprawdzamy, czy cała reszta stringa została poprawnie przetworzona:
+Jeśli *endptr != '\0' → po liczbie są jeszcze jakieś znaki → błąd.
+
+errno == ERANGE → wartość poza zakresem typu double → błąd.
+	char c = static_cast<char>(val);
+	int i = static_cast<int>(val);
+	float f = static_cast<float>(val);
+Tworzymy rzutowania do różnych typów:
+char → do ASCII (drukowalny znak).
+int → do liczby całkowitej.
+float → do floata (z końcówką .0f później przy drukowaniu).
+
+1️⃣ Co robi static_cast
+static_cast to operator rzutowania w C++.
+Pozwala nam zamienić wartość z jednego typu na inny typ, w sposób kontrolowany przez kompilator.
+
+Przykład:
+double val = 3.14;
+float f = static_cast<float>(val); // rzutujemy double na float
+
+
+Co się dzieje?
+val jest typu double (8 bajtów, większa precyzja).
+static_cast<float>(val) mówi kompilatorowi: chcę tę liczbę przechować jako float (4 bajty).
+Kompilator wykonuje konwersję, zmniejszając precyzję do typu float.
+
+2️⃣ Dlaczego < >?
+
+Nawiasy < > w static_cast<typ> określają typ, na który chcemy rzutować.
+Po tym typie w nawiasach stoi wyrażenie do konwersji
+Schemat:
+static_cast<docelowy_typ>(wyrazenie)
+
+Przykład:
+int x = 10;
+double d = static_cast<double>(x); // int → double
+Bez < > nie da się powiedzieć kompilatorowi, na jaki typ ma konwertować.
+
+3️⃣ Dlaczego używamy static_cast, a nie starego (float)val?
+Jest bezpieczniejsze i bardziej czytelne niż stare rzutowanie C: (float)val.
+static_cast:
+
+Jest kontrolowane przez kompilator.
+Lepiej widać, co jest rzutowane i na jaki typ.
+Nie pozwala np. przypadkowo rzutować wskaźników na niekompatybilne typy.
+
+4️⃣ Przykład z Twojego kodu
+double val = 66.0;
+char c = static_cast<char>(val);   // 66 → 'B'
+int i = static_cast<int>(val);     // 66 → 66
+float f = static_cast<float>(val); // 66.0 → 66.0f
+
+char c → sprawdzamy, czy wartość mieści się w ASCII.
+int i → zamieniamy na int.
+float f → zamieniamy na float, żeby potem wypisać z .0f.
+
+💡 Podsumowanie:
+static_cast to bezpieczny sposób konwersji typów.
+<float> mówi, że chcemy float.
+(val) to wartość, którą chcemy rzutować.
+W Twojej funkcji pozwala łatwo zrobić float, int i char z jednej liczby typu double.

@@ -1,12 +1,138 @@
-Ćwiczenie 01 – Serializer
 
-Stwórz pliki: Serializer.hpp, Serializer.cpp
+Co to jest "Serialization" w tym kontekście?
+W zadaniu chodzi o konwersję wskaźnika na liczbową reprezentację (uintptr_t) i później z powrotem na wskaźnik.
+uintptr_t to typ całkowity, który jest duży na tyle, żeby pomieścić adres w pamięci.
+Serializacja tutaj nie oznacza zapisywania danych do pliku — chodzi tylko o zamianę wskaźnika w liczbę i z powrotem.
 
-W klasie Serializer:
-prywatny konstruktor (nieinstancjonowalna)
-statyczne metody serialize(Data*) i deserialize(uintptr_t)
+Operator przypisania służy do robienia a = b.
+if (*this != &other) – sprawdza, czy nie przypisujesz obiektu do samego siebie (tzw. self-assignment).
+Tutaj właściwie nie ma sensu, bo klasa nie ma żadnych pól.
+Można to całkowicie pominąć w tym zadaniu – wystarczy, że konstruktor i operator są prywatne, żeby nikt nie tworzył obiektów.
 
-W main.cpp:
-utwórz obiekt Data z polami
-przetestuj serializację i deserializację
-sprawdź, czy wskaźnik po deserializacji jest taki sam jak oryginalny
+Serializacja = zamiana adresu domu w zwykłą liczbę.
+To tak, jakbyś wziął adres „ul. Programistów 42” i napisał go jako liczbę: 140732764640880.
+Nie zmieniasz domu ani jego mieszkańców – po prostu liczbowo zapisujesz adres.
+
+Deserializacja = zamiana liczby z powrotem na wskaźnik → ponownie masz adres domu.
+Teraz możesz wejść do domu i zobaczyć te same dane:
+
+Obiekt Data:  d
+               ┌─────────────┐
+               │name = Kinga │
+               │ age  = 20   │
+               └─────────────┘
+ptr ------------> wskazuje na obiekt d
+
+serialize(ptr) ---> zamienia adres na liczbę (raw)
+deserialize(raw) ---> zamienia liczbę z powrotem na wskaźnik (ptr)
+
+uintptr_t serialize(Data* ptr)
+
+serialize → nazwa funkcji
+Data* ptr → wskaźnik, czyli adres obiektu Data w pamięci
+uintptr_t → typ liczbowy, który potrafi przechować adres pamięci
+➡️ Funkcja bierze adres obiektu i zwraca go jako liczbę.
+
+reinterpret_cast<uintptr_t>(ptr)
+
+reinterpret_cast → mówi kompilatorowi:
+„Nie zmieniaj danych, tylko spójrz na ten adres jak na liczbę”
+ptr → adres obiektu Data
+uintptr_t → typ liczby, która pomieści ten adres
+➡️ Adres w pamięci zostaje zapisany jako liczba
+
+return reinterpret_cast<uintptr_t>(ptr);
+
+Zwracasz adres obiektu, ale w formie liczby
+Nic nie kopiujesz
+Nic nie zmieniasz
+Tylko inny sposób zapisu tego samego adresu
+
+
+Data* deserialize(uintptr_t raw)
+
+raw → liczba, która tak naprawdę jest adresem w pamięci
+Data* → funkcja ma zwrócić wskaźnik do Data
+
+➡️ Funkcja bierze liczbę i zrobi z niej adres obiektu Data
+
+reinterpret_cast<Data*>(raw)
+Mówisz:
+„Ta liczba to nie zwykła liczba — to adres obiektu Data”
+Kompilator nie sprawdza, czy to bezpieczne
+On tylko zmienia sposób patrzenia na dane
+
+return reinterpret_cast<Data*>(raw);
+Zwracasz wskaźnik
+Ten wskaźnik wskazuje dokładnie na ten sam obiekt, który był przed serializacją
+
+
+Data d;
+Data* ptr = &d;
+Załóżmy:
+
+ptr = 0x7ffee3b3c8f0
+serialize
+uintptr_t raw = serialize(ptr);
+raw = 140732764640880
+deserialize
+Data* ptr2 = deserialize(raw);
+ptr2 = 0x7ffee3b3c8f0
+➡️ ptr == ptr2 → TRUE
+➡️ To ten sam obiekt w pamięci
+
+Data* → adres obiektu
+uintptr_t → liczba, która przechowuje adres
+serialize → adres → liczba
+deserialize → liczba → adres
+Obiekt nigdy się nie zmienia
+
+Używane w:
+callbackach
+bibliotekach C
+MLX / SDL / OpenGL
+systemach eventów
+
+Nie do zapisu danych
+Nie do sieci
+Do runtime
+
+data to obiekt typu Data.
+&data daje adres tego obiektu w pamięci (czyli wskaźnik Data*).
+Wypisując go, pokazujesz gdzie w pamięci program przechowuje ten obiekt.
+
+serialize zamienia wskaźnik (Data*) w liczbę typu uintptr_t.
+Dzięki temu możesz przechowywać adres w formie liczby, np. do przesyłania, zapisu w pliku, czy sieci.
+Wypisujemy to, aby pokazać różnicę: wskaźnik → liczba.
+
+std::cout << "Serialized value (uintptr_t): " << ptr << std::endl;
+Tutaj wartość jest liczbową reprezentacją adresu – nie obiektu ani danych, tylko adresu.
+
+3️⃣ otherdata = Serializer::deserialize(ptr) – konwersja liczby z powrotem na wskaźnik
+otherdata = Serializer::deserialize(ptr);
+deserialize bierze tę liczbę i interpretuje ją jako adres w pamięci.
+
+Teraz otherdata wskazuje dokładnie ten sam obiekt co data.
+
+Dlatego wypisujemy:
+std::cout << "Address after deserialize: " << otherdata << std::endl;
+
+Adres powinien być dokładnie taki sam jak &data – to dowód, że serializacja i deserializacja nie tworzą nowego obiektu.
+
+4️⃣ Wypisywanie danych przez data i otherdata
+std::cout << "Data before serialize: " << data.name << ", " << data.age << std::endl;
+std::cout << "Data after deserialize: " << otherdata->name << ", " << otherdata->age << std::endl;
+
+
+data – oryginalny obiekt, dane przed serializacją.
+otherdata – wskaźnik po deserializacji, dane są identyczne, bo oba wskaźniki wskazują ten sam obiekt w pamięci.
+
+| Co printujemy            | Co pokazuje                                  |
+| ------------------------ | -------------------------------------------- |
+| `&data`                  | adres obiektu w pamięci                      |
+| `ptr` (serialize)        | liczba reprezentująca ten adres              |
+| `otherdata`              | adres po deserializacji (ten sam co `&data`) |
+| `data.name`, `data.age`  | dane oryginalnego obiektu                    |
+| `otherdata->name`, `age` | dane przez deserializowany wskaźnik          |
+
+✅ Wniosek: serializacja nie zmienia danych ani nie tworzy nowego obiektu, tylko pozwala przechować adres w formie liczby i odtworzyć wskaźnik do tego samego obiektu.

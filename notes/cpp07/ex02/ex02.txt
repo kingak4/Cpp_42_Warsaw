@@ -1,0 +1,109 @@
+Co ma robić ten program?
+
+Tworzysz klasę szablonową Array<T>, która działa jak tablica, ale na własnych zasadach.
+Tablica ma dynamiczny rozmiar – możesz określić liczbę elementów lub stworzyć pustą tablicę.
+
+Możesz:
+dodawać elementy przez arr[i],
+kopiować tablicę (konstruktor kopiujący i operator przypisania),
+sprawdzać liczbę elementów przez size().
+Jeśli spróbujesz odwołać się do elementu poza zakresem → program rzuca wyjątek.
+Czyli program ma być “bezpieczną tablicą”, której użycie nie powoduje błędów typu out-of-bounds i działa dla dowolnego typu danych
+
+Dlaczego są różne pliki?
+Array.hpp / Array.h → deklarujesz klasę i jej funkcje.
+Array.tpp (opcjonalny) → możesz tam przenieść implementację funkcji szablonu, żeby plik .hpp był czytelniejszy.
+
+Różnica z .tpp lub bez niego:
+Bez .tpp → cała klasa wraz z kodem funkcji jest w Array.hpp.
+Z .tpp → w .hpp tylko deklaracje, a w .tpp implementacja. W .hpp robisz:
+#include "Array.tpp" // na końcu pliku
+Dlaczego to opcjonalne:
+Szablony w C++ muszą mieć kod dostępny w momencie kompilacji,
+więc nie możesz po prostu wrzucić implementacji do .cpp. .tpp to tylko sposób na porządek 
+– nie zmienia działania programu.
+Czyli w skrócie: tworzysz własną bezpieczną tablicę, która działa dla dowolnego typu i jest w pełni dynamiczna.
+
+Array<T> object:
++---------------------+
+| T* ptr → dynamiczna tablica w pamięci |
+| unsigned int size   |
++---------------------+
+
+Operacje:
+- Konstruktor: alokuje pamięć i ustawia size
+- Konstruktor kopiujący: tworzy nowy blok, kopiuje wartości
+- Operator=: zwalnia starą pamięć, alokuje nową, kopiuje wartości
+- operator[]: dostęp z kontrolą zakresu
+- size(): zwraca size
+
+
+Deklaracja klasy szablonowej
+
+Utwórz szablon klasy Array<T>.
+Zdefiniuj pola prywatne: wskaźnik na tablicę i licznik elementów.
+Konstruktor bez parametrów
+Tworzy pustą tablicę.
+Ustaw licznik elementów na 0.
+Wskaźnik tablicy powinien być pusty (nullptr).
+
+Konstruktor z rozmiarem
+Przyjmuje liczbę elementów.
+Tworzy dynamiczną tablicę o zadanym rozmiarze.
+Inicjalizuje wszystkie elementy domyślnie.
+Ustaw licznik elementów.
+
+Konstruktor kopiujący
+Tworzy nową tablicę kopiując wszystkie elementy z innej tablicy.
+Modyfikacja kopii nie zmienia oryginału (deep copy).
+
+Operator przypisania
+Sprawdza, czy nie przypisujesz tablicy do samej siebie.
+Zwalnia starą pamięć.
+Tworzy nową tablicę i kopiuje elementy.
+
+Destruktor
+Zwalnia dynamicznie przydzieloną pamięć.
+
+Operator indeksowania [ ]
+Pozwala odczytać lub zmienić element pod danym indeksem.
+Jeśli indeks jest poza zakresem → rzuca wyjątek.
+
+Funkcja size()
+Zwraca liczbę elementów w tablicy.
+Nie zmienia tablicy.
+
+Tworzenie plików
+Array.hpp → deklaracja klasy i opcjonalnie implementacja.
+Array.tpp (opcjonalny) → implementacja funkcji szablonu.
+
+main.cpp → testowanie działania tablicy:
+Tworzenie tablic.
+Wstawianie i odczytywanie elementów.
+Kopiowanie i przypisywanie tablic.
+Sprawdzenie rzucania wyjątków.
+Wyświetlanie rozmiaru tablicy.
+
+
+W skrócie:
+
+Stworzyć klasę szablonową Array<T>.
+
+Zaimplementować ją w orthodox canonical form:
+Konstruktor domyślny
+Konstruktor z rozmiarem
+Konstruktor kopiujący
+Operator przypisania
+Destruktor
+
+Zapewnić:
+Dynamiczną alokację pamięci dla elementów (new[]).
+Dostęp przez [ ] z kontrolą zakresu (rzucanie wyjątku przy out-of-bounds).
+Funkcję size() zwracającą liczbę elementów.
+Testować w main.cpp: tworzenie tablic, kopiowanie, przypisywanie, dostęp do elementów, rzucanie wyjątków.
+
+Podsumowując jednym zdaniem:
+Tworzysz bezpieczną, dynamiczną tablicę szablonową, 
+która działa poprawnie w każdej sytuacji (kopiowanie, 
+przypisanie, dostęp do elementów) i informuje o rozmiarze oraz błędach
+ przy nieprawidłowym indeksie.

@@ -1,0 +1,26 @@
+Co masz zrobić – w skrócie
+
+Masz napisać szablon funkcji (template) o nazwie iter, który:
+Dostaje tablicę
+Dostaje jej długość
+Dostaje funkcję, którą wywoła dla każdego elementu tablicy
+I nic nie zwraca.
+
+Co oznacza U function
+U to dowolny typ, który podasz w momencie użycia funkcji.
+
+W praktyce U będzie typem funkcji lub funkcji lambda.
+Przykład w prostych słowach:
+void printInt(int x) { std::cout << x << std::endl; }
+Kiedy wywołasz: iter(arr, 3, printInt);
+Kompilator zamieni U na typ void(*)(int) czyli wskaźnik na funkcję przyjmującą int.
+
+iter przechodzi po każdym elemencie tablicy (to jest iteracja).
+Każdy element po kolei jest przekazywany do funkcji, którą podałaś jako trzeci argument.
+Funkcja może coś zrobić z tym elementem – np. wydrukować, zmodyfikować, policzyć sumę itd.
+
+W projekcie zaimplementowano szablon funkcji iter, który iteruje po tablicy dowolnego typu i wywołuje na każdym 
+elemencie przekazaną funkcję. Funkcja iter działa zarówno dla tablic modyfikowalnych, jak i const, umożliwiając użycie 
+funkcji zmieniających elementy lub tylko je odczytujących. W main.cpp przetestowano działanie iter na tablicach typu int i char,
+pokazując zarówno modyfikację elementów (dodawanie wartości, zmiana wielkości liter), jak i ich drukowanie. Testy potwierdziły poprawność 
+działania iter oraz elastyczność szablonu dla różnych typów danych i funkcji.

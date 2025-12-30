@@ -107,3 +107,30 @@ Tworzysz bezpieczną, dynamiczną tablicę szablonową,
 która działa poprawnie w każdej sytuacji (kopiowanie, 
 przypisanie, dostęp do elementów) i informuje o rozmiarze oraz błędach
  przy nieprawidłowym indeksie.
+
+
+ Cała klasa jest szablonem:
+
+template <typename T>
+class Array { ... };
+
+T to typ przechowywanych elementów (int, double, std::string, cokolwiek).
+Wszystkie funkcje, które działają na tej klasie, też są funkcjami szablonowymi, np.:
+
+Konstruktor domyślny
+Konstruktor z rozmiarem
+Konstruktor kopiujący
+Operator przypisania
+Operator [ ]
+Funkcja size()
+
+Dlaczego szablony:
+
+Bo chcesz, żeby ta sama klasa działała dla dowolnego typu, nie tylko dla int.
+Gdy napiszesz Array<int>, kompilator wstawi typ int w miejsce T.
+Gdy napiszesz Array<std::string>, kompilator wstawi std::string w miejsce T.
+
+💡 Podsumowując
+.tpp = plik z implementacją funkcji szablonu, dołączany w .hpp.
+Szablon = template <typename T> w całej klasie i jej funkcjach.
+Dzięki temu Twoja tablica działa dla dowolnego typu danych, a nie tylko np. int.

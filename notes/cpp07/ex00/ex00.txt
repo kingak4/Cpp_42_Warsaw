@@ -1,0 +1,81 @@
+1️⃣ swap
+Zamienia wartości dwóch zmiennych
+Nic nie zwraca
+Działa jak klasyczne std::swap, ale piszesz własną wersję
+
+Wymagania:
+Przyjmuje dwa parametry tego samego typu
+Muszą być przekazane przez referencję
+
+2️⃣ min
+Porównuje dwie wartości
+Zwraca mniejszą
+❗ Jeśli wartości są równe, zwraca drugą
+
+3️⃣ max
+Porównuje dwie wartości
+Zwraca większą
+❗ Jeśli wartości są równe, zwraca drugą
+
+Kluczowe ograniczenia
+✔ Funkcje muszą być szablonami (template)
+✔ Muszą być zdefiniowane w pliku nagłówkowym (.h lub .hpp)
+✔ Typ musi obsługiwać operatory porównania (<, >, ==)
+
+
+Tam definiujesz szablony – nie tylko deklaracje.
+
+Logicznie:
+
+template <typename T>
+
+funkcja swap
+
+funkcja min
+
+funkcja max
+
+Dlaczego w nagłówku?
+Bo szablony są generowane w czasie kompilacji, 
+a kompilator musi widzieć pełną definicję, nie tylko deklarację.
+
+1️⃣ Co to template?
+Co to znaczy:
+Template pozwala napisać jedną funkcję, która działa dla różnych typów danych.
+
+Bez template (źle)
+Musiałabyś pisać osobne funkcje:
+
+dla int
+dla float
+dla string
+To jest marnowanie czasu.
+
+Z template (dobrze)
+Piszesz jedną funkcję, a C++ sam dopasowuje typ.
+
+Co to jest
+template <typename T>
+To jest deklaracja szablonu funkcji lub klasy.
+
+Znaczenie wprost:
+„Za chwilę napiszę kod, który działa dla dowolnego typu danych.
+Ten typ nazywam tymczasowo T.”
+
+Co oznacza T
+T to placeholder na typ.
+T nie jest konkretnym typem
+T zostanie zastąpione przez:
+int
+float
+double
+std::string
+itd.
+👉 Kompilator sam wybiera, jaki to typ, na podstawie użycia funkcji.
+
+2️⃣ Co to referencja?
+
+Co to znaczy:
+Referencja (&) to bezpośredni dostęp do tej samej zmiennej, a nie jej kopii.
+Bez referencji (nie zadziała swap)
+Jeśli wiesz, że & pozwala zmieniać oryginalną zmienną, rozumiesz referencje.

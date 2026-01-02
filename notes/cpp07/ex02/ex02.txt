@@ -162,3 +162,47 @@ Zwraca liczbę elementów znajdujących się w tablicy.
 
 InvalidIndexException
 Własny wyjątek rzucany, gdy indeks wykracza poza zakres tablicy.
+
+Po co jest : (lista inicjalizacyjna)?
+🔑 NAJWAŻNIEJSZE DO ZAPAMIĘTANIA
+
+: służy do inicjalizacji pól klasy,
+zanim wejdzie ciało {} konstruktora.
+
+Bez ::
+obiekt najpierw się tworzy „pusty”
+potem próbujesz coś ustawić
+dla referencji, const i wskaźników → PROBLEM
+
+Z ::
+pola dostają wartości od razu
+szybciej
+bezpieczniej
+wymagane w wielu przypadkach
+
+: w konstruktorze służy do inicjalizacji pól klasy; bez niego C++ próbuje 
+traktować zmienne jak funkcje i kończy się błędem.
+
+W liście inicjalizacyjnej inicjalizujemy każde pole osobno. 
+Dla tablic szablonowych elementy domyślnie inicjalizujemy new T[n]()
+
+Destruktor tablicy szablonowej w C++ po prostu robi delete[] elements;
+ i nie używa listy inicjalizacyjnej.
+
+ Operator [] w tablicy szablonowej ma typ zwracany T&, a wersja dla const const T&.
+ Zawsze sprawdza zakres i rzuca wyjątek, 
+ jeśli indeks jest poza tablicą.
+
+ Konstruktor kopiujący tworzy nową tablicę, która jest kopią innej tablicy.
+Zmiana w jednej tablicy nie wpływa na drugą.
+Robi się to w trzech krokach:
+Kopiujemy rozmiar (count)
+Tworzymy nową tablicę w pamięci (new T[count]())
+Kopiujemy wszystkie elementy jeden po drugim (elements[i] = other.elements[i])
+
+Operator przypisania tablicy szablonowej:
+Sprawdza auto-przypisanie (if(this != &other))
+Zwalnia starą pamięć (delete[] elements)
+Kopiuje rozmiar i alokuje nową tablicę (elements = new T[count]())
+Kopiuje elementy po kolei
+Zwraca referencję do siebie (return *this;)

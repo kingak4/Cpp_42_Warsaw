@@ -18,7 +18,7 @@ class Array
 		Array(const Array &other);
 		Array &operator=(const Array &other);
 		T &operator[](unsigned int i);
-		T &operator[](unsigned int i) const;
+		const T &operator[](unsigned int i) const;
 		~Array();
 		unsigned int	size() const;
 	class InvalidIndexException : public std::exception

@@ -16,12 +16,13 @@ Array<T>::~Array()
 };
 
 template<typename T>
-Array<T>::operator[](unsigned int i)
+T &Array<T>::operator[](unsigned int i)
 {
 	if(i < count)
 		return(elements[i]);
 	throw InvalidIndexException();
 }
+
 template<typename T>
 const T& Array<T>::operator[](unsigned int i) const
 {

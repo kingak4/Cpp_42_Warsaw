@@ -1,0 +1,131 @@
+1️⃣ Deklaracja funkcji szablonowej
+template <typename T>
+typename T::iterator easyfind(T &container, int value)
+
+template <typename T> → to szablon: funkcja działa dla każdego typu kontenera T (np. vector<int>, list<int>).
+T &container → funkcja przyjmuje kontener przez referencję, czyli działa bez kopiowania całego kontenera.
+int value → liczba, którą chcemy znaleźć.
+typename T::iterator → funkcja zwraca iterator do elementu w kontenerze (iterator to coś jak wskaźnik do miejsca w kontenerze).
+
+2️⃣ Szukanie elementu
+typename T::iterator it = std::find(container.begin(), container.end(), value);
+std::find przeszukuje kontener od początku (container.begin()) do końca (container.end()) w poszukiwaniu wartości value.
+
+Zwraca iterator:
+jeśli element istnieje → iterator wskazuje na niego
+jeśli elementu nie ma → iterator jest równy container.end()
+
+3️⃣ Sprawdzenie, czy element został znaleziony
+if (it == container.end())
+    throw std::runtime_error("Value not found");
+Porównujemy iterator it z container.end().
+Jeśli są równe → elementu nie ma w kontenerze
+Wtedy rzucamy wyjątek std::runtime_error, który można potem złapać w try/catch.
+
+4️⃣ Zwrócenie iteratora
+return it;
+Jeśli element został znaleziony, zwracamy iterator wskazujący na ten element.
+Możesz potem w main.cpp zrobić np. *it, żeby dostać wartość elementu.
+
+✅ Podsumowanie prostymi słowami
+
+Ta funkcja:
+Szuka podanej liczby w kontenerze.
+Jeśli znajdzie → zwraca wskaźnik (iterator) do tej liczby.
+Jeśli nie znajdzie → zgłasza błąd (wyjątek).
+
+1️⃣ Co to jest kontener w C++
+Kontener to specjalny rodzaj “pojemnika”, który przechowuje wiele elementów w uporządkowany sposób.
+
+Przykłady:
+std::vector<int> – dynamiczna tablica, możesz dodawać elementy na końcu, szybko je odczytać po indeksie.
+std::list<int> – lista dwukierunkowa, szybkie wstawianie/usuwanie w środku, ale wolniejsze indeksowanie.
+std::deque<int> – coś jak wektor, ale można szybko dodawać i usuwać elementy na początku i końcu.
+W skrócie: kontener to jak pudełko na wartości, które daje Ci różne sposoby pracy z tymi wartościami.
+
+2️⃣ Jak działa kontener
+
+Każdy kontener pozwala na:
+Dodawanie elementów
+
+std::vector<int> v;
+v.push_back(5); // dodaje 5 na końcu
+
+Dostęp do elementów
+Po indeksie (np. vector)
+Przez iteratory (wskaźniki) – działa w każdym kontenerze
+
+Iterowanie po elementach
+Kontenery mają iteratory, czyli specjalne wskaźniki, które pozwalają przechodzić po każdym elemencie w pętli.
+Przykład: begin() zwraca iterator na pierwszy element, end() na “pozycję za ostatnim elementem”.
+
+3️⃣ Iteratory w skrócie
+Iteratory to wskaźniki do elementów kontenera, które pozwalają:
+czytać element → *it
+przechodzić do następnego → ++it
+porównywać → it == container.end()
+Dzięki iteratorom możesz pisać funkcje szablonowe, które działają z różnymi typami kontenerów, np. vector, list, deque.
+
+4️⃣ Jak kontener jest użyty w easyfind
+Funkcja easyfind dostaje kontener jako argument:
+easyfind(vector<int>, 3);
+
+Następnie używa iteratorów begin() i end(), żeby przeszukać wszystkie elementy w kontenerze.
+Jeśli znajdzie szukaną wartość → zwraca iterator, czyli “wskaźnik” do tego elementu w kontenerze.
+
+💡 Prosta analogia:
+Kontener = pudełko z piłeczkami (liczbami).
+Iterator = palec, który wskazuje na konkretną piłeczkę.
+easyfind = rączka, która przesuwa palec po pudełku, aż znajdzie właściwą piłeczkę, albo krzyczy, że jej nie ma.
+
+Podstawowa różnica: kontener vs tablica
+
+| Cecha                        | Tablica (array)                                                 | Kontener (np. vector, list)                                                      |
+| ---------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **Rozmiar**                  | Stały (np. `int a[10]`) lub dynamiczny z `new`                  | Zazwyczaj dynamiczny, można dodawać/usuwać elementy w trakcie działania programu |
+| **Przechowywanie**           | Proste miejsce w pamięci, elementy są obok siebie (ciągły blok) | Może mieć różne struktury: ciągła pamięć (`vector`), lista łączona (`list`)      |
+| **Funkcje gotowe do użycia** | Prawie brak, trzeba pisać własne                                | Bogactwo metod: dodawanie, usuwanie, sortowanie, szukanie itp.                   |
+| **Bezpieczeństwo**           | Brak kontroli zakresu (łatwo wyjść poza tablicę)                | Bezpieczniejsze: np. `vector::at(i)` sprawdza indeks                             |
+| **Iteratory**                | Nie ma, używa się wskaźników (`int*`)                           | Tak, pozwalają przechodzić po elementach w sposób uniwersalny                    |
+
+
+3️⃣ Zalety kontenerów nad zwykłymi tablicami
+Łatwość użycia – nie trzeba pamiętać o alokacji i zwalnianiu pamięci (w przypadku vector).
+Bezpieczeństwo – metody takie jak .at() chronią przed dostępem poza zakres.
+Wbudowane operacje – sortowanie, wyszukiwanie, usuwanie elementów.
+Elastyczność – różne rodzaje kontenerów dopasowane do potrzeb (szybki dostęp vs szybkie wstawianie).
+Iteratory – uniwersalny sposób na przeglądanie danych, działa dla wszystkich kontenerów.
+
+4️⃣ Wady kontenerów
+Większy narzut pamięci i mniejsza wydajność niż prosta tablica w niektórych przypadkach, np. list wymaga dodatkowych wskaźników.
+Mniej kontrolowane zachowanie pamięci – programista nie zawsze wie dokładnie, ile pamięci zajmie kontener.
+Nieco wolniejsze operacje w niektórych kontenerach w porównaniu z tablicą, np. wstawianie w vector w środku wymaga przesunięcia elementów.
+
+5️⃣ Proste podsumowanie
+Tablica = prosta, szybka, stała struktura pamięci, minimalny narzut.
+Kontener = bardziej elastyczny, bezpieczny i bogaty w funkcje, używany praktycznie zawsze w nowoczesnym C++ do przechowywania i manipulowania danymi.
+💡 Z perspektywy programisty: używasz kontenerów, gdy chcesz wygody, bezpieczeństwa i uniwersalności. 
+Tablice używasz tylko wtedy, gdy ważna jest maksymalna wydajność i minimalny narzut pamięci.
+
+Różnica: int[] vs vector<int>
+| Cecha          | `int[]` | `vector<int>` |
+| -------------- | ------- | ------------- |
+| Rozmiar        | stały   | dynamiczny    |
+| Bezpieczeństwo | niskie  | wyższe        |
+| Wygoda         | niska   | wysoka        |
+| Iteratory      | nie     | tak           |
+| STL            | nie     | tak           |
+
+
+vector<int> to dynamiczny kontener STL, który przechowuje liczby typu int i udostępnia iteratory,
+dzięki czemu można używać algorytmów takich jak std::find.
+
+| Potrzeba                 | Kontener        | Funkcja      |
+| ------------------------ | --------------- | ------------ |
+| Dodawanie na koniec      | `vector`        | `push_back`  |
+| Dodawanie na początek    | `list`, `deque` | `push_front` |
+| Dużo losowego dostępu    | `vector`        | indeks       |
+| Dużo wstawiania/usuwania | `list`          | front/back   |
+
+Iterator musi być tego samego typu co kontener,
+po którym się porusza, i musi być poprawnie zainicjalizowany.

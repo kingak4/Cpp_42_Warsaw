@@ -134,3 +134,31 @@ Gdy napiszesz Array<std::string>, kompilator wstawi std::string w miejsce T.
 .tpp = plik z implementacją funkcji szablonu, dołączany w .hpp.
 Szablon = template <typename T> w całej klasie i jej funkcjach.
 Dzięki temu Twoja tablica działa dla dowolnego typu danych, a nie tylko np. int.
+
+
+Array()
+Tworzy pustą tablicę. Ustawia rozmiar na 0 i wskaźnik na brak pamięci.
+
+Array(unsigned int n)
+Tworzy tablicę o podanym rozmiarze i alokuje pamięć na n elementów.
+
+Array(const Array &other)
+Tworzy nową tablicę jako niezależną kopię innej tablicy (deep copy).
+
+Array &operator=(const Array &other)
+Kopiuje zawartość jednej tablicy do już istniejącej, zwalniając wcześniej starą pamięć.
+
+T &operator[](unsigned int i)
+Umożliwia dostęp i modyfikację elementu pod danym indeksem, z kontrolą zakresu.
+
+T &operator[](unsigned int i) const
+Umożliwia tylko odczyt elementu z tablicy typu const.
+
+~Array()
+Zwalnia dynamicznie zaalokowaną pamięć tablicy.
+
+unsigned int size() const
+Zwraca liczbę elementów znajdujących się w tablicy.
+
+InvalidIndexException
+Własny wyjątek rzucany, gdy indeks wykracza poza zakres tablicy.

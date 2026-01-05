@@ -5,7 +5,7 @@
 Poniedziałek (____/____/2025)
 - zrobić ex01 w cpp 08
 - zrobić ex02 w cpp08 i oddac
-
+- oddać cpp07
 Wtorek (____/____/2025)
 
 Środa (____/____/2025)

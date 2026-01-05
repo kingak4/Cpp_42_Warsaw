@@ -67,3 +67,66 @@ normalne dane (jak w przykładzie)
 10 000+ liczb
 dodawanie zakresu iteratorów
 przypadki błędne (czy wyjątki się rzucają)
+
+Do zapamiętania (ważne w C++)
+❌ pole = wartość → NIE w initializer list
+✔ pole(wartość) → TAK
+❌ nie inicjalizujesz parametrów
+✔ inicjalizujesz TYLKO pola klasy
+
+1️⃣ Porównanie wektora z liczbą
+nb to wektor (std::vector<int>), a nie liczba
+nie można porównywać wektora z intem
+Musisz porównać liczbę elementów w wektorze: np. nb.size() vs max_i
+
+2️⃣ Dodawanie liczby do wektora
+std::vector<int> nie obsługuje operatora += z intem
+Aby dodać liczbę, trzeba użyć funkcji push_back(num) lub emplace_back(num)
+
+Funkcja addNumbers(std::vector<int>::iterator from, std::vector<int>::iterator to) – Notatki
+Cel funkcji
+
+Dodać wiele liczb do obiektu Span naraz, w jednym wywołaniu.
+Obsłużyć limit pojemności (max_i).
+Zakres liczb określany jest przez iteratory [from, to].
+
+Logika działania funkcji (krok po kroku)
+Policzenie liczby elementów w zakresie
+Tworzymy kopię iteratora: tmp = from
+Przechodzimy po wszystkich elementach kopii:
+while(tmp != to) { i++; tmp++; }
+Po pętli i = liczba elementów do dodania
+
+Dlaczego kopia? Bo nie chcemy ruszać iteratora from, który będzie użyty później do dodawania elementów.
+Sprawdzenie pojemności
+Sprawdzamy: if(nb.size() + i > max_i)
+Jeśli dodanie wszystkich nowych elementów przekroczy limit → rzucamy wyjątek std::runtime_error("Already full!").
+
+Dodanie elementów do wektora nb
+Używamy oryginalnego iteratora from:
+while(from != to) { nb.push_back(*from); from++; }
+*from = wartość elementu wskazywanego przez iterator
+from++ = przesunięcie iteratora do kolejnego elementu
+Po zakończeniu pętli wszystkie elementy z zakresu [from, to] są dodane do wektora nb.
+
+Dlaczego iteratory działają inaczej niż zwykłe zmienne typu int
+| Cecha                  | Iterator                                                                           | int                               |
+| ---------------------- | ---------------------------------------------------------------------------------- | --------------------------------- |
+| Co przechowuje         | Wskaźnik / pozycję w kontenerze                                                    | Liczbę całkowitą                  |
+| Nie można ustawić na 0 | `from = 0` nie działa, bo iterator nie jest liczbą, tylko wskaźnikiem do kontenera | int można ustawić na 0            |
+| Jak odczytać wartość   | `*iterator` = element w kontenerze                                                 | `int` to od razu wartość          |
+| Jak przesuwać          | `iterator++` = idziemy do następnego elementu w kontenerze                         | int++ = zwiększamy wartość liczby |
+| Specjalność            | Iterator przechowuje **pozycję w kontenerze**, a nie wartość                       | int to po prostu liczba           |
+
+
+Wniosek:
+Iteratory to pozycje w kontenerze, nie liczby.
+Nie można ich „ustawić na 0”, trzeba je inicjalizować na początek kontenera lub na inną istniejącą pozycję.
+Aby pobrać wartość elementu, używamy *iterator.
+Aby przejść dalej, używamy iterator++.
+
+Schemat działania funkcji w skrócie
+1. Liczymy elementy w zakresie (kopią iteratora)
+2. Sprawdzamy, czy zmieszczą się w Span
+3. Rzucamy wyjątek jeśli za dużo
+4. Iterujemy po zakresie i dodajemy elementy do nb

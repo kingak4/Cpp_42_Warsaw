@@ -5,6 +5,8 @@
 # include <list>
 # include <string>
 # include <iostream>
+#include <stack>
+#include <ostream>
 
 template<typename T>
 class MutantStack : public std::stack<T>
@@ -18,7 +20,6 @@ class MutantStack : public std::stack<T>
 		iterator begin();
 		iterator end();
 };
-
 
 # include "MutantStack.tpp"
 

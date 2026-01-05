@@ -65,3 +65,169 @@ MutantStack byłby tylko kopią std::stack
 begin() umożliwia iterowanie po MutantStack,
 ponieważ zwraca iterator kontenera bazowego std::stack,
 do którego normalnie nie ma dostępu.
+
+1️⃣ Dlaczego używamy std::stack i czemu dziedziczymy po nim?
+std::stack<T> to kontener-adapter STL, który działa jak stos:
+pozwala dodawać elementy na górę (push)
+usuwać elementy z góry (pop)
+patrzeć na element na górze (top)
+sprawdzać rozmiar (size)
+
+Problem: std::stack nie jest iterowalny.
+Nie możesz użyć begin()/end(), for, std::find itd.
+Chcemy iterować po elementach, więc tworzymy MutantStack.
+
+Rozwiązanie:
+Tworzymy klasę szablonową (template<typename T>) → żeby działała dla dowolnego typu danych
+Dziedziczymy po std::stack<T> → używamy całej logiki stosu i jego kontenera
+Dodajemy iteratory (begin(), end()), które zwracają iteratory kontenera bazowego.
+
+2️⃣ Konstruktor kopiujący
+template<typename T>
+MutantStack<T>::MutantStack(MutantStack const &other) : std::stack<T>(other) {};
+Cel: stworzyć nowy obiekt MutantStack, który będzie dokładną kopią innego obiektu.
+: std::stack<T>(other) → wywołuje konstruktor kopiujący klasy bazowej:
+kopiuje wszystkie elementy stosu
+nie trzeba robić tego ręcznie
+
+Dlaczego w liście inicjalizacyjnej?
+Bo obiekt jeszcze nie istnieje → trzeba od razu zainicjalizować klasę bazową
+Ciało {} może być puste – wszystko zostało zrobione przez std::stack.
+
+3️⃣ Operator przypisania
+Cel: przypisać jeden istniejący stos do drugiego (a = b).
+if(this == &other) → sprawdzenie samoprzypisania
+std::stack<T>::operator=(other) → wywołuje operator przypisania klasy bazowej i kopiuje wszystkie elementy.
+return *this → standardowa praktyka, pozwala łączyć przypisania: a = b = c.
+
+4️⃣ Iteratory – begin() i end()
+std::stack nie ma iteratorów, ale ma kontener bazowy c (chroniony).
+Domyślnie jest to deque<T>
+Wszystkie elementy stosu są w c
+typedef typename std::stack<T>::container_type::iterator iterator;
+
+Tworzymy alias typu iterator → będzie taki sam jak iterator kontenera bazowego
+Dzięki temu w funkcjach begin() i end() możemy po prostu zwracać iterator
+this->c.begin() i this->c.end()
+c.begin() → iterator na pierwszy element kontenera
+c.end() → iterator za ostatni element
+this-> → potrzebne w C++98 w klasach szablonowych, żeby kompilator wiedział, że c istnieje w klasie bazowej
+
+Po co to jest potrzebne?
+Dzięki temu MutantStack staje się iterowalny
+Możemy zrobić np.:
+
+for(MutantStack<int>::iterator it = mstack.begin(); it != mstack.end(); ++it)
+    std::cout << *it << std::endl;
+Normalny std::stack tego nie umożliwia.
+
+5️⃣ Podsumowanie logiki całego projektu
+
+MutantStack = std::stack + iteratory
+Dziedziczymy po std::stack → mamy wszystkie operacje stosu (push, pop, top, size)
+Dodajemy konstruktor kopiujący → pozwala tworzyć kopie
+Dodajemy operator= → pozwala przypisywać istniejące obiekty
+Dodajemy iteratory (begin(), end()) → pozwala iterować po wszystkich elementach
+
+Dlaczego taki projekt istnieje:
+std::stack nie jest iterowalny → ograniczenie STL
+MutantStack „ulepsza” stack, ale zachowuje wszystkie jego funkcje
+
+To ćwiczenie uczy:
+dziedziczenia po klasach STL
+używania listy inicjalizacyjnej w konstruktorach kopiujących
+operatora przypisania w klasach szablonowych
+iteratorów i odwoływania się do chronionych kontenerów bazowych
+
+MutantStack to klasa dziedzicząca po std::stack, która dodaje iteratory, aby można było przeglądać wszystkie elementy stosu.
+
+1. Konstruktor kopiujący:
+   - MutantStack(MutantStack const &other) : std::stack<T>(other) {}
+   - Wywołuje konstruktor kopiujący klasy bazowej, kopiuje wszystkie elementy.
+   - Ciało konstruktora jest puste.
+
+2. Operator przypisania:
+   - Sprawdza samoprzypisanie: if(this == &other) return *this;
+   - Kopiuje stan klasy bazowej: std::stack<T>::operator=(other);
+   - Zwraca *this.
+
+3. Iteratory:
+   - typedef typename std::stack<T>::container_type::iterator iterator;
+   - begin() zwraca this->c.begin() (iterator na pierwszy element)
+   - end() zwraca this->c.end() (iterator za ostatni element)
+   - Pozwala iterować po MutantStack, czego nie można w zwykłym std::stack.
+
+4. Po co to jest:
+   - std::stack nie jest iterowalny
+   - MutantStack zachowuje wszystkie funkcje stosu i dodaje iteratory
+   - Ćwiczy dziedziczenie, szablony, konstruktory kopiujące, operator= i iteratory
+
+   Stack to kontener LIFO używany do tymczasowego przechowywania danych, cofania operacji i implementacji algorytmów; MutantStack dziedziczy jego funkcje i dodaje iteratory.
+
+   MutantStack to klasa dziedzicząca po std::stack, która dodaje możliwość iterowania po elementach.
+
+1. Stack (std::stack):
+   - LIFO (Last In, First Out)
+   - Operacje: push, pop, top, size, empty
+   - Nie jest iterowalny
+
+2. MutantStack:
+   - Dziedziczy po std::stack → ma wszystkie funkcje stosu
+   - Dodaje iteratory: begin() i end()
+   - Umożliwia łatwe przechodzenie po wszystkich elementach
+
+3. Konstruktor kopiujący:
+   - MutantStack(MutantStack const &other) : std::stack<T>(other) {}
+   - Kopiuje wszystkie elementy stosu przy tworzeniu nowego obiektu
+
+4. Operator przypisania:
+   - Sprawdzenie samoprzypisania: if(this == &other) return *this;
+   - Kopiowanie danych klasy bazowej: std::stack<T>::operator=(other);
+   - Zwraca *this
+
+5. Iteratory:
+   - typedef typename std::stack<T>::container_type::iterator iterator;
+   - begin() zwraca this->c.begin() → iterator na pierwszy element
+   - end() zwraca this->c.end() → iterator za ostatni element
+
+6. Po co to jest potrzebne:
+   - std::stack nie jest iterowalny
+   - MutantStack pozwala dodawać elementy i jednocześnie je przeglądać/wypisywać
+   - Ułatwia testowanie i użycie w algorytmach STL
+
+
+| Funkcja   | Co robi                       | Przykład użycia               |
+| --------- | ----------------------------- | ----------------------------- |
+| `push(x)` | dodaje element na górę stosu  | `mstack.push(5);`             |
+| `pop()`   | usuwa element z góry stosu    | `mstack.pop();`               |
+| `top()`   | zwraca element z góry stosu   | `std::cout << mstack.top();`  |
+| `size()`  | liczba elementów w stosie     | `std::cout << mstack.size();` |
+| `empty()` | sprawdza, czy stos jest pusty | `if(mstack.empty())`          |
+
+
+2️⃣ Co dzieje się w stosie (LIFO)
+
+push(x) → wkłada element na górę stosu
+pop() → usuwa element z góry stosu
+top() → zwraca element na górze stosu
+Twój stos po push(1..5) wygląda tak:
+
+góra -> 5
+        4
+        3
+        2
+        1 <- dół
+
+
+top() teraz → 5
+pop() usuwa 5
+top() teraz → 4
+
+3️⃣ Dlaczego nie zwraca 2
+Bo stos działa od góry, ostatni dodany element jest pierwszym do zdjęcia.
+Nie mylimy stosu z kolejką (FIFO – First In, First Out)
+Kolejka by zwróciła 2, bo usuwa się z początku, a stos z końca/góry
+
+4️⃣ Podsumowanie w jednym zdaniu
+
+W stosie (std::stack / MutantStack) ostatni dodany element jest pierwszym do zdjęcia, więc po pop() nowym top() jest element, który był dodany tuż przed ostatnim, czyli 4, a nie 2.

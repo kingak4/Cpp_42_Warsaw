@@ -18,18 +18,17 @@ MutantStack<T> &MutantStack<T>::operator=(MutantStack const &other) : std::stack
 template<typename T>
 MutantStack<T>:: ~MutantStack() {};
 
-// -------------------------
-// Funkcja begin()
-// -------------------------
-// - Zwraca iterator na początek stosu
-// - Korzysta z kontenera bazowego std::stack<T>::c
-// - Zwraca this->c.begin()
+template<typename T>
+typename MutantStack<T>::iterator MutantStack<T>::begin()
+{
+	return(this->c.begin());
+}
 
-// -------------------------
-// Funkcja end()
-// -------------------------
-// - Zwraca iterator na koniec stosu
-// - Korzysta z kontenera bazowego std::stack<T>::c
-// - Zwraca this->c.end()
+
+template<typename T>
+typename MutantStack<T>::iterator MutantStack<T>::end()
+{
+	return(this->c.end());
+}
 
 #endif

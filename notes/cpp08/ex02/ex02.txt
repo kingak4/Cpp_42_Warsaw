@@ -34,7 +34,34 @@ To jest operator przypisania, a nie inicjalizacja.
 Konstruktor kopiujący ≠ operator przypisania.
 W konstruktorze obiekt jeszcze nie istnieje w pełni.
 
+Konstruktor kopiujący
+→ inicjalizuje obiekt
+→ używa listy inicjalizacyjnej
+→ wywołuje konstruktor kopiujący klasy bazowej
+
+Operator przypisania
+→ działa na istniejącym obiekcie
+→ sprawdza samoprzypisanie
+→ wywołuje std::stack::operator=
 
 Konstruktor kopiujący inicjalizuje, a operator przypisania przypisuje.
 MutantStack nie kopiuje danych sam — robi to std::stack.
 Nigdy nie wywołuj własnego operatora = wewnątrz operatora =.
+
+Co robi begin():
+Zwraca iterator na pierwszy element stosu.
+Ten iterator pochodzi nie z MutantStack, tylko z kontenera bazowego, który trzyma dane.
+
+Co daje begin() + end():
+Dzięki nim możesz:
+przejść po całym stosie
+wypisać elementy
+porównać zachowanie z innymi kontenerami (list, vector)
+używać algorytmów STL (std::find, std::sort — teoretycznie)
+
+Bez begin():
+MutantStack byłby tylko kopią std::stack
+
+begin() umożliwia iterowanie po MutantStack,
+ponieważ zwraca iterator kontenera bazowego std::stack,
+do którego normalnie nie ma dostępu.

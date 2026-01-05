@@ -130,3 +130,146 @@ Schemat działania funkcji w skrócie
 2. Sprawdzamy, czy zmieszczą się w Span
 3. Rzucamy wyjątek jeśli za dużo
 4. Iterujemy po zakresie i dodajemy elementy do nb
+
+💡 Dlaczego nie sortujemy nb bezpośrednio?
+Jeśli sortujesz nb, tracisz pierwotną kolejność liczb, które dodawałaś
+Przy dalszym użyciu np. addNumbers() lub w innych obliczeniach może to powodować błędy
+Kopia pozwala Ci pracować bezpiecznie
+
+1️⃣ Funkcja sort()
+Pochodzi z biblioteki <algorithm>
+Służy do sortowania elementów w kontenerze (np. wektorze) rosnąco domyślnie
+Przyjmuje dwa iteratory: początek i koniec zakresu do posortowania
+
+2️⃣ Jak działa na kopii wektora
+Załóżmy, że masz kopię wektora copy, która zawiera liczby:
+copy.begin() → iterator wskazujący pierwszy element wektora
+copy.end() → iterator wskazujący pierwszy element za ostatnim
+
+sort(copy.begin(), copy.end())
+Sortuje wszystkie elementy od początku do końca
+Nie modyfikuje oryginalnego nb → bezpieczne
+Po sortowaniu w copy liczby będą ułożone rosnąco
+
+3️⃣ Dlaczego musimy użyć iteratorów
+Funkcja sort() nie działa na samym wektorze, tylko na zakresie elementów
+Iteratory begin() i end() definiują dokładnie ten zakres
+
+4️⃣ Podsumowanie
+Kopia wektora = bezpieczna do manipulacji
+sort(copy.begin(), copy.end()) → posortuje kopię
+
+
+Funkcja shortestSpan() – Notatki
+Cel funkcji
+Znaleźć najkrótszą różnicę (span) między wszystkimi liczbami przechowywanymi w wektorze nb w obiekcie Span.
+
+Logika działania krok po kroku
+
+Kopiowanie wektora
+Tworzymy kopię: copy = nb
+Po co? Żeby nie zmieniać oryginalnego wektora, bo sortowanie zmieniłoby kolejność liczb w nb
+Kopia pozwala manipulować danymi (sortować) bez ryzyka dla oryginału
+
+Sprawdzenie liczby elementów
+Jeśli w wektorze jest mniej niż 2 liczby → nie da się policzyć spanu
+Rzucamy wyjątek: throw std::runtime_error("Need more numbers")
+
+Sortowanie kopii
+Funkcja sort(copy.begin(), copy.end()) układa liczby rosnąco
+Dzięki temu najmniejsza różnica między liczbami będzie zawsze między kolejnymi elementami
+
+Deklaracja iteratora / indeksu
+Używamy zwykłego int i do iterowania po elementach kopii
+
+Dlaczego można użyć int?
+Bo i jest indeksem (pozycją w wektorze), nie wskaźnikiem
+Wektor można indeksować za pomocą copy[i] → łatwe i szybkie
+Nie musimy używać iteratora (std::vector<int>::iterator)
+Bo prosta pętla po indeksach działa równie dobrze
+Iterator przydaje się głównie wtedy, gdy chcemy być uniwersalni dla różnych kontenerów
+
+Inicjalizacja miniSpan
+Zmienna miniSpan = duża liczba (np. 2147483647)
+Po co?
+Każda pierwsza różnica będzie mniejsza → zastąpi miniSpan
+Pozwala nam znaleźć najmniejszą różnicę między sąsiednimi elementami
+
+Iteracja i liczenie różnic
+Pętla: i od 0 do copy.size() - 2 (przedostatni element)
+Dla każdej pary sąsiednich liczb:
+r = copy[i+1] - copy[i] → różnica między kolejnymi elementami
+Jeśli r < miniSpan → przypisz r do miniSpan
+Dlaczego tylko do przedostatniego elementu?
+Bo ostatni element nie ma „następnego”, żeby policzyć różnicę
+
+Zwrócenie wyniku
+Po zakończeniu pętli miniSpan zawiera najkrótszą różnicę
+Zwracamy miniSpan
+ 
+Podsumowanie w punktach 
+Tworzymy kopię wektora → sortujemy ją
+Sprawdzamy, czy są co najmniej 2 liczby
+Używamy indeksu i do iteracji po sąsiednich parach elementów
+Liczymy różnicę między kolejnymi elementami
+Przechowujemy najmniejszą różnicę w miniSpan
+Zwracamy miniSpan
+
+Dlaczego możemy używać int i zamiast iteratora?
+Wektor w C++ obsługuje indeksy (copy[i])
+int i = pozycja w wektorze, proste i czytelne
+Iterator jest alternatywą, potrzebną np. gdy używasz kontenerów, które nie obsługują indeksów (np. list)
+
+
+Funkcja longestSpan() – Notatki
+Cel funkcji
+Obliczyć najdłuższy span (największą różnicę) między wszystkimi liczbami przechowywanymi w wektorze nb.
+Jeśli jest mniej niż 2 liczby → rzucamy wyjątek.
+
+Logika działania krok po kroku
+
+Sprawdzenie liczby elementów
+Jeśli nb.size() < 2 → nie da się policzyć spanu
+Rzucamy wyjątek: throw std::runtime_error("Need more numbers")
+
+Ustawienie początkowych wartości
+min = nb[0] → zakładamy, że pierwsza liczba jest najmniejsza
+max = nb[0] → zakładamy, że pierwsza liczba jest największa
+Dzięki temu mamy punkt wyjścia do porównań
+
+Iteracja po wektorze
+Przechodzimy po wszystkich elementach nb
+Dla każdego elementu:
+jeśli element < min → przypisz go do min
+jeśli element > max → przypisz go do max
+Po zakończeniu pętli min i max są odpowiednio najmniejszą i największą liczbą w wektorze
+
+Obliczenie longest span
+r = max - min
+To jest najdłuższa różnica między liczbami → najdłuższy span
+Zwrócenie wyniku
+Funkcja zwraca r jako wynik typu unsigned int
+
+Dlaczego działa
+Największa różnica zawsze będzie między najmniejszym a największym elementem
+Nie trzeba sortować ani porównywać wszystkich par liczb
+Funkcja jest szybka i efektywna: iteracja po wektorze tylko raz
+
+Dlaczego używamy int i
+i = indeks pozycji w wektorze
+Wektor obsługuje indeksowanie nb[i] → łatwe i szybkie
+Nie potrzebujemy iteratora, bo vector pozwala na bezpośredni dostęp przez indeksy
+
+Podsumowanie
+Funkcja jest prosta: znajdź min i max → odejmij → wynik = longest span
+Bez sortowania, bez kopii wektora
+Obsługuje liczby ujemne i dodatnie
+
+| Bez `try-catch`        | Z `try-catch`                        |
+| ---------------------- | ------------------------------------ |
+| Program crashuje       | Program kontroluje wyjątek           |
+| Komunikat: core dumped | Komunikat czytelny dla użytkownika   |
+| Nie można kontynuować  | Można kontynuować działanie programu |
+Wniosek:
+W C++ wszystkie wyjątki powinny być łapane, jeśli chcemy kontrolować program i uniknąć crashy.
+try-catch pozwala testować funkcje, które mają rzucać wyjątki, bez ryzyka „wywalania programu”.

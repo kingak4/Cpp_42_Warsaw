@@ -1,0 +1,40 @@
+Kluczowe informacje:
+std::stack sam w sobie nie jest iterowalny, bo jest kontenerem adaptera – w rzeczywistości trzyma elementy w jakimś kontenerze bazowym (deque domyślnie), który jest iterowalny.
+Trick polega na tym, żeby mieć dostęp do kontenera bazowego (c) stosu, który trzyma wszystkie elementy, i po nim iterować.
+Iteratory będą typu standardowego, np. iterator, const_iterator.
+
+class MutantStack : public std::stack<T> // Dziedziczymy po std::stack<T>
+Tworzymy klasę MutantStack.
+Dziedziczymy po std::stack<T> – dzięki temu:
+automatycznie mamy wszystkie funkcje push, pop, top, size
+możemy korzystać z kontenera bazowego c, który trzyma elementy (potrzebny do iteratorów).
+
+typedef typename std::stack<T>::container_type::iterator iterator;
+Co to robi:
+Tworzy alias iterator dla iteratora kontenera, który trzyma elementy stosu.
+Dzięki temu później możesz pisać MutantStack<int>::iterator it;.
+
+1. Konstruktor kopiujący – do czego służy
+Konstruktor kopiujący tworzy nowy obiekt na podstawie istniejącego.
+Nie przypisuje danych – inicjalizuje obiekt od zera.
+Cały stan MutantStack znajduje się w klasie bazowej std::stack.
+
+Wniosek:
+Konstruktor kopiujący MutantStack musi wywołać konstruktor kopiujący std::stack w liście inicjalizacyjnej.
+Ciało konstruktora może być puste.
+
+2. Dlaczego moje wcześniejsze podejścia były błędne
+❌ this = &other
+this to stały wskaźnik – nie wolno go przypisywać.
+To nie kopiuje obiektu, tylko próbuje zmienić jego adres.
+Konstruktor nie działa na już istniejącym obiekcie.
+
+❌ *this = other w konstruktorze
+To jest operator przypisania, a nie inicjalizacja.
+Konstruktor kopiujący ≠ operator przypisania.
+W konstruktorze obiekt jeszcze nie istnieje w pełni.
+
+
+Konstruktor kopiujący inicjalizuje, a operator przypisania przypisuje.
+MutantStack nie kopiuje danych sam — robi to std::stack.
+Nigdy nie wywołuj własnego operatora = wewnątrz operatora =.

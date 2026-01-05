@@ -19,7 +19,6 @@ int main()
 	std::cout << nb.shortestSpan() << std::endl;
 	std::cout << nb.longestSpan() << std::endl;
 	std::cout << std::endl;
-
 	Span s = Span(1);
 	s.addNumber(6);
 	try
@@ -44,6 +43,5 @@ int main()
 	{
 		std::cerr << e.what() << '\n';
 	}
-	
 	return (0);
 }

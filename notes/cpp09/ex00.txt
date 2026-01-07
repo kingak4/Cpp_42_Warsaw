@@ -1,0 +1,112 @@
+Bitcoin Exchange (CPP Module 09)
+Program oblicza wartość Bitcoina na podstawie historycznych kursów zapisanych w pliku CSV.
+Dla każdej linii wejścia w formacie date | value wyszukuje kurs z danej daty lub – jeśli nie istnieje – z najbliższej wcześniejszej daty.
+Dane są walidowane, a błędy wypisywane zgodnie z wymaganiami projektu.
+Do przechowywania kursów używany jest kontener STL (std::map).
+
+
+1. Argumenty programu
+ Sprawdź argc
+ Jeśli argc != 2 →
+Error: could not open file.
+ Spróbuj otworzyć plik wejściowy
+ Jeśli open() się nie uda →
+Error: could not open file.
+2. Wczytanie bazy BTC (CSV)
+Plik: data.csv
+Format:
+date,exchange_rate
+2011-01-03,0.3
+
+Do zrobienia:
+ Otworzyć plik CSV
+ Pominąć pierwszą linię (nagłówek)
+ Dla każdej linii:
+ rozdzielić po ,
+ date → std::string
+ rate → double
+ zapisać do std::map<string, double>
+❗ Nie musisz walidować CSV mocno — to dane z subjecta.
+
+3. Wczytanie pliku input (argument)
+Plik użytkownika, np. input.txt
+Format:
+date | value
+
+Do zrobienia:
+ Otworzyć plik
+ Pominąć pierwszą linię (date | value)
+ Czytać linia po linii
+
+ Dla każdej linii:
+ sprawdzić czy zawiera " | "
+
+ podzielić na:
+date
+value
+
+4. Walidacja daty (BARDZO WAŻNE)
+Dla każdej linii inputu:
+Format:
+YYYY-MM-DD
+
+Sprawdź:
+ długość == 10
+ - na pozycjach [4] i [7]
+ rok / miesiąc / dzień → tylko cyfry
+ miesiąc: 1–12
+ dzień: 1–31
+ (opcjonalnie) dni miesiąca / luty
+Jeśli błąd:
+Error: bad input => <linia>
+
+5. Walidacja value
+value = liczba po |
+Sprawdź:
+ da się skonwertować (strtod / std::stod)
+ value >= 0
+ value <= 1000
+ brak overflow
+
+Błędy:
+value < 0 →
+Error: not a positive number.
+value > 1000 →
+Error: too large a number.
+
+6. Szukanie kursu BTC (logika mapy)
+Jeśli data istnieje:
+ map.find(date)
+Jeśli NIE istnieje:
+ it = map.lower_bound(date)
+ jeśli it == map.begin() → brak wcześniejszej daty → błąd
+
+ w przeciwnym razie --it
+ użyj tej daty
+❗ Zawsze bierz wcześniejszą, nigdy późniejszą
+
+7. Obliczenie wyniku
+ result = value * rate
+ wypisać:
+YYYY-MM-DD => value = result
+
+8. Obsługa błędów – NIE przerywaj programu
+ Każda linia inputu jest niezależna
+ Błąd w jednej linii → wypisz error
+ Przejdź do następnej linii
+
+9. Czego NIE robić
+❌ nie używaj drugiego kontenera
+❌ nie sortuj ręcznie
+❌ nie przerywaj programu przy jednym błędzie
+❌ nie używaj C++17/20 ficzerów (trzymaj się klasyki)
+
+10. Testy końcowe (obowiązkowe)
+ brak argumentu
+ pusty plik
+ zła data
+ -1
+ 1001
+ bardzo duża liczba
+ data wcześniejsza niż w CSV
+ data pomiędzy dwiema datami w CSV

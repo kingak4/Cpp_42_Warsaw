@@ -3,16 +3,20 @@
 ===========================
 
 Poniedziałek (____/____/2025)
-- zrobić ex01 w cpp 08
-- zrobić ex02 w cpp08 i oddac
-- oddać cpp07
+
 Wtorek (____/____/2025)
 
 Środa (____/____/2025)
-- obejrzec kurs do incepction 
-- ogarnąć subject
+- oddac cpp08
+- zacząć cpp09
+- ogarnąć ofery pracy o 16
+- yoga o 17
+- poćwicz angielski
 
 Czwartek (____/____/2025)
+- robić cpp09 
+- obejrzec kurs do incepction 
+- ogarnąć subject
 
 Piątek (____/____/2025)
 - spotkanie z mentorką przegotuj sobei pytania

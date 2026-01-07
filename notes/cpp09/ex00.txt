@@ -100,6 +100,27 @@ YYYY-MM-DD => value = result
 ❌ nie sortuj ręcznie
 ❌ nie przerywaj programu przy jednym błędzie
 ❌ nie używaj C++17/20 ficzerów (trzymaj się klasyki)
+🔢 Value
+float lub int
+0 ≤ value ≤ 1000
+
+Błędy:
+value < 0 →
+Error: not a positive number.
+value > 1000 →
+Error: too large a number.
+| Sytuacja     | Komunikat                       |
+| ------------ | ------------------------------- |
+| brak pliku   | `Error: could not open file.`   |
+| zła linia    | `Error: bad input => ...`       |
+| value < 0    | `Error: not a positive number.` |
+| value > 1000 | `Error: too large a number.`    |
+👉 Program NIE PRZERYWA – leci dalej
+📦 Kontenery STL
+
+MUSISZ użyć co najmniej jednego
+np. std::map
+po tym zadaniu nie wolno już go użyć
 
 10. Testy końcowe (obowiązkowe)
  brak argumentu
@@ -110,3 +131,128 @@ YYYY-MM-DD => value = result
  bardzo duża liczba
  data wcześniejsza niż w CSV
  data pomiędzy dwiema datami w CSV
+
+
+ 2️⃣ Co MUSI istnieć w programie (na poziomie idei)
+
+Masz jedną główną klasę, która:
+trzyma kursy BTC
+wczytuje dane
+przetwarza input
+
+Ta klasa:
+ma mapę: data → kurs BTC
+ma metody, które:
+wczytują bazę CSV
+czytają plik wejściowy
+sprawdzają poprawność danych
+szukają odpowiedniego kursu
+liczą wynik
+
+
+3️⃣ Pierwszy realny krok: BAZA DANYCH (CSV)
+Dlaczego od tego?
+Bo:
+bez kursów BTC nic nie policzysz
+to najprostsza część
+daje Ci działającą mapę
+
+Na tym etapie:
+wczytujesz CSV
+zapisujesz daty i kursy
+nie walidujesz (dane są poprawne)
+
+Cel etapu:
+„Mam mapę z kursami i wiem, że działa”
+Drugi krok: CZYTANIE INPUTU (bez walidacji)
+
+Teraz:
+otwierasz plik wejściowy
+czytasz linia po linii
+pomijasz nagłówek
+
+Na razie:
+tylko rozdzielasz linię na „data” i „value”
+wypisujesz je testowo albo sprawdzasz, czy dobrze się dzielą
+
+Cel etapu:
+„Program poprawnie czyta każdą linię inputu”
+
+
+5️⃣ Dopiero TERAZ: WALIDACJA
+To jest trzeci etap, nie pierwszy.
+
+Walidacja daty
+Sprawdzasz:
+format (YYYY-MM-DD)
+czy są cyfry
+czy miesiąc i dzień mają sens
+
+Jeśli data jest zła:
+wypisujesz błąd
+przechodzisz do następnej linii
+
+Walidacja value
+Sprawdzasz:
+czy to liczba
+czy ≥ 0
+czy ≤ 1000
+
+Błędy:
+liczba ujemna → „not a positive number”
+za duża → „too large a number”
+
+Znów:
+brak return
+tylko przejście dalej
+
+6️⃣ Szukanie kursu BTC (najważniejsza logika)
+
+Dla poprawnej daty:
+sprawdzasz, czy jest dokładnie w bazie
+
+jeśli nie:
+szukasz najbliższej wcześniejszej daty
+nigdy późniejszej
+
+Jeśli nie ma wcześniejszej daty:
+to też jest błąd
+
+Cel:
+„Zawsze mam właściwy kurs albo wiem, że nie mogę go mieć”
+
+7️⃣ Obliczenie i wypisanie wyniku
+Dopiero gdy:
+data jest OK
+value jest OK
+kurs został znaleziony
+
+Wtedy:
+liczysz wynik
+wypisujesz go dokładnie w formacie z subjecta
+
+8️⃣ Jak MA się zachowywać program (to jest kluczowe)
+
+✔️ Jedna linia = jedna próba
+✔️ Błąd ≠ koniec programu
+✔️ Każdy błąd → komunikat + dalej
+✔️ Program kończy się dopiero po całym pliku
+
+To będzie sprawdzane na korekcie.
+
+9️⃣ Zalecana kolejność pracy (praktyczna)
+
+struktura klasy
+wczytanie CSV
+czytanie inputu
+walidacja daty
+walidacja value
+wyszukiwanie kursu
+liczenie wyniku
+testy i edge-case’y
+
+
+Program przetwarza plik wejściowy linia po linii.
+Każda linia jest niezależna.
+W przypadku błędu (zła data, zła wartość, overflow) program wypisuje odpowiedni komunikat, ale nie przerywa działania i przechodzi do następnej linii.
+Wyniki i błędy są wypisywane w kolejności występowania w pliku wejściowym.

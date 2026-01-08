@@ -11,7 +11,6 @@
 class  BitcoinExchange
 {
 	private:
-		
 		std::map<std::string, float> values;
 	public:
 		BitcoinExchange();
@@ -19,6 +18,8 @@ class  BitcoinExchange
 		BitcoinExchange(const BitcoinExchange &other);
 		BitcoinExchange &operator=(const BitcoinExchange &other);
 		int loadDatabase(const char *filename);
+
+
 };
 
 #endif

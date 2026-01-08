@@ -18,6 +18,8 @@ class  BitcoinExchange
 		BitcoinExchange(const BitcoinExchange &other);
 		BitcoinExchange &operator=(const BitcoinExchange &other);
 		int loadDatabase(const char *filename);
+		int readInputFile(const char *filename);
+		int validateInputLine(std::string date,std::string value_text);
 
 
 };

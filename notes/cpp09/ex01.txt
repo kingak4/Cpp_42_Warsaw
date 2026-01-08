@@ -1,1 +1,49 @@
-Obejrz filmik na yt
+Wymagania programu:
+
+Program musi przyjmować jako argument wyrażenie matematyczne w odwróconej notacji polskiej (RPN).
+Liczby w tym wyrażeniu (i przekazywane w argumentach) zawsze będą mniejsze niż 10. Wynik obliczeń nie musi być ograniczony tymi regułami.
+Program musi przetworzyć to wyrażenie i wypisać poprawny wynik na standardowe wyjście (terminal).
+Jeśli podczas działania programu pojawi się błąd, wyświetl komunikat "Error" na standardowym wyjściu błędów.
+Program musi obsługiwać operatory: +, -, *, /.
+W kodzie musisz użyć co najmniej jednego kontenera (np. std::stack, std::vector itp.).
+Nie musisz obsługiwać nawiasów ani liczb dziesiętnych.
+
+
+Co to jest RPN?
+RPN (Reverse Polish Notation, czyli odwrócona notacja polska) to sposób zapisywania wyrażeń matematycznych, w którym operator występuje po operandach.
+Standardowo zapisujemy: 3 + 4
+W RPN zapisujemy: 3 4 +
+Nie potrzebujemy nawiasów, bo kolejność operacji jest jednoznaczna.
+
+
+Jak działa RPN?
+RPN używa stosów do obliczeń.
+Ogólna zasada:
+Przechodzimy przez kolejne elementy wyrażenia od lewej do prawej.
+
+Jeśli element to liczba, wkładamy ją na stos.
+Jeśli element to operator (np. +, -, *, /):
+Zdejmujemy ze stosu ostatnie dwie liczby
+Wykonujemy działanie: a operator b
+Wynik wkładamy z powrotem na stos
+Po przejściu całego wyrażenia na stosie zostaje wynik końcowy.
+
+Przykład
+Wyrażenie: 5 1 2 + 4 * + 3 -
+
+Kroki:
+5 → wrzucamy na stos → [5]
+1 → wrzucamy → [5, 1]
+2 → wrzucamy → [5, 1, 2]
++ → zdejmujemy 1 i 2, dodajemy → 3, wkładamy → [5, 3]
+4 → wrzucamy → [5, 3, 4]
+* → zdejmujemy 3 i 4, mnożymy → 12, wkładamy → [5, 12]
++ → zdejmujemy 5 i 12, dodajemy → 17, wkładamy → [17]
+3 → wrzucamy → [17, 3]
+- → zdejmujemy 17 i 3, odejmujemy → 14
+Wynik: 14
+
+Do czego się używa RPN?
+W kalkulatorach naukowych (np. HP) – łatwiej przetwarzać wyrażenia bez nawiasów.
+W kompilatorach i interpreterach do przetwarzania wyrażeń matematycznych.
+W programowaniu do szybkich obliczeń w stosie, np. w zadaniu z C++ o RPN, które robisz.

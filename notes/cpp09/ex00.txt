@@ -164,8 +164,8 @@ nie walidujesz (dane są poprawne)
 
 Cel etapu:
 „Mam mapę z kursami i wiem, że działa”
-Drugi krok: CZYTANIE INPUTU (bez walidacji)
 
+Drugi krok: CZYTANIE INPUTU (bez walidacji)
 Teraz:
 otwierasz plik wejściowy
 czytasz linia po linii
@@ -250,7 +250,6 @@ walidacja value
 wyszukiwanie kursu
 liczenie wyniku
 testy i edge-case’y
-
 
 Program przetwarza plik wejściowy linia po linii.
 Każda linia jest niezależna.

@@ -16,3 +16,26 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
 
 BitcoinExchange::~BitcoinExchange() {};
 
+int BitcoinExchange::loadDatabase(const char *filename)
+{
+	std::ifstream file;
+	std::string date;
+	std::string line;
+
+	file.open(filename);
+	if(!file)
+	{
+		std::cerr<< "Can't open input file!" << std::endl;
+		return(0);
+	}
+	std::getline(file, line);
+	while(std::getline(file, line))
+	{
+		
+	}
+	file.close();
+}
+
+
+
+

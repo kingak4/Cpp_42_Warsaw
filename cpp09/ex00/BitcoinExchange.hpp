@@ -11,13 +11,14 @@
 class  BitcoinExchange
 {
 	private:
-		float getValue(std::string date);
+		
 		std::map<std::string, float> values;
 	public:
 		BitcoinExchange();
 		~BitcoinExchange();
 		BitcoinExchange(const BitcoinExchange &other);
 		BitcoinExchange &operator=(const BitcoinExchange &other);
+		int loadDatabase(const char *filename);
 };
 
 #endif

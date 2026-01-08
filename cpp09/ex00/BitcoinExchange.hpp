@@ -18,10 +18,10 @@ class BitcoinExchange
 		BitcoinExchange(const BitcoinExchange &other);
 		BitcoinExchange &operator=(const BitcoinExchange &other);
 		int loadDatabase(const char *filename);
-		int readInputFile(const char *filename);
 		int validateInputLine(std::string date,std::string value_text);
 		float getBitcoinRate(const std::string& date);
 		void calculateAndPrintResult(std::string date, float value, float rate);
+		void processInputFile(const char *filename);
 };
 
 #endif

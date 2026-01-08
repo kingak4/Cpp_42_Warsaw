@@ -2,7 +2,7 @@
 
 int main(int ac, char *av[])
 {
-	if (argc != 2)
+	if (ac != 2)
 	{
 		std::cerr << "Error: could not open file." << std::endl;
 		std::cerr << "Usage: ./btc <input_file>" << std::endl;
@@ -10,6 +10,6 @@ int main(int ac, char *av[])
 	}
 	BitcoinExchange bc;
 	bc.loadDatabase("data.csv");
-	bc.readInputFile(av[1]);
+	bc.processInputFile(av[1]);
 	return (0);
 }

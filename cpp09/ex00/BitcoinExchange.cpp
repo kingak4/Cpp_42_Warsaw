@@ -47,6 +47,7 @@ void BitcoinExchange::processInputFile(const char *filename)
 {
 	std::ifstream file(filename);
 	std::string line;
+
 	if (!file.is_open())
 	{
 		std::cerr << "Error: could not open input file." << std::endl;
@@ -78,6 +79,7 @@ void BitcoinExchange::processInputFile(const char *filename)
 		float rate = getBitcoinRate(date);
 		if (rate < 0)
 			continue;
+
 		calculateAndPrintResult(date, value, rate);
 	}
 	file.close();
@@ -105,26 +107,29 @@ int BitcoinExchange::validateInputLine(std::string date, std::string value_text)
 	int month = std::atoi(date.substr(5, 2).c_str());
 	int day = std::atoi(date.substr(8, 2).c_str());
 
-	if(month < 1 || month > 12)
-		return(0);
-	if(day < 1 || day > 31)
-		return(0);
-	if(year < 1000 || year > 2030)
-		return(0);
+	if (month < 1 || month > 12)
+		return (0);
+	if (day < 1 || day > 31)
+		return (0);
+	if (year < 1000 || year > 2030)
+		return (0);
+	float v = std::atof(value_text.c_str());
+	if (v < 0 || v > 1000)
+		return 0;
 	return (1);
 }
-float BitcoinExchange::getBitcoinRate(const std::string& date)
+float BitcoinExchange::getBitcoinRate(const std::string &date)
 {
 	std::map<std::string, float>::iterator it = values.find(date);
 	std::map<std::string, float>::iterator it_map = values.begin();
 	float ret = 0;
 	int f = 0;
 
-	if(it != values.end())
-		return(it->second);
-	while(it_map != values.end())
+	if (it != values.end())
+		return (it->second);
+	while (it_map != values.end())
 	{
-		if(it_map->first <= date)
+		if (it_map->first <= date)
 		{
 			ret = it_map->second;
 			f = 1;
@@ -133,12 +138,12 @@ float BitcoinExchange::getBitcoinRate(const std::string& date)
 			break;
 		++it_map;
 	}
-	if(f == 0)
+	if (f == 0)
 	{
-		std::cout<< "Error: no available rate for this date => " << date << std::endl;
-		return(-1);
+		std::cout << "Error: no available rate for this date => " << date << std::endl;
+		return (-1);
 	}
-	return(ret);
+	return (ret);
 }
 
 void BitcoinExchange::calculateAndPrintResult(std::string date, float value, float rate)

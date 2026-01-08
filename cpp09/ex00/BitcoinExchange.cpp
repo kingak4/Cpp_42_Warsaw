@@ -43,34 +43,44 @@ int BitcoinExchange::loadDatabase(const char *filename)
 	return (1);
 }
 
-int BitcoinExchange::readInputFile(const char *filename)
+void BitcoinExchange::processInputFile(const char *filename)
 {
-	std::ifstream file;
+	std::ifstream file(filename);
 	std::string line;
-	std::string date;
-	std::string rate_text;
-
-	file.open(filename);
-	if (!file)
+	if (!file.is_open())
 	{
-		std::cerr << "Can't open input file!" << std::endl;
-		return (0);
+		std::cerr << "Error: could not open input file." << std::endl;
+		return;
 	}
 	std::getline(file, line);
-	while (getline(file, line))
+	while (std::getline(file, line))
 	{
-		size_t r = line.find(" | ");
-		if (r == std::string::npos)
+		size_t sep = line.find(" | ");
+		if (sep == std::string::npos)
 		{
 			std::cerr << "Error: bad input => " << line << std::endl;
 			continue;
 		}
-		date = line.substr(0, r);
-		rate_text = line.substr(r + 3);
-		std::cout << "data = " << data << " | value = " << rate_text << std::endl;
+		std::string date = line.substr(0, sep);
+		std::string value_text = line.substr(sep + 3);
+		if (!validateInputLine(date, value_text) || value_text.empty())
+		{
+			float v = std::atof(value_text.c_str());
+			if (v < 0)
+				std::cout << "Error: not a positive number." << std::endl;
+			else if (v > 1000)
+				std::cout << "Error: too large a number." << std::endl;
+			else
+				std::cerr << "Error: bad input => " << line << std::endl;
+			continue;
+		}
+		float value = std::atof(value_text.c_str());
+		float rate = getBitcoinRate(date);
+		if (rate < 0)
+			continue;
+		calculateAndPrintResult(date, value, rate);
 	}
 	file.close();
-	return (1);
 }
 
 int BitcoinExchange::validateInputLine(std::string date, std::string value_text)
@@ -101,8 +111,37 @@ int BitcoinExchange::validateInputLine(std::string date, std::string value_text)
 		return(0);
 	if(year < 1000 || year > 2030)
 		return(0);
-	float v = std::atof(value_text.c_str());
-	if(v < 0 || v > 1000)
-		return(0);
 	return (1);
+}
+float BitcoinExchange::getBitcoinRate(const std::string& date)
+{
+	std::map<std::string, float>::iterator it = values.find(date);
+	std::map<std::string, float>::iterator it_map = values.begin();
+	float ret = 0;
+	int f = 0;
+
+	if(it != values.end())
+		return(it->second);
+	while(it_map != values.end())
+	{
+		if(it_map->first <= date)
+		{
+			ret = it_map->second;
+			f = 1;
+		}
+		else
+			break;
+		++it_map;
+	}
+	if(f == 0)
+	{
+		std::cout<< "Error: no available rate for this date => " << date << std::endl;
+		return(-1);
+	}
+	return(ret);
+}
+
+void BitcoinExchange::calculateAndPrintResult(std::string date, float value, float rate)
+{
+	std::cout << date << " => " << value << " = " << (value * rate) << std::endl;
 }

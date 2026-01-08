@@ -1,24 +1,15 @@
 #include "BitcoinExchange.hpp"
 
-//int main(int ac, char *av[])
-//{
-//	return(0);
-//}
-
-
-//int main()
-//{
-//    BitcoinExchange btc;
-
-//    if (btc.loadDatabase("data.csv"))
-//    {
-//        std::cout << "Zawartosc mapy:\n";
-//        btc.printDatabase(); // wypisuje wszystkie daty i kursy
-//    }
-//    else
-//    {
-//        std::cerr << "Nie udalo sie otworzyc pliku CSV!" << std::endl;
-//    }
-
-//    return 0;
-//}
+int main(int ac, char *av[])
+{
+	if (argc != 2)
+	{
+		std::cerr << "Error: could not open file." << std::endl;
+		std::cerr << "Usage: ./btc <input_file>" << std::endl;
+		return 1;
+	}
+	BitcoinExchange bc;
+	bc.loadDatabase("data.csv");
+	bc.readInputFile(av[1]);
+	return (0);
+}

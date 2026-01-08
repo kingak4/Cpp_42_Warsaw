@@ -8,7 +8,7 @@
 # include <ctime>
 # include <fstream>
 
-class  BitcoinExchange
+class BitcoinExchange
 {
 	private:
 		std::map<std::string, float> values;
@@ -20,8 +20,8 @@ class  BitcoinExchange
 		int loadDatabase(const char *filename);
 		int readInputFile(const char *filename);
 		int validateInputLine(std::string date,std::string value_text);
-
-
+		float getBitcoinRate(const std::string& date);
+		void calculateAndPrintResult(std::string date, float value, float rate);
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:14 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/08 17:18:18 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/09 12:24:14 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,22 @@
 #include <iostream>
 #include <string>
 #include <stack>
+#include <stdexcept>
 
 class RPN
 {
 	private:
-		std::stack<int> values;
+		std::stack<int> stack;
 
 	public:
 		RPN();
 		RPN(const RPN &other);
 		RPN &operator=(const RPN &other);
 		~RPN();
+		int isNumber(std::string token);
+		int isOperator(std::string token);
+		int validateToken(std::string token);
+		void applyOperator(std::string oper);
 };
 
 #endif

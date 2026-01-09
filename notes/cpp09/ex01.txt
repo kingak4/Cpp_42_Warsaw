@@ -47,3 +47,105 @@ Do czego się używa RPN?
 W kalkulatorach naukowych (np. HP) – łatwiej przetwarzać wyrażenia bez nawiasów.
 W kompilatorach i interpreterach do przetwarzania wyrażeń matematycznych.
 W programowaniu do szybkich obliczeń w stosie, np. w zadaniu z C++ o RPN, które robisz.
+
+Plan funkcji – RPN (ze std::stack)
+
+1. isNumber(token)
+
+Cel: sprawdzić, czy token jest poprawną liczbą
+Krok po kroku:
+Sprawdza długość tokenu
+musi być dokładnie 1 znak
+Sprawdza, czy znak jest cyfrą 0–9
+Jeśli tak → token jest liczbą
+Jeśli nie → nie jest liczbą
+
+Nie wrzuca nic na stack.
+Nie konwertuje do int.
+Tylko sprawdza.
+
+używana w:
+validateToken(token)
+processToken(token)
+To jest funkcja pomocnicza, prywatna.
+
+2. isOperator(token)
+
+Cel: sprawdzić, czy token jest poprawnym operatorem
+Krok po kroku:
+
+Sprawdza długość tokenu
+musi być dokładnie 1 znak
+Sprawdza, czy znak to jeden z: + - * /
+Jeśli tak → operator poprawny
+Jeśli nie → nie jest operatorem
+
+3. validateToken(token)
+
+Cel: walidacja pojedynczego tokenu
+Krok po kroku:
+Sprawdza, czy token jest liczbą
+Jeśli nie → sprawdza, czy jest operatorem
+Jeśli ani jedno, ani drugie → błąd
+Nie wykonuje żadnych obliczeń
+Nie dotyka stacka
+To jest bramka bezpieczeństwa przed logiką RPN.
+
+4. applyOperator(operator)
+
+Cel: wykonać operację na dwóch elementach stacka
+Krok po kroku:
+Sprawdza, czy stack ma co najmniej 2 elementy
+jeśli nie → błąd
+Zdejmuje drugi operand ze stacka
+Zdejmuje pierwszy operand ze stacka
+Sprawdza, jaki to operator
+Jeśli operator to /
+sprawdza, czy drugi operand ≠ 0
+jeśli 0 → błąd
+Wykonuje odpowiednie działanie
+Wynik wrzuca z powrotem na stack
+
+Nie iteruje po stringu.
+Nie sprawdza tokenów.
+Robi tylko matematykę.
+
+logika główna
+5. processToken(token)
+
+Cel: obsłużyć pojedynczy token
+Krok po kroku:
+Wywołuje validateToken(token)
+Jeśli token jest liczbą:
+konwertuje znak na int
+wrzuca wartość na stack
+Jeśli token jest operatorem:
+wywołuje applyOperator(token)
+Nic nie wypisuje
+Nie łapie błędów
+To jest połączenie walidacji + działania.
+
+6. execute(expression)
+
+Cel: wykonać całe wyrażenie RPN
+Krok po kroku:
+Dzieli string wejściowy na tokeny po spacjach
+Iteruje po tokenach od lewej do prawej
+Dla każdego tokenu:
+wywołuje processToken(token)
+Po przetworzeniu wszystkich tokenów:
+sprawdza, czy stack ma dokładnie 1 element
+jeśli nie → błąd
+Zdejmuje wynik ze stacka
+Zwraca wynik
+
+isdigit zawsze wywołujesz jako funkcję i zawsze przekazujesz jej znak, a nie string.
+✅ Prawidłowo: isdigit(token[0])
+❌ Nieprawidłowo: token[0].isdigit()
+❌ Nieprawidłowo: isdigit.token[0]
+
+4️⃣ Jak zapamiętać
+isdigit = funkcja, nie obiekt
+Argument = pojedynczy znak
+Nie używamy kropki (.) ani pętli
+Jeśli string ma długość 1 → token[0] wystarczy

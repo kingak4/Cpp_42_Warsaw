@@ -1,28 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PmergeMe.cpp                                       :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/08 17:18:24 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/09 13:32:10 by kikwasni         ###   ########.fr       */
+/*   Created: 2026/01/09 13:32:14 by kikwasni          #+#    #+#             */
+/*   Updated: 2026/01/09 13:32:16 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
-
-PmergeMe::PmergeMe() {}
-
-PmergeMe::PmergeMe(const PmergeMe& other)
-{
-	(void)other;
-}
-
-PmergeMe& PmergeMe::operator=(const PmergeMe& other)
-{
-	(void)other;
-	return *this;
-}
-
-PmergeMe::~PmergeMe() {}

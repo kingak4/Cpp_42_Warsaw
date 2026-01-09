@@ -1,7 +1,7 @@
 CC = c++
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-NAME = ex00
-SRC =  main.cpp
+NAME = PmergeMe
+SRC =  main.cpp PmergeMe.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)

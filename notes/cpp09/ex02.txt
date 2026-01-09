@@ -1,0 +1,52 @@
+Program: PmergeMe, przyjmuje argumenty dodatnie liczby całkowite.
+Sortowanie: merge-insert (Ford-Johnson).
+Błędy: wyświetla komunikat przy złych danych (np. liczby ujemne, litery).
+Kontenery: użyj dwóch różnych STL (np. vector i deque).
+Liczby: obsługuje ≥3000 elementów.
+Wyświetlanie:
+Before: → liczby nieposortowane
+After: → liczby posortowane
+Czas sortowania → osobno dla każdego kontenera
+Duplikaty: decyzja należy do Ciebie.
+Format wyjścia musi być czytelny.
+Wskazane jest, aby implementować algorytm osobno dla każdego kontenera, zamiast jednej ogólnej funkcji.
+
+$> ./PmergeMe 3 5 9 7 4
+Before: 3 5 9 7 4
+After: 3 4 5 7 9
+Time to process a range of 5 elements with std::vector : 0.00031 us
+Time to process a range of 5 elements with std::deque : 0.00014 us
+
+$> ./PmergeMe "-1" "2"
+Error
+
+Co trzeba zrobić:
+Parsowanie argumentów programu
+Pobranie wszystkich liczb z argv[]
+Sprawdzenie poprawności (czy są dodatnie i czy w ogóle liczby)
+Obsługa błędów (wyświetlenie Error)
+
+Implementacja merge-insert (Ford-Johnson)
+Musisz dokładnie odwzorować algorytm merge-insert
+Zastosować go osobno dla dwóch różnych kontenerów STL
+np. std::vector<int> i std::deque<int>
+Testować na różnych ilościach danych, od kilku do 3000 elementów
+
+Wyświetlanie wyników i pomiar czasu
+Before: → liczby nieposortowane
+After: → liczby posortowane
+Pomiar czasu sortowania dla każdego kontenera (np. std::chrono)
+
+Testowanie i debugowanie
+Sprawdzenie na małych danych (łatwo zobaczyć efekt sortowania)
+Sprawdzenie na dużych danych (3000 liczb losowych)
+
+Kolejność działania
+Parsowanie i walidacja argumentów w main.cpp
+Wyświetlanie danych nieposortowanych (Before:)
+Implementacja merge-insert dla vector
+Implementacja merge-insert dla deque
+Wyświetlanie danych posortowanych (After:)
+Pomiar czasu dla każdego kontenera
+Testy i debugowanie
+Obsługa błędów i edge-case’ów

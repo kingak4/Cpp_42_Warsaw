@@ -149,3 +149,49 @@ isdigit = funkcja, nie obiekt
 Argument = pojedynczy znak
 Nie używamy kropki (.) ani pętli
 Jeśli string ma długość 1 → token[0] wystarczy
+
+
+Tworzymy strumień z całego stringa
+std::istringstream iss(expression);
+
+expression to np. "3 4 + 2 *"
+Teraz iss zachowuje się jak plik lub cin – możemy czytać tokeny po kolei.
+
+Tworzymy zmienną na token
+std::string currentToken;
+Będzie przechowywać kolejne słowo / token z wyrażenia.
+
+Pętla czytająca tokeny
+while (iss >> currentToken)
+Operator >> czyta kolejny ciąg znaków oddzielony spacją.
+Dla "3 4 + 2 *" kolejno currentToken przyjmie: "3", "4", "+", "2", "*".
+Wywołanie funkcji dla tokenu
+processToken(currentToken);
+Każdy token jest przetwarzany osobno (liczba → push na stack, operator → wykonanie działania).
+
+1️⃣ Sprawdzenie rozmiaru stacka
+if(stack.size() != 1)
+    throw std::runtime_error("Error");
+Dlaczego to robimy?
+W poprawnym wyrażeniu RPN po przetworzeniu wszystkich tokenów na stacku powinna zostać dokładnie jedna liczba – to jest wynik całego wyrażenia.
+Jeśli jest mniej niż 1 → coś poszło nie tak (np. brak operandów).
+Jeśli jest więcej niż 1 → też coś poszło nie tak (np. za mało operatorów).
+Efekt: jeśli warunek nie jest spełniony → rzucamy wyjątek (throw) i program informuje o błędzie.
+
+2️⃣ Pobranie wyniku ze stacka
+int rest = stack.top();
+stack.pop();
+stack.top() → bierze wartość z wierzchu stacka, czyli wynik RPN.
+stack.pop() → usuwa tę wartość ze stacka, żeby stack był czysty po zakończeniu.
+Teraz rest zawiera wynik całego wyrażenia.
+
+3️⃣ Zwrócenie wyniku
+return rest;
+Funkcja execute zwraca wynik całego wyrażenia jako int.
+To jest ostatni krok – po tym masz gotową liczbę, którą możesz np. wypisać na ekranie.
+
+🔹 Podsumowanie mentalne
+Sprawdzamy: stack musi mieć dokładnie 1 element – inaczej błąd.
+Pobieramy ten element ze stacka → to jest wynik RPN.
+Usuwamy element ze stacka → zachowujemy porządek.
+Zwracamy wynik do programu / użytkownika.

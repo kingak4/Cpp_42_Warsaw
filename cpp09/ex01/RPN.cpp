@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:03 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/09 12:32:57 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/09 12:56:30 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,30 @@ void RPN::applyOperator(std::string oper)
 			throw std::runtime_error("Error");
 	}
 	stack.push(rest);
+}
+
+void RPN::processToken(std::string token)
+{
+	int value = 0;
+	validateToken(token);
+	if(isNumber(token) == 1)
+	{
+		value = token[0] - '0';
+		stack.push(value);
+	}
+	else
+		applyOperator(token);
+}
+
+int RPN::execute(std::string token)
+{
+	std::istringstream iss(token);
+	 std::string currentToken;
+	while (iss >> currentToken)
+		processToken(currentToken);
+	if(stack.size() != 1)
+		throw std::runtime_error("Error");
+	int rest = stack.top();
+	stack.pop();
+	return(rest);
 }

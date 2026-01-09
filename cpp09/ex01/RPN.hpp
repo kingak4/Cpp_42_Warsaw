@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:14 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/09 12:24:14 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/09 12:46:37 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <string>
 #include <stack>
 #include <stdexcept>
+#include <sstream>
 
 class RPN
 {
@@ -32,6 +33,8 @@ class RPN
 		int isOperator(std::string token);
 		int validateToken(std::string token);
 		void applyOperator(std::string oper);
+		void processToken(std::string token);
+		int execute(std::string token);
 };
 
 #endif

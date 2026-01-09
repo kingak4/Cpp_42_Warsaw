@@ -15,7 +15,6 @@ Standardowo zapisujemy: 3 + 4
 W RPN zapisujemy: 3 4 +
 Nie potrzebujemy nawiasów, bo kolejność operacji jest jednoznaczna.
 
-
 Jak działa RPN?
 RPN używa stosów do obliczeń.
 Ogólna zasada:

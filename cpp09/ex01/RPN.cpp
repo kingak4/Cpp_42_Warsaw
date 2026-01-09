@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:03 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/09 12:56:30 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/09 13:07:59 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 RPN::RPN() {};
 
-RPN::RPN(const RPN *other) 
+RPN::RPN(const RPN &other) 
 {
 	*this = other;
 }
 
-RPN &RPN::operator=(onst RPN *other)
+RPN &RPN::operator=(const RPN &other)
 {
 	if (this != &other)
 		*this = other;
@@ -66,13 +66,13 @@ void RPN::applyOperator(std::string oper)
 	int a = stack.top();
 	stack.pop();
 	int rest = 0;
-	if(oper == '-')
+	if(oper[0] == '-')
 		rest = a - b;
-	else if(oper == '+')
+	else if(oper[0] == '+')
 		rest = a + b;
-	else if(oper == '*')
+	else if(oper[0] == '*')
 		rest = a * b;
-	else if(oper == '/')
+	else if(oper[0] == '/')
 	{
 		if(b != 0)
 			rest = a / b;

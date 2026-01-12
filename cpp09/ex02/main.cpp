@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 13:32:14 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/12 13:14:51 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/12 13:36:56 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 	try
 	{
 		p.parseArguments(argc, argv, vec, deq);
+		p.print_before(vec);
 	}
 	catch (const std::exception &e)
 	{

@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:28 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/12 12:53:58 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/12 14:34:16 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,15 @@ class PmergeMe
 	private:
 	
 	public:
-		int parseArguments(int argc, char** argv, std::vector<int>& vec, std::deque<int>& deq);
-		PmergeMe();
-		PmergeMe(const PmergeMe& other);
-		PmergeMe& operator=(const PmergeMe& other);
-		~PmergeMe();
+	PmergeMe();
+	PmergeMe(const PmergeMe& other);
+	PmergeMe& operator=(const PmergeMe& other);
+	~PmergeMe();
+	int parseArguments(int argc, char** argv, std::vector<int>& vec, std::deque<int>& deq);
+	void print_before(std::vector<int>& vec);
+	void print_after(std::vector<int>& vec);
+	void sort_vector_pairs(std::vector<int>& vec);
+	void insert_remaining_vector(std::vector<int>& vec);
 };
 
 

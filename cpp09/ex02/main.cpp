@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 13:32:14 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/12 13:36:56 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:36:40 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ int main(int argc, char *argv[])
 	{
 		p.parseArguments(argc, argv, vec, deq);
 		p.print_before(vec);
+		p.sort_main_vector(vec);
+		p.print_after(vec);
+		
 	}
 	catch (const std::exception &e)
 	{

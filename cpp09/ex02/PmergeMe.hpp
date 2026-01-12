@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:28 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/12 14:34:16 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:38:23 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ class PmergeMe
 	void print_before(std::vector<int>& vec);
 	void print_after(std::vector<int>& vec);
 	void sort_vector_pairs(std::vector<int>& vec);
-	void insert_remaining_vector(std::vector<int>& vec);
+	void insert_remaining_vector(std::vector<int>& min_list, int last);
+	void sort_main_vector(std::vector<int>& vec);
 };
 
 

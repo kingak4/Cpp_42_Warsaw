@@ -42,7 +42,7 @@ Sprawdzenie na małych danych (łatwo zobaczyć efekt sortowania)
 Sprawdzenie na dużych danych (3000 liczb losowych)
 
 Kolejność działania
-Parsowanie i walidacja argumentów w main.cpp
+Parsowanie i walidacja argumentów
 Wyświetlanie danych nieposortowanych (Before:)
 Implementacja merge-insert dla vector
 Implementacja merge-insert dla deque
@@ -50,3 +50,127 @@ Wyświetlanie danych posortowanych (After:)
 Pomiar czasu dla każdego kontenera
 Testy i debugowanie
 Obsługa błędów i edge-case’ów
+
+Po co używamy tego algorytmu?
+To sortowanie porównawcze, które minimalizuje liczbę porównań w najgorszym przypadku.
+Nie jest to praktyczne w codziennym kodzie produkcyjnym (np. std::sort jest szybszy)
+
+Gdzie się tego używa?
+W zadaniach uczelnianych i algorytmicznych, gdzie porównania są drogie lub chcemy badać ich liczbę.
+W dowodach i analizach teoretycznych nad granicami sortowania.
+
+Założenie algorytmu 
+Najpierw sortujesz tylko „większe” elementy z par, a potem bardzo sprytnie wstawiasz mniejsze elementy w odpowiednie miejsca.
+Cały trik polega na tym, w jakiej kolejności je wstawiasz, żeby zrobić jak najmniej porównań.
+
+KROK 1 — robisz PARy i sortujesz KAŻDĄ PARĘ
+
+Łączysz elementy po dwa:
+(8, 3) (7, 4) (9, 2) (6)
+
+Każdą parę sortujesz wewnętrznie (większy po prawej):
+(3, 8) (4, 7) (2, 9) (6)
+
+➡️ Widzisz tu dwie grupy:
+mniejsze elementy: 3, 4, 2
+większe elementy: 8, 7, 9
+6 został bez pary (tzw. straggler)
+
+
+KROK 2 — sortujesz TYLKO WIĘKSZE elementy
+Bierzemy:
+[ 8, 7, 9 ]
+Sortujemy je rekurencyjnie tym samym algorytmem (albo zwykłym sortem, bo to małe dane):
+[ 7, 8, 9 ]
+➡️ To jest kręgosłup całego sortowania.
+
+KROK 3 — budujesz wynik startowy
+Zaczynasz wynik od najmniejszego z dużych + jego pary:
+Najmniejszy duży to 7, jego para to 4
+result = [ 4, 7 ]
+
+Reszta dużych:
+
+8, 9
+Dodajesz je NA RAZIE bez ich par:
+result = [ 4, 7, 8, 9 ]
+
+KROK 4 — wstawiasz MAŁE elementy (SEDNO ALGORYTMU)
+Pozostałe małe elementy:
+3 (para 8)
+2 (para 9)
+Teraz nie wstawiasz ich losowo.
+Dlaczego?
+Bo jeśli wstawiasz w złej kolejności, robisz za dużo porównań.
+
+Ford-Johnson mówi:
+wstawiaj w kolejności opartej o liczby Jacobsthala
+Dla małych danych kolejność jest po prostu:
+pierwszy → drugi → reszta
+
+Wstawianie 3
+Szukasz miejsca binary searchem w:
+[ 4, 7, 8, 9 ]
+3 < 4 → idzie na początek
+[ 3, 4, 7, 8, 9 ]
+
+Wstawianie 2
+Binary search:
+2 < 3
+[ 2, 3, 4, 7, 8, 9 ]
+
+KROK 5 — wstawiasz STRAGGLERA (jeśli był)
+Mieliśmy samotne 6.
+
+Binary search w:
+[ 2, 3, 4, 7, 8, 9 ]
+6 wpada między 4 a 7
+[ 2, 3, 4, 6, 7, 8, 9 ]
+
+CO TU SIĘ WŁAŚCIWIE STAŁO 
+Porównujesz elementy parami → mało porównań
+Sortujesz tylko połowę danych (większe z par)
+Resztę wstawiasz binarnie, czyli bardzo tanio
+Kolejność wstawiania jest sprytna → minimalna liczba porównań
+
+CO MUSISZ ZROBIĆ W PROJEKCIE 
+W skrócie:
+sparować liczby
+posortować pary
+wyciągnąć większe elementy
+posortować je rekurencyjnie
+wstawić mniejsze elementy binary searchem
+zrobić to osobno dla:
+std::vector
+std::deque
+zmierzyć czas
+
+JEDNO ZDANIE DO ZAPAMIĘTANIA
+Najpierw sortuję tylko większe elementy z par,
+a potem wstawiam resztę JEDEN PO DRUGIM do już uporządkowanej listy.
+
+PLAN OD A DO Z:
+
+Przygotuj pusty kontener
+np. vector<int> numbers
+Dla każdego argv[i] (od 1 do argc-1):
+sprawdź, czy string nie jest pusty
+sprawdź, czy każdy znak to cyfra
+skonwertuj na long
+sprawdź > 0
+sprawdź <= INT_MAX
+sprawdź duplikaty
+dodaj do kontenera
+
+Po pętli
+jeśli kontener pusty → Error
+Zwróć poprawne dane
+np. vector<int>
+
+Kontener set<int> w C++
+
+1. Co to jest set<int>
+set<int> to specjalny kontener w C++ (z biblioteki STL).
+Przechowuje unikalne elementy – czyli nie pozwala na duplikaty.
+Elementy w set są posortowane rosnąco automatycznie (ale w tym przypadku sortowanie nie jest najważniejsze, tylko unikalność).
+Dostęp do elementu jest bardzo szybki – wyszukiwanie elementu w set ma złożoność O(log n).

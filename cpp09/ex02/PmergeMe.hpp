@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:28 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/09 13:31:37 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/12 11:44:14 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <string>
 #include <ctime>
 #include <cstdlib>
+#include <set>
 
 class PmergeMe 
 {
@@ -31,6 +32,7 @@ class PmergeMe
 		PmergeMe& operator=(const PmergeMe& other);
 		~PmergeMe();
 	public:
+		int parseArguments(int argc, char** argv, std::vector<int>& vec, std::deque<int>& deq);
 }
 
 

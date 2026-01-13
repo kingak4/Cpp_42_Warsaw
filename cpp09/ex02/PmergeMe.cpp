@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:24 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/13 14:12:41 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/13 15:54:06 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &other)
 }
 
 PmergeMe::~PmergeMe() {}
+
+// parsing and printing result 
 
 int PmergeMe::parseArguments(int argc, char **argv)
 {
@@ -130,7 +132,9 @@ void PmergeMe::print_after() const
 	std::cout << std::endl;
 }
 
-void PmergeMe::insertionSortVector(int left, int right)
+// algorithm for vector 
+
+void PmergeMe::insertion_Sort_Vector(int left, int right)
 {
 	int key = 0;
 	int i = left +1;
@@ -148,7 +152,7 @@ void PmergeMe::insertionSortVector(int left, int right)
 	}
 }
 
-void PmergeMe::mergeVector(int left, int mid, int right)
+void PmergeMe::merge_Vector(int left, int mid, int right)
 {
 	std::vector<int> l(vec.begin() + left, vec.begin() + mid + 1);
 	std::vector<int> r(vec.begin() + mid + 1, vec.begin() + right + 1);
@@ -184,23 +188,98 @@ void PmergeMe::mergeVector(int left, int mid, int right)
 		k++;
 	}
 }
-void PmergeMe::mergeInsertSortVector(int left, int right)
+void PmergeMe::merge_Insert_Sort_Vector(int left, int right)
 {
-	if((right - left + 1) < 10 )
+	if((right - left + 1) < 15 )
 	{
-		insertionSortVector(left, right);
+		insertion_Sort_Vector(left, right);
 		return;
 	}
 	int mid = (left + right) / 2;
-	mergeInsertSortVector(left, mid);
-	mergeInsertSortVector(mid +1, right);
-	mergeVector(left, mid, right);
+	merge_Insert_Sort_Vector(left, mid);
+	merge_Insert_Sort_Vector(mid +1, right);
+	merge_Vector(left, mid, right);
 }
 
-void PmergeMe::sortVector()
+void PmergeMe::sort_Vector()
 {
 	int size = this->vec.size();
 	if(this->vec.size() <= 1)
 		return;
-	mergeInsertSortVector(0, size - 1);
+	merge_Insert_Sort_Vector(0, size - 1);
+}
+
+//algorithm for deque
+
+void PmergeMe::insertionSort_Deque(int left, int right)
+{
+	int key = 0;
+	int i = left +1;
+	while(i <= right)
+	{
+		key = this->deq[i];
+		int j = i - 1;
+		while(j >= left && deq[j] > key)
+		{
+			deq[j+1] = deq[j];
+			j--;
+		}
+		deq[j+1] = key;
+		i++;
+	}
+}
+void PmergeMe::merge_Deque(int left, int mid, int right)
+{
+	std::vector<int> l(deq.begin() + left, deq.begin() + mid + 1);
+	std::vector<int> r(deq.begin() + mid + 1, deq.begin() + right + 1);
+
+	size_t i = 0;
+	size_t j = 0;
+	int k = left;
+
+	while(i < l.size() && j < r.size())
+	{
+		if(l[i] <= r[j])
+		{
+			this->deq[k] = l[i];
+			i++;
+		}
+		else
+		{
+			this->deq[k] = r[j];
+			j++;
+		}
+		k++;
+	}
+	while(i < l.size())
+	{
+		deq[k] = l[i];
+		i++;
+		k++;
+	}
+	while(j < r.size())
+	{
+		deq[k] = r[j];
+		j++;
+		k++;
+	}
+}
+void PmergeMe::merge_InsertSort_Deque(int left, int right)
+{
+	if((right - left + 1) < 15 )
+	{
+		insertion_Sort_Deque(left, right);
+		return;
+	}
+	int mid = (left + right) / 2;
+	merge_Insert_Sort_Deque(left, mid);
+	merge_Insert_Sort_Deque(mid +1, right);
+	merge_Deque(left, mid, right);
+}
+void PmergeMe::sort_Deque();
+{
+	int size = this->deq.size();
+	if(this->deq.size() <= 1)
+		return;
+	merge_Insert_Sort_Deque(0, size - 1);
 }

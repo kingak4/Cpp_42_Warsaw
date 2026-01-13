@@ -5,10 +5,12 @@
 Poniedziałek (____/____/2025)
 
 Wtorek (____/____/2025)
-- robić ex02 cpp09
-- sprawdzić ofertuy pracy 
 
 Środa (____/____/2025)
+- zrobić funkjcję do mierzenia czasu
+- zrobić rysunkej przedstawiający przebieg programu
+- zrobić 2 evaucajce 
+- sprawdzić ofertuy pracy 
 
 Czwartek (____/____/2025)
 

@@ -37,20 +37,6 @@ Before: → liczby nieposortowane
 After: → liczby posortowane
 Pomiar czasu sortowania dla każdego kontenera (np. std::chrono)
 
-Testowanie i debugowanie
-Sprawdzenie na małych danych (łatwo zobaczyć efekt sortowania)
-Sprawdzenie na dużych danych (3000 liczb losowych)
-
-Kolejność działania
-Parsowanie i walidacja argumentów ✅
-Wyświetlanie danych nieposortowanych (Before:) ✅
-Implementacja merge-insert dla vector
-Implementacja merge-insert dla deque
-Wyświetlanie danych posortowanych (After:) ✅
-Pomiar czasu dla każdego kontenera
-Testy i debugowanie
-Obsługa błędów i edge-case’ów
-
 Po co używamy tego algorytmu?
 To sortowanie porównawcze, które minimalizuje liczbę porównań w najgorszym przypadku.
 Nie jest to praktyczne w codziennym kodzie produkcyjnym (np. std::sort jest szybszy)
@@ -76,7 +62,6 @@ mniejsze elementy: 3, 4, 2
 większe elementy: 8, 7, 9
 6 został bez pary (tzw. straggler)
 
-
 KROK 2 — sortujesz TYLKO WIĘKSZE elementy
 Bierzemy:
 [ 8, 7, 9 ]
@@ -90,7 +75,6 @@ Najmniejszy duży to 7, jego para to 4
 result = [ 4, 7 ]
 
 Reszta dużych:
-
 8, 9
 Dodajesz je NA RAZIE bez ich par:
 result = [ 4, 7, 8, 9 ]
@@ -179,16 +163,16 @@ który zakończył konwersję. Jeśli *endptr != '\0', to znaczy,
 że po liczbie w stringu są jeszcze inne znaki → błąd.
 
 
-1️⃣ Funkcje potrzebne dla wektora (logika Ford-Johnson / merge-insert)
+1️⃣ sortVector
 Funkcja główna
 Cel: Wywołuje cały algorytm sortowania wektora.
 
 Odpowiedzialność:
 Sprawdza, czy wektor jest pusty lub ma 1 element – wtedy nic nie robi.
 Wywołuje funkcję rekurencyjną, która implementuje merge-insert.
-Nazwa w Twojej klasie: np. sortVector()
 
 Funkcja rekurencyjna merge-insert
+
 Cel: Dzieli tablicę na mniejsze fragmenty i sortuje je.
 Odpowiedzialność:
 Jeśli rozmiar fragmentu jest mały (np. < 10), wywołuje insertion sort.
@@ -198,6 +182,7 @@ Po posortowaniu fragmentów, wywołuje funkcję scalającą.
 Nazwa: np. mergeInsertSortVector(int left, int right)
 
 Funkcja insertion sort
+
 Cel: Sortuje fragment wektora przy pomocy prostego algorytmu wstawiania.
 Odpowiedzialność:
 Bierze fragment wektora od left do right.
@@ -205,19 +190,13 @@ Dla każdego elementu od left+1 do right przesuwa go w odpowiednie miejsce.
 Nazwa: np. insertionSortVector(int left, int right)
 
 Funkcja merge (scalanie)
+
 Cel: Łączy dwa już posortowane fragmenty wektora w jeden posortowany fragment.
 Odpowiedzialność:
 Bierze fragment wektora od left do mid oraz od mid+1 do right.
 Tworzy tymczasowe wektory dla lewej i prawej strony.
 Porównuje elementy obu fragmentów i wstawia je w kolejności rosnącej do głównego wektora.
 Nazwa: np. mergeVector(int left, int mid, int right)
-
-2️⃣ Kolejność implementacji funkcji
-
-Insertion sort – najprostsza funkcja, możesz od razu ją przetestować na fragmencie wektora.
-Merge – funkcja scalająca dwa fragmenty; możesz testować ją z ręcznie posortowanymi fragmentami.
-Merge-insert rekurencyjny – używa powyższych dwóch funkcji, dzieli wektor na fragmenty.
-sortVector() – funkcja "publiczna", która wywołuje rekurencyjny merge-insert na całym wektorze.
 
 
 Insertion Sort
@@ -429,3 +408,32 @@ Dzielisz na:
 Każdą część dzielisz dalej
 Małe fragmenty sortujesz insertion sortem
 Na końcu scalasz wszystko merge
+
+sortVector()
+To jest funkcja startowa algorytmu.
+Jej zadanie:
+przygotować sortowanie,
+nie robić żadnej logiki algorytmu, tylko:
+sprawdzić, czy w ogóle ma sens sortować,
+uruchomić rekurencję na całym wektorze.
+
+Dzięki niej:
+main() jest czysty,
+cały algorytm jest zamknięty w klasie,
+masz jedno miejsce startu sortowania.
+
+Co ona robi (w prostych słowach)
+Jeśli wektor ma 0 lub 1 element → już jest posortowany
+
+W przeciwnym razie:
+wywołuje mergeInsertSortVector
+przekazuje początek i koniec wektora
+
+sortVector()
+    ↓
+mergeInsertSortVector(0, size-1)
+    ↓
+    (dzielenie)
+    ↓
+insertionSortVector()  ← dla małych fragmentów
+mergeVector()          ← dla scalania

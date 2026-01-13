@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:24 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/13 13:59:49 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/13 14:12:41 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,8 +153,8 @@ void PmergeMe::mergeVector(int left, int mid, int right)
 	std::vector<int> l(vec.begin() + left, vec.begin() + mid + 1);
 	std::vector<int> r(vec.begin() + mid + 1, vec.begin() + right + 1);
 
-	int i = 0;
-	int j = 0;
+	size_t i = 0;
+	size_t j = 0;
 	int k = left;
 
 	while(i < l.size() && j < r.size())
@@ -195,4 +195,12 @@ void PmergeMe::mergeInsertSortVector(int left, int right)
 	mergeInsertSortVector(left, mid);
 	mergeInsertSortVector(mid +1, right);
 	mergeVector(left, mid, right);
+}
+
+void PmergeMe::sortVector()
+{
+	int size = this->vec.size();
+	if(this->vec.size() <= 1)
+		return;
+	mergeInsertSortVector(0, size - 1);
 }

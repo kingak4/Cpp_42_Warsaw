@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:28 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/13 13:58:55 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/13 14:08:19 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,6 @@ class PmergeMe
 private:
 	std::vector<int> vec;
 	std::deque<int> deq;
-	void insertionSortVector(int left, int right);
-	void mergeVector(int left, int mid, int right);
-	void mergeInsertSortVector(int left, int right);
 
 public:
 	PmergeMe();
@@ -40,6 +37,10 @@ public:
 	int parseArguments(int argc, char **argv);
 	void print_before() const;
 	void print_after() const;
+	void insertionSortVector(int left, int right);
+	void mergeVector(int left, int mid, int right);
+	void mergeInsertSortVector(int left, int right);
+	void sortVector();
 };
 
 #endif

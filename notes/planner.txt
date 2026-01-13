@@ -3,12 +3,10 @@
 ===========================
 
 Poniedziałek (____/____/2025)
-- robić ex02 cpp09
-- o 15 commiunity 
-- o 16 spotkanie z projekt menager 
-- sprawdzić ofertuy pracy 
 
 Wtorek (____/____/2025)
+- robić ex02 cpp09
+- sprawdzić ofertuy pracy 
 
 Środa (____/____/2025)
 

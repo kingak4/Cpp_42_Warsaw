@@ -42,11 +42,11 @@ Sprawdzenie na małych danych (łatwo zobaczyć efekt sortowania)
 Sprawdzenie na dużych danych (3000 liczb losowych)
 
 Kolejność działania
-Parsowanie i walidacja argumentów
-Wyświetlanie danych nieposortowanych (Before:)
+Parsowanie i walidacja argumentów ✅
+Wyświetlanie danych nieposortowanych (Before:) ✅
 Implementacja merge-insert dla vector
 Implementacja merge-insert dla deque
-Wyświetlanie danych posortowanych (After:)
+Wyświetlanie danych posortowanych (After:) ✅
 Pomiar czasu dla każdego kontenera
 Testy i debugowanie
 Obsługa błędów i edge-case’ów
@@ -149,28 +149,32 @@ JEDNO ZDANIE DO ZAPAMIĘTANIA
 Najpierw sortuję tylko większe elementy z par,
 a potem wstawiam resztę JEDEN PO DRUGIM do już uporządkowanej listy.
 
-PLAN OD A DO Z:
-
-Przygotuj pusty kontener
-np. vector<int> numbers
-Dla każdego argv[i] (od 1 do argc-1):
-sprawdź, czy string nie jest pusty
-sprawdź, czy każdy znak to cyfra
-skonwertuj na long
-sprawdź > 0
-sprawdź <= INT_MAX
-sprawdź duplikaty
-dodaj do kontenera
-
-Po pętli
-jeśli kontener pusty → Error
-Zwróć poprawne dane
-np. vector<int>
-
 Kontener set<int> w C++
-
 1. Co to jest set<int>
 set<int> to specjalny kontener w C++ (z biblioteki STL).
 Przechowuje unikalne elementy – czyli nie pozwala na duplikaty.
 Elementy w set są posortowane rosnąco automatycznie (ale w tym przypadku sortowanie nie jest najważniejsze, tylko unikalność).
 Dostęp do elementu jest bardzo szybki – wyszukiwanie elementu w set ma złożoność O(log n).
+
+seenNumbers.insert(number) → próbuje dodać number do setu
+.second → sprawdza bool: true jeśli dodano, false jeśli był duplikat
+! → odwraca wartość:
+jeśli false (czyli duplikat), to !false = true → wyrzucamy "Error"
+jeśli true (nowa liczba), to !true = false → wszystko OK
+
+Masz pusty zbiór: {}
+Dodajesz 5 → zbiór: {5}, .second = true → OK
+Dodajesz 7 → zbiór: {5, 7}, .second = true → OK
+Dodajesz 5 → zbiór: {5, 7}, .second = false → throw Error
+
+1️⃣ strtol – co robi
+Funkcja z C/C++:
+long strtol(const char *nptr, char **endptr, int base);
+nptr → wskaźnik na string, który chcesz zamienić na liczbę.
+endptr → wskaźnik do wskaźnika, który po konwersji wskaże miejsce w stringu, gdzie konwersja się zakończyła.
+base → podstawa systemu, np. 10 dla dziesiętne
+
+strtol konwertuje string na long i podaje wskaźnik na znak,
+który zakończył konwersję. Jeśli *endptr != '\0', to znaczy,
+że po liczbie w stringu są jeszcze inne znaki → błąd.
+

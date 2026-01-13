@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:24 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/12 18:40:13 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:43:47 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,3 +218,8 @@ void PmergeMe::sort_main_vector(std::vector<int>& vec)
 //./PmergeMe 9 8 7 6 5
 //Before:  9 8 7 6 5 
 //After:  5 7 8 6 9 
+//Problem → logika w sort_main_vector
+//Co naprawić → upewnić się, że:
+//min_list jest uporządkowana przed wstawianiem max_list.
+//max_list jest wstawiana w odpowiedniej kolejności do min_list.
+//element nieparzysty (jeśli jest) trafia w odpowiednie miejsce.

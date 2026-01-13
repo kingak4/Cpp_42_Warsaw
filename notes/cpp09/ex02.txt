@@ -178,3 +178,254 @@ strtol konwertuje string na long i podaje wskaźnik na znak,
 który zakończył konwersję. Jeśli *endptr != '\0', to znaczy,
 że po liczbie w stringu są jeszcze inne znaki → błąd.
 
+
+1️⃣ Funkcje potrzebne dla wektora (logika Ford-Johnson / merge-insert)
+Funkcja główna
+Cel: Wywołuje cały algorytm sortowania wektora.
+
+Odpowiedzialność:
+Sprawdza, czy wektor jest pusty lub ma 1 element – wtedy nic nie robi.
+Wywołuje funkcję rekurencyjną, która implementuje merge-insert.
+Nazwa w Twojej klasie: np. sortVector()
+
+Funkcja rekurencyjna merge-insert
+Cel: Dzieli tablicę na mniejsze fragmenty i sortuje je.
+Odpowiedzialność:
+Jeśli rozmiar fragmentu jest mały (np. < 10), wywołuje insertion sort.
+Dzieli tablicę na dwie części: lewą i prawą
+Wywołuje siebie rekurencyjnie dla lewej i prawej części.
+Po posortowaniu fragmentów, wywołuje funkcję scalającą.
+Nazwa: np. mergeInsertSortVector(int left, int right)
+
+Funkcja insertion sort
+Cel: Sortuje fragment wektora przy pomocy prostego algorytmu wstawiania.
+Odpowiedzialność:
+Bierze fragment wektora od left do right.
+Dla każdego elementu od left+1 do right przesuwa go w odpowiednie miejsce.
+Nazwa: np. insertionSortVector(int left, int right)
+
+Funkcja merge (scalanie)
+Cel: Łączy dwa już posortowane fragmenty wektora w jeden posortowany fragment.
+Odpowiedzialność:
+Bierze fragment wektora od left do mid oraz od mid+1 do right.
+Tworzy tymczasowe wektory dla lewej i prawej strony.
+Porównuje elementy obu fragmentów i wstawia je w kolejności rosnącej do głównego wektora.
+Nazwa: np. mergeVector(int left, int mid, int right)
+
+2️⃣ Kolejność implementacji funkcji
+
+Insertion sort – najprostsza funkcja, możesz od razu ją przetestować na fragmencie wektora.
+Merge – funkcja scalająca dwa fragmenty; możesz testować ją z ręcznie posortowanymi fragmentami.
+Merge-insert rekurencyjny – używa powyższych dwóch funkcji, dzieli wektor na fragmenty.
+sortVector() – funkcja "publiczna", która wywołuje rekurencyjny merge-insert na całym wektorze.
+
+
+Insertion Sort
+1️⃣ Co to są left i right?
+
+left = indeks początku fragmentu wektora, który chcesz posortować.
+right = indeks końca fragmentu wektora, który chcesz posortować.
+
+Przykład:
+vec = [5, 2, 4, 6, 1, 3]
+Jeśli chcesz posortować cały wektor: left = 0, right = 5
+Jeśli chcesz posortować tylko [4, 6, 1] → left = 2, right = 4
+Dlaczego używamy left i right?
+Funkcja merge-insert dzieli wektor na mniejsze fragmenty, więc chcemy móc sortować tylko część wektora, a nie cały wektor.
+
+2️⃣ Co to jest key?
+key = element, który aktualnie próbujemy wstawić w posortowaną część wektora.
+Wyciągamy go z wektora: key = vec[i]
+Przykład:
+
+vec = [5, 2, 4, 6, 1, 3], i = 1
+key = vec[1] = 2
+Teraz "trzymamy" 2 w ręku i przesuwamy większe elementy w prawo, żeby zrobić miejsce dla key.
+
+3️⃣ Co to jest i i j?
+
+i = indeks elementu, który obecnie próbujemy wstawić (nasz key)
+j = indeks elementu w posortowanej części po lewej, którego porównujemy z key
+
+Wyjaśnienie linijka po linijce z przykładem [5, 2, 4]:
+
+int key = 0; – Tworzysz zmienną key, w której będziesz trzymać aktualnie wstawiany element.
+int i = left + 1; – ustawiasz indeks i na drugi element fragmentu wektora, bo pierwszy element traktujesz jako już posortowany.
+while(i <= right) – pętla przechodzi przez wszystkie elementy fragmentu wektora od left+1 do right.
+Przykład: [5, 2, 4], left = 0, right = 2 → i kolejno: 1, 2.
+key = this->vec[i]; – zapisujesz bieżący element w key.
+
+Krok 1: i = 1 → key = 2
+int j = i - 1; – ustawiasz j na indeks ostatniego elementu posortowanej części po lewej stronie.
+Krok 1: j = 0, vec[j] = 5
+while(j >= left && vec[j] > key) – dopóki element po lewej jest większy od key, przesuwasz go w prawo.
+
+Krok 1: vec[0] = 5 > 2 → przesuwamy 5: [5, 5, 4]
+Zmniejszamy j-- → j = -1 → warunek j >= left przestaje być prawdziwy
+vec[j+1] = key; – wstawiasz key w odpowiednie miejsce.
+
+Krok 1: j+1 = 0 → [2, 5, 4]
+i++; – przechodzisz do następnego elementu wektora.
+
+Krok 2: i = 2 → key = 4, j = 1, vec[j] = 5 > 4 → przesuwamy 5: [2, 5, 5]
+j = 0, vec[j] = 2 < 4 → kończymy while, wstawiamy key: [2, 4, 5]
+
+✅ Po wykonaniu wszystkich kroków wektor [5, 2, 4] zostaje posortowany: [2, 4, 5].
+
+Przykład krok po kroku:
+
+vec = [5, 2, 4, 6, 1, 3]
+left = 0
+i = 1 → key = 2
+j = i-1 = 0 → porównujemy key z vec[0] = 5
+Ponieważ 2 < 5, przesuwamy 5 w prawo: [5, 5, 4, 6, 1, 3]
+Teraz zmniejszamy j-- → j = -1 (już nie mamy po lewej)
+Wstawiamy key na miejsce j+1 = 0: [2, 5, 4, 6, 1, 3]
+
+
+Start: [5, 2, 4]
+i = 1, key = 2, j = 0
+vec[j] = 5 > 2 → przesuwamy 5 → [5, 5, 4]
+j-- → -1
+
+Wstawiamy key: [2, 5, 4]
+i = 2, key = 4, j = 1
+vec[j] = 5 > 4 → przesuwamy 5 → [2, 5, 5]
+j = 0, vec[j] = 2 < 4 → koniec while
+Wstawiamy key: [2, 4, 5] ✅
+
+Przed krokiem 1: [5][2][4]
+key = 2 (trzymamy w ręku)
+[5]   [  ]  [4]  <- przesuwamy 5 w prawo
+[  ]  [5]   [4]  <- wstawiamy 2
+Wektor: [2][5][4]
+
+Krok 2: key = 4
+[2][5][4]
+key = 4 (trzymamy w ręku)
+[2][5][ ]  <- przesuwamy 5 w prawo
+[2][  ][5]  <- wstawiamy 4
+Wektor: [2][4][5]
+
+mergeVector
+
+Funkcja merge bierze dwa posortowane fragmenty i łączy je w jeden posortowany fragment w vec.
+Każdy element trafia na swoje miejsce, zaczynając od najmniejszego.
+
+przykład: [2, 5, 4]
+left = 0, mid = 1, right = 2
+Lewy fragment l = [2, 5]
+Prawy fragment r = [4]
+Główny wektor vec = [2, 5, 4]
+
+1️⃣ Porównujemy pierwsze elementy lewego i prawego fragmentu
+l[0] = 2, r[0] = 4
+2 <= 4 → wstawiamy 2 do vec[0]
+Teraz i=1, j=0, k=1
+vec = [2, 5, 4]
+
+2️⃣ Kolejne porównanie
+l[1] = 5, r[0] = 4
+5 > 4 → wstawiamy 4 do vec[1]
+Teraz i=1, j=1, k=2
+vec = [2, 4, 4]
+
+3️⃣ Lewy fragment ma jeszcze element 5
+Wstawiamy 5 do vec[2]
+Teraz i=2, k=3
+vec = [2, 4, 5] ✅
+
+4️⃣ Prawy fragment już pusty → nic nie robimy
+
+Funkcja mergeInsertSortVector
+
+Co robi:
+Sprawdza rozmiar fragmentu:
+Jeśli fragment jest mały (np. < 10 elementów), używa insertion sort, bo dla małych fragmentów jest szybszy.
+Jeśli fragment jest większy, dzieli go dalej.
+
+Dzieli fragment na dwie części:
+Lewa część: left .. mid
+Prawa część: mid+1 .. right
+mid = (left + right) / 2
+Wywołuje siebie rekurencyjnie dla lewej i prawej części, aby je posortować.
+
+Scalanie fragmentów:
+Po posortowaniu obu części, wywołuje funkcję mergeVector(left, mid, right), aby połączyć je w jeden fragment w vec.
+
+Intuicja:
+Myślisz o wektorze jak o książce, którą dzielisz na dwie części.
+Sortujesz każdą część oddzielnie, a potem łączysz je w całość.
+Dla małych fragmentów używasz insertion sort, bo jest szybki dla krótkich list.
+
+
+mergeInsertSortVector
+1️⃣
+if ((right - left + 1) < 10)
+➡️ Sprawdzasz, ile elementów ma ten fragment.
+right - left + 1 = liczba elementów.
+
+Przykład:
+left = 2, right = 4
+elementy: vec[2], vec[3], vec[4] → 3 elementy
+
+2️⃣
+insertionSortVector(left, right);
+return;
+➡️ Jeśli fragment jest mały, to:
+sortujesz go insertion sortem
+kończysz funkcję (return)
+Nie dzielisz już dalej.
+📌 Dlaczego?
+Bo insertion sort jest szybki dla małych fragmentów.
+
+3️⃣
+int mid = (left + right) / 2;
+➡️ Dzielisz fragment na pół.
+Przykład:
+left = 0, right = 5
+mid = 2
+Masz:
+lewa część: 0 → 2
+prawa część: 3 → 5
+
+4️⃣
+mergeInsertSortVector(left, mid);
+➡️ Rekurencja
+Mówisz:
+„Najpierw posortuj lewą połowę”
+
+5️⃣
+mergeInsertSortVector(mid + 1, right);
+➡️ Potem:
+„Posortuj prawą połowę”
+W tym momencie:
+lewa część jest posortowana
+prawa część jest posortowana
+
+6️⃣
+mergeVector(left, mid, right);
+➡️ Scalasz dwie posortowane części w jedną.
+Czyli:
+bierzesz lewą posortowaną
+bierzesz prawą posortowaną
+łączysz je w jeden posortowany fragment
+Całość na MAŁYM PRZYKŁADZIE
+
+Wektor:
+[5, 2, 4]
+left=0, right=2
+(2 - 0 + 1) = 3 < 10
+➜ insertionSortVector(0,2)
+
+Wektor staje się:
+[2, 4, 5]
+Funkcja kończy się (return)
+
+Na WIĘKSZYM PRZYKŁADZIE (intuicja)
+[8, 3, 7, 1, 5, 2]
+Dzielisz na:
+[8,3,7] | [1,5,2]
+Każdą część dzielisz dalej
+Małe fragmenty sortujesz insertion sortem
+Na końcu scalasz wszystko merge

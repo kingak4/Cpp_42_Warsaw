@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 13:32:14 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/12 18:36:40 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/13 12:20:14 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 int main(int argc, char *argv[])
 {
-	std::vector<int> vec;
-	std::deque<int> deq;
 	PmergeMe p;
 	try
 	{

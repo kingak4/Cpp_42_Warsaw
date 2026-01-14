@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:28 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/14 10:27:54 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/14 10:37:26 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <set>
+#include <iomanip>
 
 class PmergeMe
 {
@@ -49,6 +50,7 @@ public:
 	void merge_Deque(int left, int mid, int right);
 	void merge_Insert_Sort_Deque(int left, int right);
 	void sort_Deque();
+	void measure_Time_For_Deque();
 };
 
 #endif

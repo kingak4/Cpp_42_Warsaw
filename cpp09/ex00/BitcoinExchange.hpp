@@ -6,10 +6,11 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:17:46 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/08 17:17:50 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/14 10:57:00 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef BITCOINEXCHANGE_HPP
 # define BITCOINEXCHANGE_HPP
 
 # include <iostream>

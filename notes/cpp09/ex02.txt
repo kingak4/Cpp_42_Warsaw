@@ -20,6 +20,8 @@ Time to process a range of 5 elements with std::deque : 0.00014 us
 $> ./PmergeMe "-1" "2"
 Error
 
+`shuf -i 1-100000 -n 3000 | tr "\n" " "` - genereuje losowe liczby w podanym zakresie 
+
 Co trzeba zrobić:
 Parsowanie argumentów programu
 Pobranie wszystkich liczb z argv[]
@@ -260,8 +262,6 @@ j = i-1 = 0 → porównujemy key z vec[0] = 5
 Ponieważ 2 < 5, przesuwamy 5 w prawo: [5, 5, 4, 6, 1, 3]
 Teraz zmniejszamy j-- → j = -1 (już nie mamy po lewej)
 Wstawiamy key na miejsce j+1 = 0: [2, 5, 4, 6, 1, 3]
-
-
 Start: [5, 2, 4]
 i = 1, key = 2, j = 0
 vec[j] = 5 > 2 → przesuwamy 5 → [5, 5, 4]
@@ -285,6 +285,12 @@ key = 4 (trzymamy w ręku)
 [2][5][ ]  <- przesuwamy 5 w prawo
 [2][  ][5]  <- wstawiamy 4
 Wektor: [2][4][5]
+
+Bierze fragment tablicy od left do right.
+Rozpoczyna od drugiego elementu fragmentu (left + 1).
+Dla każdego elementu (key) przesuwa w lewo wszystkie większe elementy.
+Wstawia key w odpowiednie miejsce.
+Powtarza aż cała podtablica będzie posortowana rosnąco.
 
 mergeVector
 
@@ -337,6 +343,16 @@ Myślisz o wektorze jak o książce, którą dzielisz na dwie części.
 Sortujesz każdą część oddzielnie, a potem łączysz je w całość.
 Dla małych fragmentów używasz insertion sort, bo jest szybki dla krótkich list.
 
+Tworzymy kopie dwóch fragmentów (l i r).
+Porównujemy elementy obu fragmentów od początku.
+Wstawiamy mniejszy element do oryginalnego wektora vec.
+Jeśli jeden fragment się skończy, kopiujemy pozostałe elementy z drugiego fragmentu.
+Po wykonaniu funkcji vec[left..right] jest w pełni posortowany.
+
+💡 Analogia:
+Wyobraź sobie dwie listy kart (lewa i prawa) posegregowane rosnąco.
+Bierzesz po jednej karcie z każdej listy i wybierasz mniejszą → odkładasz na nową listę.
+Kiedy jedna lista się skończy, dokładasz resztę z drugiej listy.
 
 mergeInsertSortVector
 1️⃣

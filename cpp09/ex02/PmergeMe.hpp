@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:28 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/13 15:42:04 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/14 10:27:54 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,13 @@ public:
 	// algorithm for vector 
 	void insertion_Sort_Vector(int left, int right);
 	void merge_Vector(int left, int mid, int right);
-	void merge_Insert_Sort_Vectorr(int left, int right);
+	void merge_Insert_Sort_Vector(int left, int right);
 	void sort_Vector();
+	void measure_Time_For_Vector();
 	//algorithm for deque
-	void insertionSort_Deque(int left, int right);
+	void insertion_Sort_Deque(int left, int right);
 	void merge_Deque(int left, int mid, int right);
-	void merge_InsertSort_Deque(int left, int right);
+	void merge_Insert_Sort_Deque(int left, int right);
 	void sort_Deque();
 };
 

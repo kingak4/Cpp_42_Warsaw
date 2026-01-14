@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:24 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/13 15:54:06 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/14 10:28:14 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,10 +208,17 @@ void PmergeMe::sort_Vector()
 		return;
 	merge_Insert_Sort_Vector(0, size - 1);
 }
+void PmergeMe::measure_Time_For_Vector()
+{
+	size_t len = this->vec.size();
+	clock_t start = clock();
+	sort_Vector();
+	clock_t end = clock();
+	double time_us = (double)(end - start) / CLOCKS_PER_SEC * 1000000.0;
+	std::cout<< "Time to process a range of " << len << " elements with std::[..] :  " << time_us << " us "<<std::endl;
+}
 
-//algorithm for deque
-
-void PmergeMe::insertionSort_Deque(int left, int right)
+void PmergeMe::insertion_Sort_Deque(int left, int right)
 {
 	int key = 0;
 	int i = left +1;
@@ -264,7 +271,7 @@ void PmergeMe::merge_Deque(int left, int mid, int right)
 		k++;
 	}
 }
-void PmergeMe::merge_InsertSort_Deque(int left, int right)
+void PmergeMe::merge_Insert_Sort_Deque(int left, int right)
 {
 	if((right - left + 1) < 15 )
 	{
@@ -276,10 +283,11 @@ void PmergeMe::merge_InsertSort_Deque(int left, int right)
 	merge_Insert_Sort_Deque(mid +1, right);
 	merge_Deque(left, mid, right);
 }
-void PmergeMe::sort_Deque();
+void PmergeMe::sort_Deque()
 {
 	int size = this->deq.size();
 	if(this->deq.size() <= 1)
 		return;
 	merge_Insert_Sort_Deque(0, size - 1);
 }
+

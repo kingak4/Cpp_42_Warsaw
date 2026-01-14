@@ -6,7 +6,7 @@
 /*   By: kikwasni <kikwasni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:18:24 by kikwasni          #+#    #+#             */
-/*   Updated: 2026/01/14 10:48:00 by kikwasni         ###   ########.fr       */
+/*   Updated: 2026/01/14 14:08:04 by kikwasni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,8 +218,7 @@ void PmergeMe::measure_Time_For_Vector()
 	print_after();
 	std::cout << std::fixed << std::setprecision(5);
 	std::cout << "Time to process a range of " << len 
-			<< " elements with std::[..] : " << time_us << " us" << std::endl;
-	//std::cout<< "Time to process a range of " << len << " elements with std::[..] :  " << time_us << " us "<<std::endl;
+			<< " elements with std:: Vector : " << time_us << " us" << std::endl;
 }
 
 void PmergeMe::insertion_Sort_Deque(int left, int right)
@@ -302,5 +301,5 @@ void PmergeMe::measure_Time_For_Deque()
 	sort_Deque();
 	clock_t end = clock();
 	double time_us = (double)(end - start) / CLOCKS_PER_SEC * 1000000.0;
-	std::cout<< "Time to process a range of " << len << " elements with std::[..] :  " << time_us << " us "<<std::endl;
+	std::cout<< "Time to process a range of " << len << " elements with std:: Deque :  " << time_us << " us "<<std::endl;
 }
